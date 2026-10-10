@@ -61,3 +61,8 @@ if st.button("Generate Precision Advisory", type="primary"):
            
     st.markdown("---")
     st.info("💡 **Agronomic Advisory Note:** Modify your fertilizer applications to match the target soil conditions outlined above.")
+
+
+# Footer
+st.markdown("---")
+st.caption("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited.")
