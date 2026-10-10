@@ -1,0 +1,32 @@
+{
+  "model": "RandomForestClassifier (200 trees)",
+  "n_rows": 2200,
+  "n_crops": 22,
+  "test_size": 0.2,
+  "holdout_accuracy": 0.9955,
+  "per_crop_f1": {
+    "apple": 1.0,
+    "banana": 1.0,
+    "blackgram": 0.974,
+    "chickpea": 1.0,
+    "coconut": 1.0,
+    "coffee": 1.0,
+    "cotton": 1.0,
+    "grapes": 1.0,
+    "jute": 0.976,
+    "kidneybeans": 1.0,
+    "lentil": 1.0,
+    "maize": 0.976,
+    "mango": 1.0,
+    "mothbeans": 1.0,
+    "mungbean": 1.0,
+    "muskmelon": 1.0,
+    "orange": 1.0,
+    "papaya": 1.0,
+    "pigeonpeas": 1.0,
+    "pomegranate": 1.0,
+    "rice": 0.974,
+    "watermelon": 1.0
+  },
+  "data_note": "Public crop recommendation dataset (2,200 rows, 22 crops) built by augmenting rainfall, climate and fertilizer data for India. It is not field-collected data, so accuracy on real farms can be lower. Use the result as guidance and confirm with your agriculture officer."
+}
