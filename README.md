@@ -11,4 +11,4 @@ Crop advisory demo. Enter soil and weather values (N, P, K, temperature, humidit
 
 Python, Streamlit, scikit-learn, NumPy
 
-Live demo: (add link after deploying)
+Live demo: https://kisandrishti-mvp.streamlit.app/
