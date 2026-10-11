@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+import ui
+
 st.set_page_config(page_title="KisanDrishti Portal", page_icon="🌾")
 
 FEATURES = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
@@ -87,8 +89,12 @@ def explorer_table(crop, profiles, values):
 model, profiles, metrics = load_artifacts()
 crops = sorted(profiles)
 
-st.title("🌾 KisanDrishti")
-st.caption("Crop advisor for farmers. Enter your field conditions and get crop suggestions with nutrient pointers.")
+ui.inject_css()
+ui.hero("KisanDrishti", "Crop advice, a photo-based crop doctor, weather precautions and scheme help for Karnataka farmers.", "🌾")
+l1, l2, l3 = st.columns(3)
+l1.page_link("pages/3_Crop_Doctor.py", label="Crop Doctor", icon="🩺")
+l2.page_link("pages/1_Weather_Precautions.py", label="Weather", icon="⛈️")
+l3.page_link("pages/2_Schemes_and_Help.py", label="Schemes", icon="📋")
 
 st.subheader("Your field")
 c1, c2 = st.columns(2)

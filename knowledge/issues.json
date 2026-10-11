@@ -1,0 +1,396 @@
+[
+  {
+    "id": "rice_blast",
+    "type": "disease",
+    "name": "Rice blast (leaf, node and neck blast)",
+    "crops": [
+      "rice"
+    ],
+    "look_for": [
+      "Spindle-shaped leaf spots with grey or ashy centres and brown edges",
+      "Blackened, rotting nodes on the stem",
+      "Grey-brown rot at the neck of the panicle, so the panicle bends or falls over, with partly filled or empty grains"
+    ],
+    "not_to_confuse": [
+      "Brown spot has rounder, smaller brown spots",
+      "Sheath blight starts on the leaf sheath near the water line"
+    ],
+    "why_it_happens": "It is favoured by high humidity, cool nights, dry nurseries, late planting, crowded plants and too much nitrogen.",
+    "act_now": [
+      "Do not add extra nitrogen. Apply nitrogen in three split doses.",
+      "Remove grasses and weeds from the bunds and inside the field.",
+      "Drain excess water after heavy rain and avoid very close planting.",
+      "Next season avoid dry nurseries and late planting, do not transplant infected seedlings, and ask your KVK for blast-resistant varieties."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Tricyclazole",
+          "kind": "Systemic fungicide",
+          "note": "Commonly used against blast."
+        },
+        {
+          "active": "Carbendazim",
+          "kind": "Systemic fungicide",
+          "note": "Listed by TNAU for nursery and tillering-stage infection."
+        }
+      ],
+      "when": [
+        "Do not spray for a few spots. Spray when leaf damage reaches about 2 to 5 percent of the leaf area at tillering or booting.",
+        "At flowering and after, spray when leaf damage reaches about 5 percent or when 1 to 2 percent of the necks are infected.",
+        "In a bad blast year, 3 to 4 sprays across the nursery, tillering and panicle emergence stages may be needed.",
+        "Spray before 11 AM or after 3 PM, not at noon."
+      ]
+    },
+    "precautions": [
+      "Neck blast cannot be cured once the neck has rotted, so protect the crop before the panicles come out.",
+      "Do not spray more often than the label allows."
+    ],
+    "see_expert_if": [
+      "The problem keeps spreading after you have treated it once",
+      "You are not sure what the problem is",
+      "Many panicle necks are already affected"
+    ],
+    "sources": [
+      {
+        "title": "TNAU Agritech Portal: Rice blast",
+        "url": "https://agritech.tnau.ac.in/expert_system/paddy/cpdisblast.html"
+      },
+      {
+        "title": "Rice Research and Development Institute, Sri Lanka: Rice blast",
+        "url": "https://doa.gov.lk/rrdi_ricediseases_riceblast/"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "maize_fall_armyworm",
+    "type": "pest",
+    "name": "Fall armyworm on maize",
+    "crops": [
+      "maize"
+    ],
+    "look_for": [
+      "Ragged holes and see-through patches on young leaves",
+      "Sawdust-like droppings (frass) packed inside the central whorl",
+      "Green to brown caterpillars hiding in the whorl, and later feeding on the cob"
+    ],
+    "not_to_confuse": [
+      "Stem borers cause pin-holes and dead hearts instead of a frass-filled whorl"
+    ],
+    "why_it_happens": "Attack can start as early as 14 to 21 days after sowing. The caterpillars hide inside the whorl, where sprays do not reach easily.",
+    "act_now": [
+      "Check plants across the whole field every few days from 2 weeks after sowing, not only at the edges.",
+      "Act early. Young plants suffer the most damage.",
+      "If only a few plants are affected, ask your KVK about biological or neem-based options."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Emamectin benzoate",
+          "kind": "Insecticide",
+          "note": "Effective in ICAR and university trials."
+        },
+        {
+          "active": "Spinetoram",
+          "kind": "Insecticide",
+          "note": "Effective in ICAR and university trials."
+        },
+        {
+          "active": "Chlorantraniliprole",
+          "kind": "Insecticide",
+          "note": "Effective, and also tested as a seed treatment. Ask your KVK."
+        }
+      ],
+      "when": [
+        "Start when you see fresh whorl damage, and direct the spray into the whorl.",
+        "Studies suggest longer-lasting products such as chlorantraniliprole suit the early crop stage, while emamectin benzoate and spinetoram suit about 25 to 40 days after sowing.",
+        "Two rounds of spraying may be needed. Spray in the early morning or late afternoon.",
+        "Rotate between chemical groups on repeat sprays to slow resistance."
+      ]
+    },
+    "precautions": [
+      "Follow the waiting period on the label, especially once cobs form.",
+      "Check that the product label lists maize and fall armyworm."
+    ],
+    "see_expert_if": [
+      "The problem keeps spreading after you have treated it once",
+      "You are not sure what the problem is",
+      "Damage keeps rising after two sprays",
+      "Cobs are already damaged"
+    ],
+    "sources": [
+      {
+        "title": "ICAR KRISHI: newer molecules against fall armyworm on maize",
+        "url": "https://krishi.icar.gov.in/jspui/handle/123456789/84061"
+      },
+      {
+        "title": "Madras Agricultural Journal 2024: management of maize fall armyworm",
+        "url": "https://masujournal.org/store_file/temp/20241112063116_MAJ-2024-S12-FD.html"
+      },
+      {
+        "title": "Indian Journal of Entomology: seed treatment against fall armyworm",
+        "url": "https://indianentomology.org/index.php/ije/article/view/1329"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "tomato_early_blight",
+    "type": "disease",
+    "name": "Early blight of tomato",
+    "crops": [
+      "tomato",
+      "potato"
+    ],
+    "look_for": [
+      "Small dark brown or black leathery spots with rings like a target, on the older leaves first",
+      "Spots on stems and on fruit, where they are sunken and often near the stalk end"
+    ],
+    "not_to_confuse": [
+      "Late blight has water-soaked blotches and whitish fuzz on the underside of leaves"
+    ],
+    "why_it_happens": "The fungus survives on infected crop residue and on nightshade weeds, and spreads in humid, wet spells.",
+    "act_now": [
+      "Remove infected lower leaves and destroy them. Do not compost them.",
+      "Destroy nightshade weeds and volunteer tomato or potato plants.",
+      "Stake the plants for airflow and avoid wetting the leaves. Do not irrigate late in the evening.",
+      "Rotate with a crop outside the tomato, potato and brinjal family next season."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Mancozeb",
+          "kind": "Protectant fungicide",
+          "note": "Widely tested in Indian trials."
+        },
+        {
+          "active": "Chlorothalonil",
+          "kind": "Protectant fungicide",
+          "note": "Widely tested in Indian trials."
+        }
+      ],
+      "when": [
+        "Start at the first spots. These products protect healthy leaves but do not cure badly infected ones.",
+        "Repeat about every 7 to 10 days while the weather stays wet, within the label limit.",
+        "Alternate between fungicide groups rather than using one product all season."
+      ]
+    },
+    "precautions": [
+      "Keep to the waiting period on the label before you pick fruit, and wash the fruit."
+    ],
+    "see_expert_if": [
+      "The problem keeps spreading after you have treated it once",
+      "You are not sure what the problem is",
+      "Spots are reaching the fruit"
+    ],
+    "sources": [
+      {
+        "title": "UC IPM: Tomato early blight",
+        "url": "https://ipm.ucanr.edu/agriculture/tomato/Early-Blight"
+      },
+      {
+        "title": "Indian Journal of Horticulture: management of early blight of tomato",
+        "url": "https://journal.iahs.org.in/index.php/ijh/article/download/384/1511"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "tomato_late_blight",
+    "type": "disease",
+    "name": "Late blight of tomato",
+    "crops": [
+      "tomato",
+      "potato"
+    ],
+    "look_for": [
+      "Small water-soaked patches that grow fast into purple-brown, oily-looking blotches",
+      "Grey-white fuzzy growth on the underside of leaves in humid weather",
+      "Brown, firm patches on fruit, often at the shoulders"
+    ],
+    "not_to_confuse": [
+      "Early blight has dry spots with target-like rings"
+    ],
+    "why_it_happens": "It appears when humid, cloudy, cool weather lasts for days. Sprinkler irrigation helps it spread.",
+    "act_now": [
+      "Remove badly infected plants early and keep them away from healthy plants.",
+      "Remove volunteer tomato and potato plants and nightshade weeds nearby.",
+      "Avoid sprinkler irrigation. Check transplants are healthy before planting."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Mancozeb",
+          "kind": "Protectant fungicide",
+          "note": "Protects healthy leaves."
+        },
+        {
+          "active": "Chlorothalonil",
+          "kind": "Protectant fungicide",
+          "note": "Protects healthy leaves."
+        },
+        {
+          "active": "Metalaxyl + mancozeb, or cymoxanil + mancozeb",
+          "kind": "Systemic plus protectant mixes",
+          "note": "Used preventively in Indian guidance. Overuse leads to resistance."
+        }
+      ],
+      "when": [
+        "Spray before the disease reaches you during a cool, humid spell, not after the leaves are dying.",
+        "In cool, wet weather extension guidance shortens the interval to about 5 to 7 days, within the label limit.",
+        "Alternate fungicide groups."
+      ]
+    },
+    "precautions": [
+      "Late blight can destroy a field in days, so get expert advice at the first sign."
+    ],
+    "see_expert_if": [
+      "The problem keeps spreading after you have treated it once",
+      "You are not sure what the problem is",
+      "Blotches are spreading to many plants within days"
+    ],
+    "sources": [
+      {
+        "title": "UC IPM: Tomato late blight",
+        "url": "https://ipm.ucanr.edu/agriculture/tomato/late-blight/"
+      },
+      {
+        "title": "OMAFRA: Late blight update",
+        "url": "https://onvegetables.com/2012/08/21/late-blight-update-7/"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "parthenium",
+    "type": "weed",
+    "name": "Parthenium (congress grass, carrot weed)",
+    "crops": [
+      "any"
+    ],
+    "look_for": [
+      "Young plants form a rosette with deeply cut leaves that look like carrot leaves",
+      "Mature plants are branched, with many small white flower heads"
+    ],
+    "not_to_confuse": [
+      "Young plants can be mistaken for carrot or other herb seedlings. Look for the many small white flowers on older plants."
+    ],
+    "why_it_happens": "It spreads by huge numbers of seeds, so the key is to remove it before it flowers.",
+    "act_now": [
+      "Uproot plants before they flower and set seed. This is the most effective method.",
+      "Wear thick gloves, long sleeves and a mask. Parthenium can cause skin rash, asthma and eye irritation.",
+      "Compost uprooted plants or burn them, and keep animals from eating it.",
+      "On wasteland and field boundaries, competitive plants such as Cassia tora or marigold, and the Mexican beetle Zygogramma bicolorata, help. Ask your KVK."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Glyphosate",
+          "kind": "Non-selective herbicide",
+          "note": "For non-crop areas such as bunds and wasteland. It kills any green crop it touches."
+        },
+        {
+          "active": "2,4-D",
+          "kind": "Selective herbicide",
+          "note": "Used in non-crop areas. It harms broad-leaved crops."
+        },
+        {
+          "active": "Metribuzin",
+          "kind": "Herbicide",
+          "note": "Mentioned by ICAR for use before flowering."
+        }
+      ],
+      "when": [
+        "Spray before flowering, roughly in the first 7 to 8 weeks after the weed emerges.",
+        "Inside a standing crop, ask your agriculture officer which herbicide is registered for your crop. ICAR advice is a crop-safe herbicide about 30 to 35 days after sowing in crops such as maize, sorghum and sugarcane."
+      ]
+    },
+    "precautions": [
+      "Never spray non-selective herbicide near your crop or in wind. Drift kills crops.",
+      "Keep sprayers and runoff away from wells, ponds and streams."
+    ],
+    "see_expert_if": [
+      "The problem keeps spreading after you have treated it once",
+      "You are not sure what the problem is",
+      "It is growing inside your crop and you are unsure what is safe to spray"
+    ],
+    "sources": [
+      {
+        "title": "Lok Sabha answer on Parthenium (Government of India)",
+        "url": "https://eparlib.nic.in/bitstream/123456789/604159/1/74368.pdf"
+      },
+      {
+        "title": "ICAR: Parthenium Awareness Week",
+        "url": "https://icar.org.in/hi/node/16516"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "nutgrass",
+    "type": "weed",
+    "name": "Nutgrass (purple nutsedge, Cyperus rotundus)",
+    "crops": [
+      "any"
+    ],
+    "look_for": [
+      "Grass-like plants with shiny dark green leaves and a triangular stem",
+      "Brownish flower spikes",
+      "Small hard tubers (nuts) in chains underground"
+    ],
+    "not_to_confuse": [
+      "True grasses have round or flattened stems. Sedges like nutgrass have a triangular stem."
+    ],
+    "why_it_happens": "It spreads mainly by underground tubers, so pulling the top growth does not remove it.",
+    "act_now": [
+      "Do deep summer ploughing and repeat it every 3 to 4 weeks, so tubers are brought up to dry and die in the hot sun.",
+      "Clear plastic sheeting over moist soil in hot weather (solarisation) kills tubers.",
+      "Dense, fast-growing crops and cover crops suppress it. Complete control can take two seasons.",
+      "Hand pulling leaves the tubers behind and can make it worse."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Glyphosate",
+          "kind": "Non-selective herbicide",
+          "note": "Moves into the tubers. It kills any green crop it touches."
+        },
+        {
+          "active": "2,4-D",
+          "kind": "Selective herbicide",
+          "note": "Studied with glyphosate in Indian trials. It harms broad-leaved crops."
+        }
+      ],
+      "when": [
+        "Spray while the weed is green and actively growing, on fallow land or before sowing.",
+        "Expect to repeat. Studies show a single spray rarely kills all the tubers, so combine it with ploughing in summer.",
+        "Inside a standing crop, ask your agriculture officer which herbicide is registered for your crop."
+      ]
+    },
+    "precautions": [
+      "Never spray non-selective herbicide on or near your crop, or in wind.",
+      "Keep sprayers and runoff away from wells, ponds and streams."
+    ],
+    "see_expert_if": [
+      "The problem keeps spreading after you have treated it once",
+      "You are not sure what the problem is",
+      "It is spreading through a standing crop"
+    ],
+    "sources": [
+      {
+        "title": "SARE: Purple nutsedge",
+        "url": "https://www.sare.org/publications/manage-weeds-on-your-farm/purple-nutsedge"
+      },
+      {
+        "title": "Journal of Tropical Agriculture: control of purple nutsedge with glyphosate and 2,4-D",
+        "url": "https://jtropag.kau.in/index.php/ojs2/article/download/116/116"
+      },
+      {
+        "title": "Indian Journal of Weed Science: purple nutsedge in okra",
+        "url": "https://isws.org.in/IJWSn/File/2013_45_Issue-1_51-54.pdf"
+      }
+    ],
+    "last_checked": "2026-10"
+  }
+]

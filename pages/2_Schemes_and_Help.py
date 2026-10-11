@@ -4,9 +4,14 @@ Optional screenshots: put images in an `images` folder named <slug>_step<N>.png
 (for example images/pmfby_step3.png). They appear under that step automatically.
 Information last checked October 2026 from government and public sources.
 """
+import sys
 from pathlib import Path
 
-import streamlit as st
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+import streamlit as st  # noqa: E402
+
+import ui  # noqa: E402
 
 st.set_page_config(page_title="Schemes and Help | KisanDrishti", page_icon="📋")
 
@@ -140,8 +145,9 @@ def bullets(items):
         st.markdown(f"- {item}")
 
 
-st.title("Schemes and help")
-st.caption("For Karnataka farmers. Rules, dates and amounts change, so confirm with your bank, CSC or Raitha Samparka Kendra before you apply. Information last checked October 2026.")
+ui.inject_css()
+ui.hero("Schemes and help", "Documents, steps and safe buying, for Karnataka farmers.", "📋")
+st.caption("Rules, dates and amounts change, so confirm with your bank, CSC or Raitha Samparka Kendra before you apply. Information last checked October 2026.")
 
 tab1, tab2, tab3 = st.tabs(["Schemes and documents", "Buying inputs safely", "Crop disease help"])
 
