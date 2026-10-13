@@ -9,6 +9,7 @@ A farmer-first advisory web app for Karnataka: crop suggestions, a photo-based C
 - **Crop advisor (home):** enter 7 field measures and get the top 3 crops with confidence and nutrient pointers. "Check any crop" shows how your field fits each of the 22 crops in the training data.
 - **Crop Doctor:** upload or take a photo of a plant problem, pest or weed. An AI vision model (free Gemini tier) identifies it. Treatment advice never comes from the AI: it comes from a reviewed knowledge base (`knowledge/issues.json`) with sources, and only when the match is confident. Otherwise the app sends the farmer to an expert. Includes spray-timing check from the weather forecast, and safety precautions.
 - **Weather precautions:** 7-day forecast by district, hazard flags, matching precautions, and entry of an official IMD warning.
+- **Season planner:** practices for each stage of the season (seed germination test with a calculator, summer ploughing and solarisation, stale seedbed, cover crops, compost, fertilizer use, safe grain storage, renting machinery), each with its sources and no doses.
 - **Schemes and help:** document checklists and steps for PMFBY, PM-KISAN, KCC and Soil Health Card; safe buying of fertilizer and pesticide.
 
 ## How the Crop Doctor stays safe
@@ -61,7 +62,7 @@ GitHub Actions runs the tests on every push.
 
 ## Roadmap
 
-1. More reviewed Crop Doctor entries with a KVK or agricultural university
+1. More reviewed Crop Doctor and Season Planner entries, reviewed by a KVK or agricultural university
 2. Crop library for more crops (needs a reviewed open dataset)
 3. Kannada and English toggle with native-speaker review
 4. Farmer and agriculture officer feedback form

@@ -91,10 +91,11 @@ crops = sorted(profiles)
 
 ui.inject_css()
 ui.hero("KisanDrishti", "Crop advice, a photo-based crop doctor, weather precautions and scheme help for Karnataka farmers.", "🌾")
-l1, l2, l3 = st.columns(3)
+l1, l2, l3, l4 = st.columns(4)
 l1.page_link("pages/3_Crop_Doctor.py", label="Crop Doctor", icon="🩺")
 l2.page_link("pages/1_Weather_Precautions.py", label="Weather", icon="⛈️")
 l3.page_link("pages/2_Schemes_and_Help.py", label="Schemes", icon="📋")
+l4.page_link("pages/4_Season_Planner.py", label="Season plan", icon="🗓️")
 
 st.subheader("Your field")
 c1, c2 = st.columns(2)
