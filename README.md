@@ -4,6 +4,10 @@ A farmer-first advisory web app for Karnataka: crop suggestions, a photo-based C
 
 **Live demo:** https://kisandrishti-mvp.streamlit.app/
 
+## Languages
+
+English and Kannada (switch at the top of every page). Phase 1 covers the home page, Crop Doctor menus, results and safety rules, and the Season Planner menus. The long guidance texts (knowledge base entries, planner practices, scheme steps, weather precautions) are still English and fall back to English when a Kannada text is missing. Translations live in `translations/kn.json` and were made with machine help, so they need a native-speaker review before wide use. When the photo analysis runs in Kannada mode it is asked to write its photo-specific text in Kannada.
+
 ## Pages
 
 - **Crop advisor (home):** enter 7 field measures and get the top 3 crops with confidence and nutrient pointers. "Check any crop" shows how your field fits each of the 22 crops in the training data.

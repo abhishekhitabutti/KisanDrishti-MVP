@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import pandas as pd  # noqa: E402
 import streamlit as st  # noqa: E402
 
+import i18n  # noqa: E402
 import ui  # noqa: E402
 from districts import DISTRICTS  # noqa: E402
 
@@ -149,6 +150,7 @@ def hazards_for(daily):
 
 
 ui.inject_css()
+i18n.language_picker(translated=False)
 ui.hero("Weather precautions", "7-day forecast by district, with what to do before the weather turns. General guidance, not crop-specific advice.", "⛈️")
 
 district = st.selectbox("Your district", sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"))

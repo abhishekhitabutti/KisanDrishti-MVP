@@ -125,12 +125,16 @@ def parse_result(text, kb):
     }
 
 
-def _hint_text(crop_hint):
+def _hint_text(crop_hint, language="en"):
     if crop_hint and crop_hint != "Not sure":
         hint = f"The farmer says the crop is: {crop_hint}."
     else:
         hint = "The farmer did not say which crop."
-    return hint + " Analyse the photo and reply with the JSON object only."
+    extra = ""
+    if language == "kn":
+        extra = (" Write the values of name, symptoms_seen, could_also_be and photo_tip in simple Kannada, and add the English name in "
+                 "brackets after the name. Keep category, confidence and kb_id in English.")
+    return hint + " Analyse the photo and reply with the JSON object only." + extra
 
 
 def _post_json(url, payload, headers):
@@ -153,25 +157,25 @@ def _post_json(url, payload, headers):
         raise AnalysisError("Could not reach the analysis service. Check your internet and try again.") from exc
 
 
-def _call_anthropic(b64, media, api_key, kb, model, crop_hint):
+def _call_anthropic(b64, media, api_key, kb, model, crop_hint, language="en"):
     payload = {
         "model": model or DEFAULT_MODEL,
         "max_tokens": 700,
         "system": build_system_prompt(kb),
         "messages": [{"role": "user", "content": [
             {"type": "image", "source": {"type": "base64", "media_type": media, "data": b64}},
-            {"type": "text", "text": _hint_text(crop_hint)},
+            {"type": "text", "text": _hint_text(crop_hint, language)},
         ]}],
     }
     body = _post_json(API_URL, payload, {"x-api-key": api_key, "anthropic-version": "2023-06-01"})
     return "".join(b.get("text", "") for b in body.get("content", []) if b.get("type") == "text")
 
 
-def _call_gemini(b64, media, api_key, kb, model, crop_hint):
+def _call_gemini(b64, media, api_key, kb, model, crop_hint, language="en"):
     payload = {
         "system_instruction": {"parts": [{"text": build_system_prompt(kb)}]},
         "contents": [{"role": "user", "parts": [
-            {"text": _hint_text(crop_hint)},
+            {"text": _hint_text(crop_hint, language)},
             {"inline_data": {"mime_type": media, "data": b64}},
         ]}],
         "generationConfig": {"temperature": 0.2, "maxOutputTokens": 2048, "responseMimeType": "application/json"},
@@ -184,13 +188,13 @@ def _call_gemini(b64, media, api_key, kb, model, crop_hint):
     return "".join(p.get("text", "") for p in parts)
 
 
-def analyze(raw_image, api_key, kb, provider="gemini", model=None, crop_hint=""):
+def analyze(raw_image, api_key, kb, provider="gemini", model=None, crop_hint="", language="en"):
     """Identify the problem in a photo. Location data is removed when the photo is re-encoded."""
     b64, media = prepare_image(raw_image)
     if provider == "gemini":
-        text = _call_gemini(b64, media, api_key, kb, model, crop_hint)
+        text = _call_gemini(b64, media, api_key, kb, model, crop_hint, language)
     elif provider == "anthropic":
-        text = _call_anthropic(b64, media, api_key, kb, model, crop_hint)
+        text = _call_anthropic(b64, media, api_key, kb, model, crop_hint, language)
     else:
         raise AnalysisError("Photo analysis is not set up.")
     return parse_result(text, kb)
