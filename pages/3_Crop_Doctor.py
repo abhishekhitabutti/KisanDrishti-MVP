@@ -248,5 +248,6 @@ with tab_browse:
     else:
         st.info(t("The guidance library could not be loaded."))
 
+ui.feedback_box()
 st.markdown("---")
 st.caption(t("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."))

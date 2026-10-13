@@ -52,5 +52,25 @@ def steps_row(steps):
     st.markdown(f'<div class="kd-steps">{cells}</div>', unsafe_allow_html=True)
 
 
+def feedback_box():
+    """Feedback link on every page. Set FEEDBACK_URL in Secrets to use a form; otherwise it opens an email."""
+    import os
+    from urllib.parse import quote
+
+    from i18n import t
+    try:
+        url = st.secrets.get("FEEDBACK_URL")
+    except Exception:
+        url = None
+    url = url or os.environ.get("FEEDBACK_URL")
+    if not url:
+        body = "Page I used:\nWhat was wrong or missing:\nI am a (farmer / agriculture officer / student):\n"
+        url = "mailto:abhishekhitabutti@gmail.com?subject=" + quote("KisanDrishti feedback") + "&body=" + quote(body)
+    with st.container(border=True):
+        st.markdown("**" + t("Feedback") + "**")
+        st.write(t("Something wrong or missing? Tell us. Farmers and agriculture officers: your feedback makes this app safer."))
+        st.markdown(f"[{t('Send feedback')}]({url})")
+
+
 def note(text, kind="warn"):
     st.markdown(f'<div class="kd-{kind}">{escape(text)}</div>', unsafe_allow_html=True)

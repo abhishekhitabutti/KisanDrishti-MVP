@@ -232,5 +232,10 @@
  "crop:pigeonpeas": "ತೊಗರಿ",
  "crop:pomegranate": "ದಾಳಿಂಬೆ",
  "crop:rice": "ಭತ್ತ",
- "crop:watermelon": "ಕಲ್ಲಂಗಡಿ"
+ "crop:watermelon": "ಕಲ್ಲಂಗಡಿ",
+ "Feedback": "ಪ್ರತಿಕ್ರಿಯೆ",
+ "Something wrong or missing? Tell us. Farmers and agriculture officers: your feedback makes this app safer.": "ಏನಾದರೂ ತಪ್ಪಿದೆಯೇ ಅಥವಾ ಕೊರತೆ ಇದೆಯೇ? ನಮಗೆ ತಿಳಿಸಿ. ರೈತರೇ ಮತ್ತು ಕೃಷಿ ಅಧಿಕಾರಿಗಳೇ, ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆ ಈ ಆ್ಯಪ್ ಅನ್ನು ಹೆಚ್ಚು ಸುರಕ್ಷಿತವಾಗಿಸುತ್ತದೆ.",
+ "Send feedback": "ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಿ",
+ "Your crop is not in the list?": "ನಿಮ್ಮ ಬೆಳೆ ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲವೇ?",
+ "This app's crop advisor knows 22 crops. For more than 2,500 plants, look up temperature, rainfall and soil pH needs in the free FAO EcoCrop tool, then ask your KVK or the University of Agricultural Sciences which varieties suit your district.": "ಈ ಆ್ಯಪ್‌ನ ಬೆಳೆ ಸಲಹೆಗಾರ 22 ಬೆಳೆಗಳನ್ನು ತಿಳಿದಿದೆ. 2,500ಕ್ಕೂ ಹೆಚ್ಚು ಸಸ್ಯಗಳ ತಾಪಮಾನ, ಮಳೆ ಮತ್ತು ಮಣ್ಣಿನ pH ಅಗತ್ಯಗಳನ್ನು ಉಚಿತ FAO EcoCrop ಉಪಕರಣದಲ್ಲಿ ನೋಡಿ. ನಂತರ ನಿಮ್ಮ ಜಿಲ್ಲೆಗೆ ಯಾವ ತಳಿಗಳು ಹೊಂದುತ್ತವೆ ಎಂದು ನಿಮ್ಮ ಕೆವಿಕೆ ಅಥವಾ ಕೃಷಿ ವಿಶ್ವವಿದ್ಯಾಲಯವನ್ನು ಕೇಳಿ."
 }

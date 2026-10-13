@@ -188,5 +188,6 @@ with tab3:
         st.write(text)
     st.markdown("**Help:** Kisan Call Centre 1800-180-1551 | Emergency 112")
 
+ui.feedback_box()
 st.markdown("---")
 st.caption("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited.")

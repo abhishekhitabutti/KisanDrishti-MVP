@@ -41,6 +41,10 @@ Free-tier limits are shown per project in AI Studio and can change. Each visit i
 
 **Privacy:** on Google's free tier, Google may use the content to improve its products. The app says so on the page, removes location data from every photo before sending, asks users not to upload photos with people, and does not store photos. If you prefer a paid service with different terms, set `ANTHROPIC_API_KEY` instead; the free Gemini key is used first when both exist. Without any key, the page works in browse mode and sends nothing anywhere.
 
+## Feedback
+
+Every page has a Send feedback link. By default it opens an email. To use a form instead (for example a free Google Form), add `FEEDBACK_URL = "https://..."` to Streamlit Secrets. No code change is needed.
+
 ## Data and limits
 
 - Crop model: public crop recommendation dataset (2,200 rows, 22 crops) described as built by augmenting rainfall, climate and fertilizer data for India. Hold-out accuracy is 99.5%, but it is not field-collected data, so real-farm accuracy can be lower.

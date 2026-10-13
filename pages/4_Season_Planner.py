@@ -69,5 +69,6 @@ for tab, stage in zip(tabs, pdata.STAGES):
             st.info(t("If your insured crop is damaged by flooding, hail or similar, report it within 72 hours. See the Schemes and Help page."))
 
 st.caption(t("General practices from published sources. Local conditions differ, so confirm with your KVK or agriculture officer. This app gives no doses."))
+ui.feedback_box()
 st.markdown("---")
 st.caption(t("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."))

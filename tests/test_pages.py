@@ -76,3 +76,30 @@ def test_schemes_page_checklist():
         box.check()
     at.run()
     assert any("All documents ready" in s.value for s in at.success)
+
+
+PAGES = [ROOT / "app.py", ROOT / "pages" / "1_Weather_Precautions.py", ROOT / "pages" / "2_Schemes_and_Help.py",
+         ROOT / "pages" / "3_Crop_Doctor.py", ROOT / "pages" / "4_Season_Planner.py"]
+
+
+def all_markdown(at):
+    return " ".join(m.value for m in at.markdown)
+
+
+def test_every_page_has_a_feedback_link(monkeypatch):
+    monkeypatch.delenv("FEEDBACK_URL", raising=False)
+    for page in PAGES:
+        at = AppTest.from_file(str(page), default_timeout=30).run()
+        assert not at.exception, page
+        assert "[Send feedback](mailto:" in all_markdown(at), page
+
+
+def test_feedback_form_link_can_be_set_without_code_changes(monkeypatch):
+    monkeypatch.setenv("FEEDBACK_URL", "https://forms.example.com/abc")
+    at = AppTest.from_file(str(PAGES[0]), default_timeout=30).run()
+    assert "[Send feedback](https://forms.example.com/abc)" in all_markdown(at)
+
+
+def test_home_page_points_to_more_crops():
+    at = AppTest.from_file(str(PAGES[0]), default_timeout=30).run()
+    assert "gaez.fao.org/pages/ecocrop-search" in all_markdown(at)

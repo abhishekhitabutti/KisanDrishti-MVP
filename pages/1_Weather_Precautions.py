@@ -217,5 +217,6 @@ st.markdown(
     "- For advice on your own crop, contact your nearest Krishi Vigyan Kendra or Raitha Samparka Kendra."
 )
 
+ui.feedback_box()
 st.markdown("---")
 st.caption("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited.")

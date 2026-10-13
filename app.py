@@ -151,6 +151,9 @@ default_index = crops.index(advice["top"][0][0]) if advice else 0
 crop_labels = {i18n.crop(c): c for c in crops}
 chosen_label = st.selectbox(t("Pick a crop to see how your field fits it"), list(crop_labels), index=default_index)
 chosen = crop_labels[chosen_label]
+with st.expander(t("Your crop is not in the list?")):
+    st.write(t("This app's crop advisor knows 22 crops. For more than 2,500 plants, look up temperature, rainfall and soil pH needs in the free FAO EcoCrop tool, then ask your KVK or the University of Agricultural Sciences which varieties suit your district."))
+    st.markdown("[gaez.fao.org/pages/ecocrop-search](https://gaez.fao.org/pages/ecocrop-search)")
 table, inside = explorer_table(chosen, profiles, values)
 st.write(t("**{n} of 7 measures** are within the typical range for {crop}.", n=inside, crop=i18n.crop(chosen)))
 st.dataframe(table, hide_index=True)
@@ -162,5 +165,6 @@ with st.expander(t("About this model and its limits")):
         st.write(t(metrics["data_note"]))
     st.write(t("It does not know your local market, water supply, pests or soil history. Talk to your agriculture officer before you decide."))
 
+ui.feedback_box()
 st.markdown("---")
 st.caption(t("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."))
