@@ -11,9 +11,6 @@ import planner_data as pdata  # noqa: E402
 import ui  # noqa: E402
 from i18n import t  # noqa: E402
 
-st.set_page_config(page_title="Season Planner | KisanDrishti", page_icon="🗓️")
-ui.inject_css()
-i18n.language_picker()
 ui.hero(t("Season planner"), t("What to do at each stage of the season. Every practice shows where it comes from."), "🗓️")
 ui.steps_row([("🌱", t("Before sowing")), ("🚜", t("Sowing")), ("🌾", t("Growing")), ("📦", t("Harvest"))])
 

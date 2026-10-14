@@ -8,12 +8,17 @@ A farmer-first advisory web app for Karnataka: crop suggestions, a photo-based C
 
 English and Kannada (switch at the top of every page). Phase 1 covers the home page, Crop Doctor menus, results and safety rules, and the Season Planner menus. The long guidance texts (knowledge base entries, planner practices, scheme steps, weather precautions) are still English and fall back to English when a Kannada text is missing. Translations live in `translations/kn.json` and were made with machine help, so they need a native-speaker review before wide use. When the photo analysis runs in Kannada mode it is asked to write its photo-specific text in Kannada.
 
+## Structure
+
+`app.py` is the entry point: page setup, language switch and the navigation menu. Each page is a file in `views/` (`home.py`, `crop_doctor.py`, `season_planner.py`, `weather.py`, `schemes.py`, `about.py`). Shared code: `i18n.py` (language), `ui.py` (look and feel), `diagnosis.py` (photo analysis rules), `spray_weather.py`, `planner_data.py`, `districts.py`. If an old `pages/` folder is still in your repo, delete it.
+
 ## Pages
 
 - **Crop advisor (home):** enter 7 field measures and get the top 3 crops with confidence and nutrient pointers. "Check any crop" shows how your field fits each of the 22 crops in the training data.
-- **Crop Doctor:** upload or take a photo of a plant problem, pest or weed. An AI vision model (free Gemini tier) identifies it. Treatment advice never comes from the AI: it comes from a reviewed knowledge base (`knowledge/issues.json`) with sources, and only when the match is confident. Otherwise the app sends the farmer to an expert. Includes spray-timing check from the weather forecast, and safety precautions.
+- **Crop Doctor:** upload or take a photo of a plant problem, pest or weed. An AI vision model (free Gemini tier) identifies it. Treatment advice never comes from the AI: it comes from a reviewed knowledge base (`knowledge/issues.json`) with sources, and only when the match is confident. Otherwise the app sends the farmer to an expert. Photos can be uploaded, taken with the phone camera through the upload button, or taken with a webcam. The webcam is switched on only when the person chooses it. Includes spray-timing check from the weather forecast, and safety precautions.
 - **Weather precautions:** 7-day forecast by district, hazard flags, matching precautions, and entry of an official IMD warning.
 - **Season planner:** practices for each stage of the season (seed germination test with a calculator, summer ploughing and solarisation, stale seedbed, cover crops, compost, fertilizer use, safe grain storage, renting machinery), each with its sources and no doses.
+- **About and privacy:** what the app is, where advice comes from, its limits, how data is handled, and credits.
 - **Schemes and help:** document checklists and steps for PMFBY, PM-KISAN, KCC and Soil Health Card; safe buying of fertilizer and pesticide.
 
 ## How the Crop Doctor stays safe

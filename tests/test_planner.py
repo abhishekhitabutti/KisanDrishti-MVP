@@ -8,7 +8,7 @@ from streamlit.testing.v1 import AppTest
 import planner_data as pdata
 
 ROOT = Path(__file__).resolve().parent.parent
-PAGE = str(ROOT / "pages" / "4_Season_Planner.py")
+PAGE = str(ROOT / "views" / "season_planner.py")
 DOSE = re.compile(r"\d+(\.\d+)?\s*(g|gm|ml|kg|l|lit|litre|litres|liter)\b\s*(/|per)|@")
 ALL_ITEMS = [i for items in pdata.ITEMS.values() for i in items]
 

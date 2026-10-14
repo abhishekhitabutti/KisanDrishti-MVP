@@ -15,8 +15,9 @@ ROOT = Path(__file__).resolve().parent.parent
 KN = json.loads((ROOT / "translations" / "kn.json").read_text(encoding="utf-8"))
 KANNADA_CHAR = re.compile(r"[\u0c80-\u0cff]")
 PLACEHOLDER = re.compile(r"\{(\w+)\}")
-HOME, WEATHER, SCHEMES = str(ROOT / "app.py"), str(ROOT / "pages" / "1_Weather_Precautions.py"), str(ROOT / "pages" / "2_Schemes_and_Help.py")
-DOCTOR, PLANNER = str(ROOT / "pages" / "3_Crop_Doctor.py"), str(ROOT / "pages" / "4_Season_Planner.py")
+ROUTER = str(ROOT / "app.py")
+HOME, WEATHER, SCHEMES = str(ROOT / "views" / "home.py"), "views/weather.py", "views/schemes.py"
+DOCTOR, PLANNER = str(ROOT / "views" / "crop_doctor.py"), str(ROOT / "views" / "season_planner.py")
 
 
 def flatten(obj, out):
@@ -81,7 +82,7 @@ def test_home_page_in_kannada(monkeypatch):
 
 
 def test_switching_with_the_radio_changes_language():
-    at = AppTest.from_file(HOME, default_timeout=30).run()
+    at = AppTest.from_file(ROUTER, default_timeout=40).run()
     assert "KisanDrishti" in markdown_text(at)
     at.radio(key="lang_radio").set_value("ಕನ್ನಡ").run()
     assert "ಕಿಸಾನ್ ದೃಷ್ಟಿ" in markdown_text(at) and not at.exception
@@ -103,13 +104,16 @@ def test_crop_doctor_in_kannada_shows_safety_text_in_kannada():
 def test_planner_and_other_pages_in_kannada():
     at = run_in_kannada(PLANNER)
     assert not at.exception and "ಋತು ಯೋಜಕ" in markdown_text(at)
-    for path in (WEATHER, SCHEMES):
-        at = run_in_kannada(path)
-        assert not at.exception
-        assert any("ಇನ್ನೂ ಕನ್ನಡಕ್ಕೆ ಅನುವಾದಿಸಿಲ್ಲ" in i.value for i in at.info)
+    for view in (WEATHER, SCHEMES, "views/about.py"):
+        at = AppTest.from_file(ROUTER, default_timeout=40)
+        at.session_state["lang"] = "kn"
+        at.run().switch_page(view).run()
+        assert not at.exception, view
+        assert any("ಇನ್ನೂ ಕನ್ನಡಕ್ಕೆ ಅನುವಾದಿಸಿಲ್ಲ" in i.value for i in at.info), view
 
 
 @pytest.mark.parametrize("path,state", [
+    (ROUTER, {}),
     (HOME, {"advice": {"inputs": {"N": 60, "P": 50, "K": 50, "ph": 6.5, "temperature": 25.0, "humidity": 65.0, "rainfall": 100.0},
                        "top": [("rice", 0.9), ("jute", 0.1), ("maize", 0.0)]}}),
     (PLANNER, {}),

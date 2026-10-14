@@ -14,7 +14,6 @@ import streamlit as st  # noqa: E402
 import i18n  # noqa: E402
 import ui  # noqa: E402
 
-st.set_page_config(page_title="Schemes and Help | KisanDrishti", page_icon="📋")
 
 IMAGES = Path(__file__).resolve().parent.parent / "images"
 
@@ -146,8 +145,6 @@ def bullets(items):
         st.markdown(f"- {item}")
 
 
-ui.inject_css()
-i18n.language_picker(translated=False)
 ui.hero("Schemes and help", "Documents, steps and safe buying, for Karnataka farmers.", "📋")
 st.caption("Rules, dates and amounts change, so confirm with your bank, CSC or Raitha Samparka Kendra before you apply. Information last checked October 2026.")
 

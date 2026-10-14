@@ -5,7 +5,7 @@ from streamlit.testing.v1 import AppTest
 import diagnosis
 
 ROOT = Path(__file__).resolve().parent.parent
-PAGE = str(ROOT / "pages" / "3_Crop_Doctor.py")
+PAGE = str(ROOT / "views" / "crop_doctor.py")
 
 
 def make_result(**over):

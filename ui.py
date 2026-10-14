@@ -19,6 +19,12 @@ CSS = """
 .kd-step {flex: 1; background: #F1F8E9; border-radius: 12px; padding: .6rem .5rem; text-align: center;
   font-size: .85rem; border: 1px solid #DCE8DC;}
 .kd-step b {display: block; font-size: 1.3rem;}
+.kd-stats {display: flex; gap: .5rem; margin: .4rem 0 1rem 0;}
+.kd-stat {flex: 1; background: #fff; border: 1px solid #DCE8DC; border-radius: 12px; padding: .6rem .4rem; text-align: center;}
+.kd-stat b {display: block; font-size: 1.5rem; color: #1B5E20; line-height: 1.1;}
+.kd-stat span {font-size: .8rem; color: #4A5A4A;}
+.kd-card-icon {font-size: 1.6rem; line-height: 1;}
+[data-testid="stSidebar"] {background: #F1F8E9;}
 .kd-warn {background: #FFF8E1; border-left: 5px solid #F9A825; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 .kd-stop {background: #FDECEA; border-left: 5px solid #C62828; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 </style>
@@ -70,6 +76,19 @@ def feedback_box():
         st.markdown("**" + t("Feedback") + "**")
         st.write(t("Something wrong or missing? Tell us. Farmers and agriculture officers: your feedback makes this app safer."))
         st.markdown(f"[{t('Send feedback')}]({url})")
+
+
+def stat_row(items):
+    cells = "".join(f'<div class="kd-stat"><b>{escape(str(v))}</b><span>{escape(l)}</span></div>' for v, l in items)
+    st.markdown(f'<div class="kd-stats">{cells}</div>', unsafe_allow_html=True)
+
+
+def page_link(path, label, icon=""):
+    """A link to another page. Falls back to plain text when the page is not registered (for example in tests)."""
+    try:
+        st.page_link(path, label=label, icon=icon or None)
+    except Exception:
+        st.markdown(f"{icon} {label}")
 
 
 def note(text, kind="warn"):

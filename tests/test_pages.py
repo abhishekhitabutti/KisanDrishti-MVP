@@ -36,12 +36,12 @@ def run_weather(payload=None, fail=False, monkeypatch=None):
 
     monkeypatch.setattr(urllib.request, "urlopen", fake_urlopen)
     st.cache_data.clear()
-    at = AppTest.from_file(str(ROOT / "pages" / "1_Weather_Precautions.py"), default_timeout=30)
+    at = AppTest.from_file(str(ROOT / "views" / "weather.py"), default_timeout=30)
     return at.run()
 
 
 def test_main_page_gives_top_three_crops():
-    at = AppTest.from_file(str(ROOT / "app.py"), default_timeout=30).run()
+    at = AppTest.from_file(str(ROOT / "views" / "home.py"), default_timeout=30).run()
     assert not at.exception
     at.button[0].click().run()
     assert not at.exception
@@ -70,7 +70,7 @@ def test_weather_page_survives_no_network(monkeypatch):
 
 
 def test_schemes_page_checklist():
-    at = AppTest.from_file(str(ROOT / "pages" / "2_Schemes_and_Help.py"), default_timeout=30).run()
+    at = AppTest.from_file(str(ROOT / "views" / "schemes.py"), default_timeout=30).run()
     assert not at.exception
     for box in at.checkbox:
         box.check()
@@ -78,8 +78,8 @@ def test_schemes_page_checklist():
     assert any("All documents ready" in s.value for s in at.success)
 
 
-PAGES = [ROOT / "app.py", ROOT / "pages" / "1_Weather_Precautions.py", ROOT / "pages" / "2_Schemes_and_Help.py",
-         ROOT / "pages" / "3_Crop_Doctor.py", ROOT / "pages" / "4_Season_Planner.py"]
+PAGES = [ROOT / "views" / "home.py", ROOT / "views" / "weather.py", ROOT / "views" / "schemes.py",
+         ROOT / "views" / "crop_doctor.py", ROOT / "views" / "season_planner.py", ROOT / "views" / "about.py"]
 
 
 def all_markdown(at):

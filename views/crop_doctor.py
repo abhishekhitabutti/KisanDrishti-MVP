@@ -16,9 +16,6 @@ import ui  # noqa: E402
 from districts import DISTRICTS  # noqa: E402
 from i18n import t  # noqa: E402
 
-st.set_page_config(page_title="Crop Doctor | KisanDrishti", page_icon="🩺")
-ui.inject_css()
-i18n.language_picker()
 ui.hero(t("Crop Doctor"), t("Photograph a sick plant, pest or weed. Get clear steps, spray timing and safety advice."), "🩺")
 
 KB = diagnosis.load_kb()
@@ -210,9 +207,15 @@ with tab_photo:
     hint_labels = {t(h): h for h in CROP_HINTS}
     crop_hint = hint_labels[c1.selectbox(t("Which crop is it?"), list(hint_labels))]
     district = c2.selectbox(t("Your district (for spray timing)"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"))
-    uploaded = st.file_uploader(t("Upload a photo"), type=["jpg", "jpeg", "png"])
-    with st.expander(t("Or use the camera")):
-        camera = st.camera_input(t("Take a photo now"))
+    source_labels = {t("Upload or take a photo with my phone"): "upload", t("Use this device's webcam"): "webcam"}
+    source = source_labels[st.radio(t("How do you want to add the photo?"), list(source_labels))]
+    uploaded = camera = None
+    if source == "upload":
+        uploaded = st.file_uploader(t("Upload a photo"), type=["jpg", "jpeg", "png"])
+        st.caption(t("On most phones this opens your camera or your gallery. Allow camera access if your phone asks."))
+    else:
+        camera = st.camera_input(t("Take a photo now"))  # the browser asks for camera permission only now
+        st.caption(t("The webcam option may use the front camera. On a phone, the first option is usually better."))
     image = uploaded or camera
 
     provider, api_key, model = get_provider()

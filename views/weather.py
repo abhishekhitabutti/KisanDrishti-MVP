@@ -20,7 +20,6 @@ import i18n  # noqa: E402
 import ui  # noqa: E402
 from districts import DISTRICTS  # noqa: E402
 
-st.set_page_config(page_title="Weather Precautions | KisanDrishti", page_icon="⛈️")
 
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -149,8 +148,6 @@ def hazards_for(daily):
     return found
 
 
-ui.inject_css()
-i18n.language_picker(translated=False)
 ui.hero("Weather precautions", "7-day forecast by district, with what to do before the weather turns. General guidance, not crop-specific advice.", "⛈️")
 
 district = st.selectbox("Your district", sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"))

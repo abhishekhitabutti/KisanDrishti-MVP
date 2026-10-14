@@ -20,7 +20,13 @@ def _kannada():
     return {}
 
 
+UNTRANSLATED_PAGES = {"weather", "schemes", "about"}
+
+
 def current_lang():
+    radio = st.session_state.get("lang_radio")
+    if radio is not None:
+        return "kn" if radio == LANGS["kn"] else "en"
     return st.session_state.get("lang", "en")
 
 
