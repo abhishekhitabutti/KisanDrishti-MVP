@@ -1,12 +1,15 @@
-"""KisanDrishti entry point. Sets up the page, the language switch and the navigation menu."""
 import streamlit as st
 
+import auth
 import i18n
 import ui
 from i18n import t
 
 st.set_page_config(page_title="KisanDrishti", page_icon="🌾", initial_sidebar_state="expanded")
 ui.inject_css()
+
+# Security Gate: Enforce password login, user registration, and 1-hour inactivity timeout
+auth.require_auth()
 
 pages = [
     st.Page("views/home.py", title=t("Crop advisor"), icon="🌾", default=True),
