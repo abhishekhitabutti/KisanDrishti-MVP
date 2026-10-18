@@ -13,7 +13,7 @@ import diagnosis  # noqa: E402
 import i18n  # noqa: E402
 import spray_weather  # noqa: E402
 import ui  # noqa: E402
-from districts import DISTRICTS  # noqa: E402
+from districts import DISTRICTS, DISTRICTS_KN  # noqa: E402
 from i18n import t  # noqa: E402
 
 ui.hero(t("Crop Doctor"), t("Photograph a sick plant, pest or weed. Get clear steps, spray timing and safety advice."), "🩺")
@@ -206,7 +206,16 @@ with tab_photo:
     c1, c2 = st.columns(2)
     hint_labels = {t(h): h for h in CROP_HINTS}
     crop_hint = hint_labels[c1.selectbox(t("Which crop is it?"), list(hint_labels))]
-    district = c2.selectbox(t("Your district (for spray timing)"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"))
+    is_kn = (i18n.current_lang() == "kn")
+    if is_kn:
+        d_options = {DISTRICTS_KN.get(d, d): d for d in sorted(DISTRICTS)}
+        d_keys = list(d_options.keys())
+        d_default = DISTRICTS_KN.get("Mysuru", "ಮೈಸೂರು")
+        d_idx = d_keys.index(d_default) if d_default in d_keys else 0
+        sel_d_kn = c2.selectbox(t("Your district (for spray timing)"), d_keys, index=d_idx)
+        district = d_options[sel_d_kn]
+    else:
+        district = c2.selectbox(t("Your district (for spray timing)"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"))
     source_labels = {t("Upload or take a photo with my phone"): "upload", t("Use this device's webcam"): "webcam"}
     source = source_labels[st.radio(t("How do you want to add the photo?"), list(source_labels))]
     uploaded = camera = None
@@ -245,8 +254,15 @@ with tab_browse:
     st.write(t("Reviewed guidance for common problems. More are added as they are checked by experts."))
     options = {f"{t(e['name'])} ({type_label(e['type'])})": e for e in KB}
     if options:
-        pick = st.selectbox(t("Choose a problem"), list(options))
-        browse_district = st.selectbox(t("Your district"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"), key="browse_district")
+        if is_kn:
+            b_options = {DISTRICTS_KN.get(d, d): d for d in sorted(DISTRICTS)}
+            b_keys = list(b_options.keys())
+            b_default = DISTRICTS_KN.get("Mysuru", "ಮೈಸೂರು")
+            b_idx = b_keys.index(b_default) if b_default in b_keys else 0
+            sel_b_kn = st.selectbox(t("Your district"), b_keys, index=b_idx, key="browse_district")
+            browse_district = b_options[sel_b_kn]
+        else:
+            browse_district = st.selectbox(t("Your district"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"), key="browse_district")
         render_entry(options[pick], browse_district)
     else:
         st.info(t("The guidance library could not be loaded."))

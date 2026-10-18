@@ -20,7 +20,7 @@ def _kannada():
     return {}
 
 
-UNTRANSLATED_PAGES = {"weather", "schemes", "about"}
+UNTRANSLATED_PAGES = set()
 
 
 def current_lang():

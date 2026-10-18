@@ -12,3 +12,17 @@ DISTRICTS = {
     "Uttara Kannada": (14.81, 74.13), "Vijayanagara": (15.27, 76.39), "Vijayapura": (16.83, 75.71),
     "Yadgir": (16.77, 77.14),
 }
+
+DISTRICTS_KN = {
+    "Bagalkote": "ಬಾಗಲಕೋಟೆ", "Ballari": "ಬಳ್ಳಾರಿ", "Belagavi": "ಬೆಳಗಾವಿ",
+    "Bengaluru Rural": "ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ", "Bengaluru Urban": "ಬೆಂಗಳೂರು ನಗರ", "Bidar": "ಬೀದರ್",
+    "Chamarajanagar": "ಚಾಮರಾಜನಗರ", "Chikkaballapura": "ಚಿಕ್ಕಬಳ್ಳಾಪುರ", "Chikkamagaluru": "ಚಿಕ್ಕಮಗಳೂರು",
+    "Chitradurga": "ಚಿತ್ರದುರ್ಗ", "Dakshina Kannada": "ದಕ್ಷಿಣ ಕನ್ನಡ", "Davanagere": "ದಾವಣಗೆರೆ",
+    "Dharwad": "ಧಾರವಾಡ", "Gadag": "ಗದಗ", "Hassan": "ಹಾಸನ",
+    "Haveri": "ಹಾವೇರಿ", "Kalaburagi": "ಕಲಬುರಗಿ", "Kodagu": "ಕೊಡಗು",
+    "Kolar": "ಕೋಲಾರ", "Koppal": "ಕೊಪ್ಪಳ", "Mandya": "ಮಂಡ್ಯ",
+    "Mysuru": "ಮೈಸೂರು", "Raichur": "ರಾಯಚೂರು", "Ramanagara": "ರಾಮನಗರ",
+    "Shivamogga": "ಶಿವಮೊಗ್ಗ", "Tumakuru": "ತುಮಕೂರು", "Udupi": "ಉಡುಪಿ",
+    "Uttara Kannada": "ಉತ್ತರ ಕನ್ನಡ", "Vijayanagara": "ವಿಜಯನಗರ", "Vijayapura": "ವಿಜಯಪುರ",
+    "Yadgir": "ಯಾದಗಿರಿ",
+}
