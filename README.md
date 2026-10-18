@@ -1,8 +1,8 @@
-# KisanDrishti
+# KrushiNudi
 
 A farmer-first advisory web app for Karnataka: crop suggestions, a photo-based Crop Doctor, weather precautions, and step-by-step help with schemes and safe buying of inputs.
 
-**Live demo:** https://kisandrishti-mvp.streamlit.app/
+**Live demo:** https://KrushiNudi-mvp.streamlit.app/
 
 ## Languages
 
