@@ -30,7 +30,7 @@ sec1_title = "ಕಿಸಾನ್ ದೃಷ್ಟಿ {KisanDrishti} ಎಂದರ�
 st.subheader(sec1_title)
 sec1_body = (
     "ಕರ್ನಾಟಕದ ರೈತರಿಗಾಗಿ ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾದ ಉಚಿತ ಕೃಷಿ ಸಲಹಾ ತಂತ್ರಾಂಶ. ಇದನ್ನು ಬೆಂಗಳೂರಿನ ಅಮಿಟಿ ವಿಶ್ವವಿದ್ಯಾಲಯದ {Amity University Bengaluru} "
-    "ಬಿ.ಟೆಕ್ ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಮತ್ತು ಯಂತ್ರ ಕಲಿಕೆ {B.Tech CSE (AI & ML)} ವಿದ್ಯಾರ್ಥಿ ಅಭಿಷೇಕ್ ಹಿತಬುತ್ತಿ {Abhishek Hitabutti} ರೂಪಿಸಿದ್ದಾರೆ. "
+    "ಬಿ.ಟೆಕ್ ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಮತ್ತು ಯಂತ್ರ ಕಲಿಕೆ {B.Tech CSE (AI & ML)} ವಿದ್ಯಾರ್ಥಿ ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ {Abhishek Hitabutti} ರೂಪಿಸಿದ್ದಾರೆ. "
     "ಇದು ಯಾವುದೇ ಸರ್ಕಾರಿ ಅಧಿಕೃತ ಸೇವೆಯಲ್ಲ. ಇದರಲ್ಲಿ ಯಾವುದೇ ವಾಣಿಜ್ಯ ಜಾಹೀರಾತುಗಳಿಲ್ಲ."
     if is_kn else
     "A free advisory app for Karnataka farmers, built by Abhishek Hitabutti, a B.Tech CSE (AI & ML) student at Amity University "
@@ -131,7 +131,7 @@ else:
 sec6_title = "ಸಂಪರ್ಕ" if is_kn else "Contact"
 st.subheader(sec6_title)
 contact_text = (
-    "ಅಭಿಷೇಕ್ ಹಿತಬುತ್ತಿ {Abhishek Hitabutti}: [abhishekhitabutti@gmail.com](mailto:abhishekhitabutti@gmail.com). ರೈತರು, ಕೃಷಿ ಅಧಿಕಾರಿಗಳು ಮತ್ತು {KVK} ತಜ್ಞರ ಸಲಹೆ ಮತ್ತು ತಿದ್ದುಪಡಿಗಳನ್ನು ಮುಕ್ತವಾಗಿ ಸ್ವಾಗತಿಸಲಾಗುತ್ತದೆ."
+    "ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ {Abhishek Hitabutti}: [abhishekhitabutti@gmail.com](mailto:abhishekhitabutti@gmail.com). ರೈತರು, ಕೃಷಿ ಅಧಿಕಾರಿಗಳು ಮತ್ತು {KVK} ತಜ್ಞರ ಸಲಹೆ ಮತ್ತು ತಿದ್ದುಪಡಿಗಳನ್ನು ಮುಕ್ತವಾಗಿ ಸ್ವಾಗತಿಸಲಾಗುತ್ತದೆ."
     if is_kn else
     "Abhishek Hitabutti: [abhishekhitabutti@gmail.com](mailto:abhishekhitabutti@gmail.com). Corrections from farmers, agriculture officers and KVK staff are very welcome."
 )
@@ -140,7 +140,7 @@ st.markdown(contact_text)
 ui.feedback_box()
 st.markdown("---")
 footer_str = (
-    "© 2026 ಅಭಿಷೇಕ್ ಹಿತಬುತ್ತಿ. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ. ಅನುಮತಿ ಇಲ್ಲದೆ ಈ ಆ್ಯಪ್ ಅನ್ನು ನಕಲು ಮಾಡುವುದು ಅಥವಾ ಮರುಬಳಕೆ ಮಾಡುವುದು ನಿಷಿದ್ಧ."
+    "© 2026 ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ. ಅನುಮತಿ ಇಲ್ಲದೆ ಈ ಆ್ಯಪ್ ಅನ್ನು ನಕಲು ಮಾಡುವುದು ಅಥವಾ ಮರುಬಳಕೆ ಮಾಡುವುದು ನಿಷಿದ್ಧ."
     if is_kn else
     "© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."
 )
