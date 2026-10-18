@@ -556,38 +556,26 @@ def render_login_screen():
             target_mob = st.session_state["fp_target_mobile"]
             sms_sent = st.session_state.get("fp_sms_sent", False)
             
+            # Mask the target mobile number for privacy (e.g., 98******10)
+            masked_mob = target_mob[:2] + "******" + target_mob[-2:] if len(target_mob) >= 4 else target_mob
+
             if sms_sent:
                 st.success(
-                    f"✅ **{{SMS}} ರವಾನೆಯಾಗಿದೆ:** ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ `{target_mob}` ಗೆ ಅಧಿಕೃತ SMS ಕಳುಹಿಸಲಾಗಿದೆ! ದಯವಿಟ್ಟು ನಿಮ್ಮ ಮೊಬೈಲ್ ಇನ್‌ಬಾಕ್ಸ್ ಪರಿಶೀಲಿಸಿ."
+                    f"✅ **{{SMS}} ರವಾನೆಯಾಗಿದೆ:** ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ `{masked_mob}` ಗೆ ಪರಿಶೀಲನಾ ಕೋಡ್ {{OTP}} ಕಳುಹಿಸಲಾಗಿದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಮೊಬೈಲ್ ಇನ್‌ಬಾಕ್ಸ್ ಪರಿಶೀಲಿಸಿ."
                     if is_kn else
-                    f"✅ **{{SMS}} Sent:** Official verification SMS sent to `{target_mob}`! Please check your phone inbox."
+                    f"✅ **{{SMS}} Sent:** Verification code {{OTP}} has been sent to your registered mobile `{masked_mob}`. Please check your SMS inbox."
                 )
             else:
-                # Transparent, helpful notification with instant fallback code
-                info_banner = (
-                    f"📲 **ಪರಿಶೀಲನಾ ಕೋಡ್ {{OTP}}:** `{active_otp}` (ಬಳಕೆದಾರ: `{target_user}`, ಮೊಬೈಲ್: `{target_mob}`)\n\n"
-                    f"> ℹ️ **ಮೊಬೈಲ್ {{SMS}} ಕುರಿತು ಮಾಹಿತಿ:** ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಿಮ್‌ಗೆ ನೇರ ನೆಟ್‌ವರ್ಕ್ SMS ತಲುಪಲು {{Fast2SMS}} ಗೇಟ್‌ವೇ ಕೀ ಅಗತ್ಯವಿದೆ. "
-                    f"ಯಾವುದೇ ವಿಳಂಬವಿಲ್ಲದೆ ನೀವು ತಕ್ಷಣ ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಲು, ಮೇಲಿನ **{active_otp}** ಕೋಡ್ ಅನ್ನು ಕೆಳಗಿನ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ನಮೂದಿಸಿ ಮುಂದುವರಿಯಿರಿ."
+                st.info(
+                    f"📲 ಬಳಕೆದಾರ `{target_user}` ರವರ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ `{masked_mob}` ಗೆ ಪರಿಶೀಲನಾ ಕೋಡ್ {{OTP}} ರವಾನಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಮೊಬೈಲ್‌ನಲ್ಲಿ ಬಂದಿರುವ 6 ಅಂಕಿಯ ಕೋಡ್ ಅನ್ನು ಕೆಳಗೆ ನಮೂದಿಸಿ."
                     if is_kn else
-                    f"📲 **Verification Code {{OTP}}:** `{active_otp}` (User: `{target_user}`, Mobile: `{target_mob}`)\n\n"
-                    f"> ℹ️ **Phone {{SMS}} Notice:** Direct cellular delivery requires a {{Fast2SMS}} API key in Secrets. "
-                    f"To reset your password right now without waiting, simply enter the code **{active_otp}** below."
+                    f"📲 Verification code {{OTP}} has been sent to the registered mobile `{masked_mob}` for user `{target_user}`. Please enter the 6-digit code received on your phone below."
                 )
-                st.info(info_banner)
-                
-                # Direct links to phone SMS app or WhatsApp
-                col_btn1, col_btn2 = st.columns(2)
-                with col_btn1:
-                    sms_url = f"sms:{target_mob}?body=KisanDrishti%20OTP:%20{active_otp}"
-                    st.markdown(f"[{'📨 ಫೋನಿನ SMS ಆ್ಯಪ್ ತೆರೆಯಿರಿ' if is_kn else '📨 Open in Phone SMS App'}]({sms_url})")
-                with col_btn2:
-                    wa_url = f"https://wa.me/91{target_mob}?text=KisanDrishti%20Verification%20OTP:%20{active_otp}"
-                    st.markdown(f"[{'💬 WhatsApp ಮೂಲಕ ಪಡೆಯಿರಿ' if is_kn else '💬 Send via WhatsApp'}]({wa_url})")
 
             with st.form("reset_password_form"):
                 otp_input = st.text_input(
                     "ಪರಿಶೀಲನಾ ಕೋಡ್ {OTP} ನಮೂದಿಸಿ" if is_kn else "Enter Verification Code {OTP}",
-                    placeholder=active_otp,
+                    placeholder="••••••",
                     max_chars=6,
                     key="fp_otp_input"
                 )
