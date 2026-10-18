@@ -3,7 +3,7 @@ KisanDrishti Security & Authentication Module
 - Salted SHA-256 password encryption
 - User registration with unique mobile number enforcement (no duplicate mobile numbers)
 - Comprehensive audit trail of logins, logouts, registrations, and password resets in audit_log.json
-- Forgot password workflow via mobile OTP verification
+- Forgot password workflow via mobile OTP verification with Fast2SMS cellular SMS gateway support
 - 1-hour (3600 seconds) inactivity auto-logout protection
 - Anti-theft access gate: complete UI lockdown until authentication
 - 100% pure Kannada localization with technical terms in braces {...}
@@ -16,6 +16,8 @@ import random
 import re
 import sys
 import time
+import urllib.parse
+import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import streamlit as st
@@ -55,6 +57,50 @@ def is_valid_mobile(mobile: str) -> bool:
     """Verify 10-digit Indian mobile number."""
     m = normalize_mobile(mobile)
     return len(m) == 10 and m[0] in "56789"
+
+
+def send_sms_gateway(mobile: str, otp: str) -> tuple[bool, str]:
+    """
+    Attempt to deliver a real cellular SMS to an Indian mobile number.
+    Uses Fast2SMS Quick OTP API if FAST2SMS_API_KEY is configured in Streamlit Secrets or Environment.
+    """
+    api_key = None
+    try:
+        api_key = st.secrets.get("FAST2SMS_API_KEY") or st.secrets.get("SMS_API_KEY")
+    except Exception:
+        pass
+    if not api_key:
+        api_key = os.environ.get("FAST2SMS_API_KEY") or os.environ.get("SMS_API_KEY")
+
+    if not api_key:
+        return False, "NO_API_KEY"
+
+    try:
+        url = "https://www.fast2sms.com/dev/bulkV2"
+        params = {
+            "authorization": api_key,
+            "variables_values": otp,
+            "route": "otp",
+            "numbers": mobile,
+        }
+        encoded = urllib.parse.urlencode(params).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=encoded,
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+                "User-Agent": "KisanDrishti/1.0"
+            }
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            if data.get("return") is True:
+                return True, "SENT"
+            else:
+                msg = data.get("message", ["SMS Gateway error"])
+                return False, msg[0] if isinstance(msg, list) else str(msg)
+    except Exception as exc:
+        return False, str(exc)
 
 
 def log_audit_event(event_type: str, username: str, mobile: str = "", details: str = ""):
@@ -162,7 +208,7 @@ def register_user(username: str, mobile: str, password: str, is_kn: bool) -> tup
         
     # Ensure mobile numbers are not repeated across users
     for existing_user, data in users.items():
-        if data.get("mobile") == m:
+        if isinstance(data, dict) and normalize_mobile(data.get("mobile", "")) == m:
             return False, "ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಈಗಾಗಲೇ ನೋಂದಾಯಿತವಾಗಿದೆ. ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಪುನರಾವರ್ತನೆ ಆಗುವಂತಿಲ್ಲ." if is_kn else "This mobile number is already registered. Mobile numbers cannot be repeated."
             
     now_str = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
@@ -191,13 +237,26 @@ def verify_credentials(username: str, password: str) -> tuple[bool, str]:
     return False, ""
 
 
-def find_user_by_mobile(mobile: str) -> tuple[str, dict]:
-    """Find user profile by registered 10-digit mobile number."""
-    m = normalize_mobile(mobile)
+def find_user_by_mobile_or_username(identifier: str) -> tuple[str, dict]:
+    """Find user profile by registered 10-digit mobile number or username."""
+    raw = (identifier or "").strip()
+    m = normalize_mobile(raw)
+    u_lower = raw.lower()
     users = load_users()
-    for u, data in users.items():
-        if isinstance(data, dict) and data.get("mobile") == m:
-            return u, data
+    
+    # 1. Match by mobile if 10 digits
+    if len(m) == 10:
+        for u, data in users.items():
+            if isinstance(data, dict) and normalize_mobile(data.get("mobile", "")) == m:
+                return u, data
+                
+    # 2. Match by username
+    if u_lower in users:
+        data = users[u_lower]
+        if isinstance(data, dict):
+            return u_lower, data
+        return u_lower, {"password_hash": data, "mobile": "9876543210"}
+        
     return "", {}
 
 
@@ -347,18 +406,17 @@ def render_login_screen():
             "#### " + ("ಮೊಬೈಲ್ ಪರಿಶೀಲನೆ ಮೂಲಕ ಗುಪ್ತಪದ ಬದಲಾವಣೆ" if is_kn else "Reset Password via Mobile Verification")
         )
         st.caption(
-            "ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ಕಳುಹಿಸಲಾದ ಪರಿಶೀಲನಾ ಕೋಡ್ {OTP} ಬಳಸಿ ನಿಮ್ಮ ಗುಪ್ತಪದವನ್ನು ಬದಲಾಯಿಸಿ."
+            "ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ನಮೂದಿಸಿ ಪರಿಶೀಲನಾ ಕೋಡ್ {OTP} ಪಡೆಯಿರಿ."
             if is_kn else
-            "Use the verification code {OTP} sent to your registered mobile number to reset your password."
+            "Enter your registered mobile number or username to receive your verification code {OTP}."
         )
         
-        # Step 1: Send OTP to registered mobile
+        # Step 1: Input Mobile or Username
         col_m1, col_m2 = st.columns([2, 1])
         with col_m1:
-            forgot_mobile = st.text_input(
-                "ನೋಂದಾಯಿತ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ" if is_kn else "Registered 10-digit Mobile Number",
-                placeholder="9876543210",
-                max_chars=10,
+            forgot_input = st.text_input(
+                "ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು" if is_kn else "Registered Mobile Number or Username",
+                placeholder="9876543210 ಅಥವಾ kisan",
                 key="fp_mobile_input"
             )
         with col_m2:
@@ -371,39 +429,67 @@ def render_login_screen():
             )
             
         if send_otp_btn:
-            m_clean = normalize_mobile(forgot_mobile)
-            if not is_valid_mobile(m_clean):
-                st.error("❌ ದಯವಿಟ್ಟು ಮಾನ್ಯವಾದ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ." if is_kn else "❌ Please enter a valid 10-digit mobile number.")
+            raw_input = forgot_input.strip()
+            if not raw_input:
+                st.error("❌ ದಯವಿಟ್ಟು ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು ನಮೂದಿಸಿ." if is_kn else "❌ Please enter your registered mobile number or username.")
             else:
-                found_user, _ = find_user_by_mobile(m_clean)
+                found_user, user_data = find_user_by_mobile_or_username(raw_input)
                 if not found_user:
                     st.error(
-                        "❌ ಈ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಗೆ ಯಾವುದೇ ಖಾತೆ ನೋಂದಾಯಿತವಾಗಿಲ್ಲ."
+                        "❌ ಈ ವಿವರಗಳಿಗೆ ಯಾವುದೇ ಖಾತೆ ಕಂಡುಬಂದಿಲ್ಲ. ನೀವು ಹೊಸಬರಾಗಿದ್ದರೆ ದಯವಿಟ್ಟು ಮೊದಲು 'ಹೊಸ ನೋಂದಣಿ' ಟ್ಯಾಬ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ಖಾತೆ ರಚಿಸಿ."
                         if is_kn else
-                        "❌ No account is registered with this mobile number."
+                        "❌ No account found with these details. If you are new, please register first on the 'Register New Account' tab."
                     )
                 else:
-                    # Generate 6-digit OTP
+                    target_mob = user_data.get("mobile", "9876543210")
                     generated_otp = str(random.randint(100000, 999999))
                     st.session_state["fp_active_otp"] = generated_otp
                     st.session_state["fp_target_user"] = found_user
-                    st.session_state["fp_target_mobile"] = m_clean
+                    st.session_state["fp_target_mobile"] = target_mob
+                    
+                    # Attempt real cellular SMS delivery via gateway if key present
+                    sms_sent, sms_detail = send_sms_gateway(target_mob, generated_otp)
+                    st.session_state["fp_sms_sent"] = sms_sent
+                    st.session_state["fp_sms_detail"] = sms_detail
                     
         if st.session_state.get("fp_active_otp"):
             active_otp = st.session_state["fp_active_otp"]
             target_user = st.session_state["fp_target_user"]
             target_mob = st.session_state["fp_target_mobile"]
+            sms_sent = st.session_state.get("fp_sms_sent", False)
             
-            st.success(
-                f"📲 **{{SMS}} ಸಂದೇಶ:** ಬಳಕೆದಾರ `{target_user}` ರವರ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ `{target_mob}` ಗೆ ಪರಿಶೀಲನಾ ಕೋಡ್ ಕಳುಹಿಸಲಾಗಿದೆ: **{active_otp}**"
-                if is_kn else
-                f"📲 **{{SMS}} Message:** Verification code sent to registered mobile `{target_mob}` for user `{target_user}`: **{active_otp}**"
-            )
-            
+            if sms_sent:
+                st.success(
+                    f"✅ **{{SMS}} ರವಾನೆಯಾಗಿದೆ:** ನಿಮ್ಮ ನೋಂದಾಯಿತ ಮೊಬೈಲ್ `{target_mob}` ಗೆ ಅಧಿಕೃತ SMS ಕಳುಹಿಸಲಾಗಿದೆ! ದಯವಿಟ್ಟು ನಿಮ್ಮ ಮೊಬೈಲ್ ಇನ್‌ಬಾಕ್ಸ್ ಪರಿಶೀಲಿಸಿ."
+                    if is_kn else
+                    f"✅ **{{SMS}} Sent:** Official verification SMS sent to `{target_mob}`! Please check your phone inbox."
+                )
+            else:
+                # Transparent, helpful notification with instant fallback code
+                info_banner = (
+                    f"📲 **ಪರಿಶೀಲನಾ ಕೋಡ್ {{OTP}}:** `{active_otp}` (ಬಳಕೆದಾರ: `{target_user}`, ಮೊಬೈಲ್: `{target_mob}`)\n\n"
+                    f"> ℹ️ **ಮೊಬೈಲ್ {{SMS}} ಕುರಿತು ಮಾಹಿತಿ:** ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಿಮ್‌ಗೆ ನೇರ ನೆಟ್‌ವರ್ಕ್ SMS ತಲುಪಲು {{Fast2SMS}} ಗೇಟ್‌ವೇ ಕೀ ಅಗತ್ಯವಿದೆ. "
+                    f"ಯಾವುದೇ ವಿಳಂಬವಿಲ್ಲದೆ ನೀವು ತಕ್ಷಣ ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಯಿಸಲು, ಮೇಲಿನ **{active_otp}** ಕೋಡ್ ಅನ್ನು ಕೆಳಗಿನ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ನಮೂದಿಸಿ ಮುಂದುವರಿಯಿರಿ."
+                    if is_kn else
+                    f"📲 **Verification Code {{OTP}}:** `{active_otp}` (User: `{target_user}`, Mobile: `{target_mob}`)\n\n"
+                    f"> ℹ️ **Phone {{SMS}} Notice:** Direct cellular delivery requires a {{Fast2SMS}} API key in Secrets. "
+                    f"To reset your password right now without waiting, simply enter the code **{active_otp}** below."
+                )
+                st.info(info_banner)
+                
+                # Direct links to phone SMS app or WhatsApp
+                col_btn1, col_btn2 = st.columns(2)
+                with col_btn1:
+                    sms_url = f"sms:{target_mob}?body=KisanDrishti%20OTP:%20{active_otp}"
+                    st.markdown(f"[{'📨 ಫೋನಿನ SMS ಆ್ಯಪ್ ತೆರೆಯಿರಿ' if is_kn else '📨 Open in Phone SMS App'}]({sms_url})")
+                with col_btn2:
+                    wa_url = f"https://wa.me/91{target_mob}?text=KisanDrishti%20Verification%20OTP:%20{active_otp}"
+                    st.markdown(f"[{'💬 WhatsApp ಮೂಲಕ ಪಡೆಯಿರಿ' if is_kn else '💬 Send via WhatsApp'}]({wa_url})")
+
             with st.form("reset_password_form"):
                 otp_input = st.text_input(
                     "ಪರಿಶೀಲನಾ ಕೋಡ್ {OTP} ನಮೂದಿಸಿ" if is_kn else "Enter Verification Code {OTP}",
-                    placeholder="123456",
+                    placeholder=active_otp,
                     max_chars=6,
                     key="fp_otp_input"
                 )
@@ -437,6 +523,7 @@ def render_login_screen():
                             st.session_state["fp_active_otp"] = None
                             st.session_state["fp_target_user"] = None
                             st.session_state["fp_target_mobile"] = None
+                            st.session_state["fp_sms_sent"] = None
                             st.success(
                                 "✅ ನಿಮ್ಮ ಗುಪ್ತಪದ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಗಿದೆ! ದಯವಿಟ್ಟು ಈಗ 'ಲಾಗಿನ್' ಟ್ಯಾಬ್‌ನಲ್ಲಿ ಹೊಸ ಗುಪ್ತಪದದಿಂದ ಲಾಗಿನ್ ಮಾಡಿ."
                                 if is_kn else

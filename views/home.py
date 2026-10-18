@@ -182,5 +182,10 @@ with st.expander(t("About this model and its limits")):
     st.write(t("It does not know your local market, water supply, pests or soil history. Talk to your agriculture officer before you decide."))
 
 ui.feedback_box()
-st.markdown("---")
-st.caption(t("© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."))
+is_kn = (i18n.current_lang() == "kn")
+footer_str = (
+    "© 2026 ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ. ಅನುಮತಿ ಇಲ್ಲದೆ ಈ ಆ್ಯಪ್ ಅನ್ನು ನಕಲು ಮಾಡುವುದು ಅಥವಾ ಮರುಬಳಕೆ ಮಾಡುವುದು ನಿಷಿದ್ಧ."
+    if is_kn else
+    "© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."
+)
+st.caption(footer_str)
