@@ -1,11 +1,13 @@
 """
 KisanDrishti Security & Authentication Module
+- Permanent user credentials: user registrations and login details NEVER expire
+- Dual-storage architecture: persistent SQLite (kisan_users.db) + users.json synchronization
 - Salted SHA-256 password encryption
-- User registration with unique mobile number enforcement (no duplicate mobile numbers)
-- Comprehensive audit trail of logins, logouts, registrations, and password resets in audit_log.json
-- Forgot password workflow via mobile OTP verification with Fast2SMS cellular SMS gateway support
-- 1-hour (3600 seconds) inactivity auto-logout protection
+- Unique mobile number constraint (no duplicate registrations allowed)
+- Comprehensive audit trail in SQLite and audit_log.json (logins, logouts, registrations, resets)
+- 30-minute (1800 seconds) inactivity auto-logout protection for sessions
 - Anti-theft access gate: complete UI lockdown until authentication
+- Fast2SMS cellular SMS gateway integration + instant on-screen & WhatsApp/SMS fallback
 - 100% pure Kannada localization with technical terms in braces {...}
 """
 
@@ -14,6 +16,7 @@ import json
 import os
 import random
 import re
+import sqlite3
 import sys
 import time
 import urllib.parse
@@ -29,11 +32,12 @@ if "pytest" in sys.modules:
     st.session_state.setdefault("authenticated", True)
     st.session_state.setdefault("username", "test_farmer")
 
-# Inactivity timeout: 1 hour = 3600 seconds
-INACTIVITY_TIMEOUT_SECONDS = 3600
+# Session inactivity timeout: 30 minutes = 1800 seconds (login credentials themselves NEVER expire)
+INACTIVITY_TIMEOUT_SECONDS = 1800
 
 SALT = "KisanDrishti_Secure_Salt_2026_Karnataka"
 BASE_DIR = Path(__file__).resolve().parent
+DB_FILE = BASE_DIR / "kisan_users.db"
 USERS_FILE = BASE_DIR / "users.json"
 AUDIT_LOG_FILE = BASE_DIR / "audit_log.json"
 
@@ -57,6 +61,181 @@ def is_valid_mobile(mobile: str) -> bool:
     """Verify 10-digit Indian mobile number."""
     m = normalize_mobile(mobile)
     return len(m) == 10 and m[0] in "56789"
+
+
+def init_db():
+    """Initialize permanent SQLite database tables."""
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    username TEXT PRIMARY KEY,
+                    password_hash TEXT NOT NULL,
+                    mobile TEXT NOT NULL,
+                    created_at TEXT NOT NULL
+                )
+            """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS audit_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    timestamp TEXT NOT NULL,
+                    event TEXT NOT NULL,
+                    username TEXT NOT NULL,
+                    mobile TEXT,
+                    details TEXT
+                )
+            """)
+            
+            # Default demo users
+            cur = conn.cursor()
+            cur.execute("SELECT COUNT(*) FROM users")
+            if cur.fetchone()[0] == 0:
+                defaults = [
+                    ("kisan", hash_password("kisan@2026"), "9876543210", "2026-10-18 00:00:00"),
+                    ("admin", hash_password("admin@2026"), "9876543211", "2026-10-18 00:00:00"),
+                ]
+                cur.executemany("INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?)", defaults)
+                conn.commit()
+    except Exception:
+        pass
+
+
+# Ensure database is initialized on import
+init_db()
+
+
+def load_users() -> dict:
+    """
+    Load all authorized users from permanent SQLite database.
+    Merges with users.json to ensure no registered account is ever lost across server restarts.
+    """
+    init_db()
+    users = {}
+    
+    # 1. Load from SQLite
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT username, password_hash, mobile, created_at FROM users")
+            for u, p, m, c in cur.fetchall():
+                users[u] = {
+                    "password_hash": p,
+                    "mobile": m,
+                    "created_at": c,
+                }
+    except Exception:
+        pass
+
+    # 2. Synchronize with users.json
+    if USERS_FILE.exists():
+        try:
+            with open(USERS_FILE, "r", encoding="utf-8") as f:
+                json_data = json.load(f)
+                for u, val in json_data.items():
+                    if u not in users:
+                        if isinstance(val, dict):
+                            users[u] = val
+                        elif isinstance(val, str):
+                            users[u] = {
+                                "password_hash": val,
+                                "mobile": "9876543210" if u == "kisan" else "",
+                                "created_at": "2026-10-18 00:00:00",
+                            }
+                        # Save missing user back to SQLite
+                        try:
+                            with sqlite3.connect(DB_FILE) as conn:
+                                conn.execute(
+                                    "INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?)",
+                                    (u, users[u]["password_hash"], users[u]["mobile"], users[u]["created_at"])
+                                )
+                                conn.commit()
+                        except Exception:
+                            pass
+        except Exception:
+            pass
+
+    # Always ensure default demo accounts exist
+    default_users = {
+        "kisan": {
+            "password_hash": hash_password("kisan@2026"),
+            "mobile": "9876543210",
+            "created_at": "2026-10-18 00:00:00",
+        },
+        "admin": {
+            "password_hash": hash_password("admin@2026"),
+            "mobile": "9876543211",
+            "created_at": "2026-10-18 00:00:00",
+        },
+    }
+    for du, dval in default_users.items():
+        if du not in users:
+            users[du] = dval
+
+    return users
+
+
+def save_users(users: dict):
+    """Save user records to both SQLite and JSON for permanent persistence."""
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            for u, data in users.items():
+                p = data.get("password_hash") if isinstance(data, dict) else data
+                m = data.get("mobile", "") if isinstance(data, dict) else ""
+                c = data.get("created_at", "2026-10-18 00:00:00") if isinstance(data, dict) else ""
+                conn.execute(
+                    "INSERT INTO users (username, password_hash, mobile, created_at) VALUES (?, ?, ?, ?) "
+                    "ON CONFLICT(username) DO UPDATE SET password_hash=excluded.password_hash, mobile=excluded.mobile",
+                    (u, p, m, c)
+                )
+            conn.commit()
+    except Exception:
+        pass
+
+    try:
+        with open(USERS_FILE, "w", encoding="utf-8") as f:
+            json.dump(users, f, indent=2, ensure_ascii=False)
+    except Exception:
+        pass
+
+
+def log_audit_event(event_type: str, username: str, mobile: str = "", details: str = ""):
+    """Record all login, logout, registration, and reset events persistently in SQLite and JSON."""
+    now_str = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Save to SQLite
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            conn.execute(
+                "INSERT INTO audit_logs (timestamp, event, username, mobile, details) VALUES (?, ?, ?, ?, ?)",
+                (now_str, event_type, username, mobile, details)
+            )
+            conn.commit()
+    except Exception:
+        pass
+
+    # Save to audit_log.json
+    entry = {
+        "timestamp": now_str,
+        "event": event_type,
+        "username": username,
+        "mobile": mobile,
+        "details": details,
+    }
+    logs = []
+    if AUDIT_LOG_FILE.exists():
+        try:
+            with open(AUDIT_LOG_FILE, "r", encoding="utf-8") as f:
+                logs = json.load(f)
+                if not isinstance(logs, list):
+                    logs = []
+        except Exception:
+            logs = []
+    logs.append(entry)
+    try:
+        with open(AUDIT_LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(logs, f, indent=2, ensure_ascii=False)
+    except Exception:
+        pass
 
 
 def send_sms_gateway(mobile: str, otp: str) -> tuple[bool, str]:
@@ -103,92 +282,8 @@ def send_sms_gateway(mobile: str, otp: str) -> tuple[bool, str]:
         return False, str(exc)
 
 
-def log_audit_event(event_type: str, username: str, mobile: str = "", details: str = ""):
-    """Record all login, logout, registration, and reset events persistently."""
-    now_str = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
-    entry = {
-        "timestamp": now_str,
-        "event": event_type,
-        "username": username,
-        "mobile": mobile,
-        "details": details,
-    }
-    
-    logs = []
-    if AUDIT_LOG_FILE.exists():
-        try:
-            with open(AUDIT_LOG_FILE, "r", encoding="utf-8") as f:
-                logs = json.load(f)
-                if not isinstance(logs, list):
-                    logs = []
-        except Exception:
-            logs = []
-            
-    logs.append(entry)
-    
-    try:
-        with open(AUDIT_LOG_FILE, "w", encoding="utf-8") as f:
-            json.dump(logs, f, indent=2, ensure_ascii=False)
-    except Exception:
-        pass
-
-
-def load_users() -> dict:
-    """Load authorized users and normalize user records."""
-    default_users = {
-        "kisan": {
-            "password_hash": hash_password("kisan@2026"),
-            "mobile": "9876543210",
-            "created_at": "2026-10-18 00:00:00",
-        },
-        "admin": {
-            "password_hash": hash_password("admin@2026"),
-            "mobile": "9876543211",
-            "created_at": "2026-10-18 00:00:00",
-        },
-    }
-    
-    if not USERS_FILE.exists():
-        try:
-            with open(USERS_FILE, "w", encoding="utf-8") as f:
-                json.dump(default_users, f, indent=2)
-        except Exception:
-            pass
-        return default_users
-        
-    try:
-        with open(USERS_FILE, "r", encoding="utf-8") as f:
-            raw_data = json.load(f)
-            users = {}
-            for u, val in raw_data.items():
-                if isinstance(val, str):
-                    users[u] = {
-                        "password_hash": val,
-                        "mobile": "9876543210" if u == "kisan" else "",
-                        "created_at": "2026-10-18 00:00:00",
-                    }
-                elif isinstance(val, dict):
-                    users[u] = val
-                    
-            for du, dval in default_users.items():
-                if du not in users:
-                    users[du] = dval
-            return users
-    except Exception:
-        return default_users
-
-
-def save_users(users: dict):
-    """Save users to persistent disk storage."""
-    try:
-        with open(USERS_FILE, "w", encoding="utf-8") as f:
-            json.dump(users, f, indent=2, ensure_ascii=False)
-    except Exception:
-        pass
-
-
 def register_user(username: str, mobile: str, password: str, is_kn: bool) -> tuple[bool, str]:
-    """Register a new farmer account ensuring no duplicate mobile numbers."""
+    """Register a new farmer account permanently ensuring no duplicate mobile numbers."""
     u = username.strip().lower()
     m = normalize_mobile(mobile)
     
@@ -220,9 +315,9 @@ def register_user(username: str, mobile: str, password: str, is_kn: bool) -> tup
     save_users(users)
     
     # Audit log registration
-    log_audit_event("REGISTRATION", username=u, mobile=m, details="New user account registered")
+    log_audit_event("REGISTRATION", username=u, mobile=m, details="New user account registered permanently")
     
-    return True, "ಖಾತೆ ಯಶಸ್ವಿಯಾಗಿ ರಚನೆಯಾಗಿದೆ! ದಯವಿಟ್ಟು ಈಗ ಲಾಗಿನ್ ಮಾಡಿ." if is_kn else "Account created successfully! Please log in now."
+    return True, "ಖಾತೆ ಶಾಶ್ವತವಾಗಿ ರಚನೆಯಾಗಿದೆ! ನಿಮ್ಮ ವಿವರಗಳು ಎಂದಿಗೂ ಮುಕ್ತಾಯವಾಗುವುದಿಲ್ಲ. ದಯವಿಟ್ಟು ಈಗ ಲಾಗಿನ್ ಮಾಡಿ." if is_kn else "Account created permanently! Your credentials never expire. Please log in now."
 
 
 def verify_credentials(username: str, password: str) -> tuple[bool, str]:
@@ -261,7 +356,7 @@ def find_user_by_mobile_or_username(identifier: str) -> tuple[str, dict]:
 
 
 def reset_password(username: str, new_password: str) -> bool:
-    """Reset password after OTP verification."""
+    """Reset password permanently after OTP verification."""
     users = load_users()
     u = username.strip().lower()
     if u in users:
@@ -277,13 +372,16 @@ def reset_password(username: str, new_password: str) -> bool:
 
 
 def check_inactivity():
-    """Enforce 1-hour inactivity timeout and record audit log."""
+    """
+    Enforce 30-minute session inactivity timeout.
+    NOTE: Only the active login session logs out; user accounts and credentials NEVER expire.
+    """
     now = time.time()
     if st.session_state.get("authenticated", False):
         last_active = st.session_state.get("last_activity", now)
         if now - last_active > INACTIVITY_TIMEOUT_SECONDS:
             username = st.session_state.get("username", "Unknown")
-            log_audit_event("LOGOUT_TIMEOUT", username=username, details="1-hour inactivity auto-logout")
+            log_audit_event("LOGOUT_TIMEOUT", username=username, details="30-minute inactivity session logout")
             st.session_state["authenticated"] = False
             st.session_state["session_expired"] = True
             st.session_state["last_activity"] = None
@@ -325,9 +423,9 @@ def render_login_screen():
     
     title = "🔒 ಕಿಸಾನ್ ದೃಷ್ಟಿ - ಸುರಕ್ಷಿತ ಲಾಗಿನ್ ವ್ಯವಸ್ಥೆ" if is_kn else "🔒 KisanDrishti - Secure Portal Login"
     subtitle = (
-        "ಕರ್ನಾಟಕದ ರೈತರಿಗಾಗಿ ಸುರಕ್ಷಿತ ಕೃಷಿ ವೇದಿಕೆ. 1 ಗಂಟೆ ನಿಷ್ಕ್ರಿಯತೆಯ ನಂತರ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ನಿರ್ಗಮಿಸುತ್ತದೆ."
+        "ಕರ್ನಾಟಕದ ರೈತರಿಗಾಗಿ ಶಾಶ್ವತ ಮತ್ತು ಸುರಕ್ಷಿತ ಕೃಷಿ ವೇದಿಕೆ. ಖಾತೆ ವಿವರಗಳು ಶಾಶ್ವತವಾಗಿರುತ್ತವೆ; 30 ನಿಮಿಷ ನಿಷ್ಕ್ರಿಯತೆಯ ನಂತರ ಸೆಷನ್ ಮಾತ್ರ ನಿರ್ಗಮಿಸುತ್ತದೆ."
         if is_kn else
-        "Secure precision agriculture portal for Karnataka farmers. Auto log-out occurs after 1 hour of inactivity."
+        "Secure precision agriculture portal for Karnataka farmers. Accounts never expire; active sessions time out after 30 minutes of inactivity."
     )
     
     st.markdown(f"## {title}")
@@ -335,9 +433,9 @@ def render_login_screen():
     
     if st.session_state.get("session_expired", False):
         msg = (
-            "⚠️ 1 ಗಂಟೆ ಕಾಲ ಯಾವುದೇ ಚಟುವಟಿಕೆ ಇಲ್ಲದ ಕಾರಣ ಭದ್ರತೆಗಾಗಿ ನಿಮ್ಮ ಅವಧಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ. ದಯವಿಟ್ಟು ಪುನಃ ಲಾಗಿನ್ ಮಾಡಿ."
+            "⚠️ 30 ನಿಮಿಷಗಳ ಕಾಲ ಯಾವುದೇ ಚಟುವಟಿಕೆ ಇಲ್ಲದ ಕಾರಣ ಭದ್ರತೆಗಾಗಿ ಸೆಷನ್ ಮಾತ್ರ ಮುಕ್ತಾಯಗೊಂಡಿದೆ. ನಿಮ್ಮ ನೋಂದಾಯಿತ ಖಾತೆ ವಿವರಗಳು ಶಾಶ್ವತವಾಗಿ ಸುರಕ್ಷಿತವಾಗಿವೆ. ಮುಂದುವರಿಯಲು ದಯವಿಟ್ಟು ಪುನಃ ಲಾಗಿನ್ ಮಾಡಿ."
             if is_kn else
-            "⚠️ Your session expired due to 1 hour of inactivity for security. Please log in again."
+            "⚠️ For security, your session timed out after 30 minutes of inactivity. Your registered credentials are permanently preserved. Please log in again to continue."
         )
         st.warning(msg)
         st.session_state["session_expired"] = False
@@ -383,7 +481,7 @@ def render_login_screen():
     # TAB 2: REGISTER
     with tab_reg:
         with st.form("register_form"):
-            reg_user_label = "ಹೊಸ ಬಳಕೆದಾರ ಹೆಸರು (ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳು)" if is_kn else "Choose Username (min 3 chars)"
+            reg_user_label = "ಹೊಸ ಬಳಕೆದಾರ ಹೆಸರು (ಶಾಶ್ವತ, ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳು)" if is_kn else "Choose Username (Permanent, min 3 chars)"
             reg_mobile_label = "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (ಪುನರಾವರ್ತನೆ ಅನುಮತಿಸುವುದಿಲ್ಲ)" if is_kn else "10-digit Mobile Number (No duplicates allowed)"
             reg_pass_label = "ಹೊಸ ಗುಪ್ತಪದ (ಕನಿಷ್ಠ 4 ಅಕ್ಷರಗಳು)" if is_kn else "Choose Password (min 4 chars)"
             reg_btn = "ಖಾತೆ ರಚಿಸಿ" if is_kn else "Create Account"

@@ -8,5 +8,10 @@
     "password_hash": "36bd52ea6c2273c3fd4be7e0685b9c704b8ec583d612674c92736e1da0986d4c",
     "mobile": "9876543211",
     "created_at": "2026-10-18 00:00:00"
+  },
+  "raitha_karnataka": {
+    "password_hash": "6f8c1b74ce7b5b53841ac50ad472307f9d923a0fdc5f829dd8cf4178cc26f52a",
+    "mobile": "9845012345",
+    "created_at": "2026-10-18 23:11:43"
   }
 }

@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "timestamp": "2026-10-18 23:11:43",
+    "event": "REGISTRATION",
+    "username": "raitha_karnataka",
+    "mobile": "9845012345",
+    "details": "New user account registered permanently"
+  }
+]
