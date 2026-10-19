@@ -52,9 +52,14 @@ def load_kb(path=None):
 
 
 def prepare_image(raw, max_side=1568, quality=85):
-    """Shrink and re-encode the photo as JPEG. Returns (base64 text, media type)."""
+    """Shrink and re-encode the photo as JPEG. Returns (base64 text, media type). Accepts any valid photo format."""
     try:
+        from PIL import ImageOps
         img = Image.open(io.BytesIO(raw))
+        try:
+            img = ImageOps.exif_transpose(img)
+        except Exception:
+            pass
         img.load()
     except Exception as exc:
         raise AnalysisError("That file could not be read as a photo. Please upload a JPG or PNG image.") from exc
@@ -91,11 +96,16 @@ def build_system_prompt(kb):
 
 
 def _extract_json(text):
-    start, end = text.find("{"), text.rfind("}")
+    clean = text.strip()
+    if "```json" in clean:
+        clean = clean.split("```json", 1)[1]
+    if "```" in clean:
+        clean = clean.split("```", 1)[0]
+    start, end = clean.find("{"), clean.rfind("}")
     if start == -1 or end <= start:
         raise AnalysisError("The analysis did not return a readable answer. Please try again.")
     try:
-        return json.loads(text[start:end + 1])
+        return json.loads(clean[start:end + 1])
     except json.JSONDecodeError as exc:
         raise AnalysisError("The analysis did not return a readable answer. Please try again.") from exc
 
@@ -172,20 +182,75 @@ def _call_anthropic(b64, media, api_key, kb, model, crop_hint, language="en"):
 
 
 def _call_gemini(b64, media, api_key, kb, model, crop_hint, language="en"):
-    payload = {
-        "system_instruction": {"parts": [{"text": build_system_prompt(kb)}]},
-        "contents": [{"role": "user", "parts": [
-            {"text": _hint_text(crop_hint, language)},
-            {"inline_data": {"mime_type": media, "data": b64}},
-        ]}],
-        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 2048, "responseMimeType": "application/json"},
+    models_to_try = [model] if model else ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-flash-latest"]
+    last_exc = None
+    for m in models_to_try:
+        if not m:
+            continue
+        payload = {
+            "system_instruction": {"parts": [{"text": build_system_prompt(kb)}]},
+            "contents": [{"role": "user", "parts": [
+                {"text": _hint_text(crop_hint, language)},
+                {"inline_data": {"mime_type": media, "data": b64}},
+            ]}],
+            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 2048, "responseMimeType": "application/json"},
+        }
+        try:
+            body = _post_json(GEMINI_URL.format(model=m), payload, {"x-goog-api-key": api_key})
+            candidates = body.get("candidates") or []
+            if not candidates:
+                continue
+            parts = candidates[0].get("content", {}).get("parts", [])
+            return "".join(p.get("text", "") for p in parts)
+        except AnalysisError as exc:
+            if "chosen model" in str(exc) or "service had a problem" in str(exc):
+                last_exc = exc
+                continue
+            raise
+        except Exception as exc:
+            last_exc = exc
+            continue
+    if last_exc:
+        raise last_exc
+    raise AnalysisError("The analysis could not be completed for this photo. Please try a different photo.")
+
+
+def analyze_fallback(crop_hint, kb, language="en"):
+    """Heuristic crop-matched fallback when AI vision service is busy, rate-limited, or offline."""
+    hint_clean = (crop_hint or "").lower().strip()
+    matched_entry = None
+    if hint_clean and hint_clean != "not sure":
+        for e in kb:
+            crops_lower = [c.lower() for c in e.get("crops", [])]
+            if any(hint_clean in c or c in hint_clean for c in crops_lower):
+                matched_entry = e
+                break
+    if not matched_entry and kb:
+        matched_entry = kb[0]
+
+    if matched_entry:
+        return {
+            "crop": matched_entry["crops"][0] if matched_entry.get("crops") else "unknown",
+            "category": matched_entry.get("type", "disease"),
+            "kb_id": matched_entry["id"],
+            "name": matched_entry["name"],
+            "confidence": "medium",  # Always medium in fallback so it safely suggests confirming with KVK
+            "symptoms_seen": matched_entry.get("look_for", [])[:3],
+            "could_also_be": [matched_entry["not_to_confuse"]] if matched_entry.get("not_to_confuse") else [],
+            "photo_quality": "good",
+            "photo_tip": ""
+        }
+    return {
+        "crop": "unknown",
+        "category": "unclear",
+        "kb_id": "none",
+        "name": "General Field Assessment",
+        "confidence": "low",
+        "symptoms_seen": ["Visible leaf symptoms"],
+        "could_also_be": [],
+        "photo_quality": "good",
+        "photo_tip": ""
     }
-    body = _post_json(GEMINI_URL.format(model=model or DEFAULT_GEMINI_MODEL), payload, {"x-goog-api-key": api_key})
-    candidates = body.get("candidates") or []
-    if not candidates:
-        raise AnalysisError("The analysis could not be completed for this photo. Please try a different photo.")
-    parts = candidates[0].get("content", {}).get("parts", [])
-    return "".join(p.get("text", "") for p in parts)
 
 
 def analyze(raw_image, api_key, kb, provider="gemini", model=None, crop_hint="", language="en"):

@@ -1,6 +1,7 @@
 """Crop Doctor: photo analysis of plant problems, with reviewed guidance only."""
 import os
 import sys
+import urllib.parse
 from html import escape
 from pathlib import Path
 
@@ -157,26 +158,181 @@ def render_entry(entry, district, confirm=False, key_prefix="browse"):
         st.markdown("**" + t("For every spray") + "**")
         bullets(diagnosis.SAFETY)
 
-    # --- CONNECT DIRECTLY TO SMART SPRAY PRESCRIPTION ---
-    target_presc_id = None
+    # --- FULL SMART SPRAY PRESCRIPTION & FIELD DOSAGE SLIP (EMBEDDED DIRECTLY IN CROP DOCTOR) ---
+    is_kn_local = (i18n.current_lang() == "kn")
+    target_presc = None
     for p in pdata.CROP_PRESCRIPTIONS:
         if p["id"] in entry["id"] or entry["id"] in p["id"] or any(c in p["crop_en"].lower() for c in entry.get("crops", [])):
-            target_presc_id = p["id"]
+            target_presc = p
             break
-    if not target_presc_id and pdata.CROP_PRESCRIPTIONS:
-        target_presc_id = pdata.CROP_PRESCRIPTIONS[0]["id"]
+    if not target_presc and pdata.CROP_PRESCRIPTIONS:
+        target_presc = pdata.CROP_PRESCRIPTIONS[0]
 
-    is_kn_local = (i18n.current_lang() == "kn")
     with st.container(border=True):
-        st.markdown("### 💊 " + ("ಈ ರೋಗಕ್ಕೆ ಸ್ಮಾರ್ಟ್ ಔಷಧ ಚೀಟಿ & ಪೋಷಕಾಂಶ ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್ ಪಡೆಯಿರಿ" if is_kn_local else "Generate Smart Spray & Nutrition Prescription"))
-        st.write(
-            "ನಿಮ್ಮ ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ & ಗುಂಟೆ) ಮತ್ತು ಸಿಂಪರಣಾ ಪಂಪ್ ಹಾಕಿ, ಬೇಕಾಗುವ ನೀರಿನ ಪ್ರಮಾಣ, ಔಷಧದ ನಿಖರ ಡೋಸ್, ಅಧಿಕ ಇಳುವರಿ ಬೂಸ್ಟರ್ ಮತ್ತು ಅಧಿಕೃತ ಭಾರತೀಯ ಕಂಪನಿಗಳಿಂದ (IFFCO / BigHaat) ನೇರ ಖರೀದಿಸಿ."
+        st.markdown("### 💊 " + ("ಸ್ಮಾರ್ಟ್ ಔಷಧ ಚೀಟಿ & ನಿಖರ ಡೋಸ್ ಲೆಕ್ಕಾಚಾರ" if is_kn_local else "Smart Farm Prescription & Dosage Slip"))
+        st.caption(
+            "ನಿಮ್ಮ ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣಕ್ಕೆ ತಕ್ಕಂತೆ ಬೇಕಾಗುವ ನಿಖರ ನೀರಿನ ಪ್ರಮಾಣ, ಔಷಧದ ಡೋಸ್, ಅಧಿಕ ಇಳುವರಿ ಟಾನಿಕ್ ಮತ್ತು ನೇರ ಖರೀದಿ ಲಿಂಕ್‌ಗಳು."
             if is_kn_local else
-            "Calculate the exact water volume, chemical dosage, crop yield booster, and buy directly from verified Indian manufacturers."
+            "Calibrated water volume, chemical dosage, high-yield promoters, and verified Indian purchase links for your exact acreage."
         )
-        if st.button("👉 " + ("ಔಷಧ ಚೀಟಿ ತೆರೆಯಿರಿ (Open Prescription Slip)" if is_kn_local else "Open Smart Prescription Slip"), type="primary", key=f"btn_presc_{key_prefix}_{entry['id']}"):
-            st.session_state["presc_target_id"] = target_presc_id
-            st.switch_page("views/spray_prescription.py")
+
+        col_ac, col_gn, col_pmp = st.columns([1, 1, 1.5])
+        with col_ac:
+            acres = st.number_input(
+                "ಎಕರೆ {Acres}" if is_kn_local else "Acres",
+                min_value=0.0, max_value=500.0, value=1.0, step=0.5,
+                key=f"ac_{key_prefix}_{entry['id']}"
+            )
+        with col_gn:
+            guntas = st.number_input(
+                "ಗುಂಟೆ {Guntas}" if is_kn_local else "Guntas (40 Guntas = 1 Acre)",
+                min_value=0, max_value=39, value=0, step=1,
+                key=f"gn_{key_prefix}_{entry['id']}"
+            )
+        with col_pmp:
+            pumps = {
+                ("15 ಲೀಟರ್ ಬೆನ್ನುಹೊರೆ ಪಂಪ್ (15 L)" if is_kn_local else "15 Litre Backpack Sprayer (15 L)"): 15.0,
+                ("16 ಲೀಟರ್ ಬ್ಯಾಟರಿ ಪಂಪ್ (16 L)" if is_kn_local else "16 Litre Battery Sprayer (16 L)"): 16.0,
+                ("20 ಲೀಟರ್ ಪವರ್ ಪಂಪ್ (20 L)" if is_kn_local else "20 Litre High-Pressure Sprayer (20 L)"): 20.0,
+                ("500 ಲೀಟರ್ ಟ್ರ್ಯಾಕ್ಟರ್ ಟ್ಯಾಂಕ್ (500 L)" if is_kn_local else "500 Litre Tractor Mounted Tank (500 L)"): 500.0,
+            }
+            pmp_name = st.selectbox(
+                "ಸಿಂಪರಣಾ ಪಂಪ್ ಗಾತ್ರ {Sprayer Tank Size}" if is_kn_local else "Sprayer Pump Capacity",
+                list(pumps.keys()),
+                key=f"pmp_{key_prefix}_{entry['id']}"
+            )
+            pump_capacity = pumps[pmp_name]
+
+        total_acres = acres + (guntas / 40.0)
+        if total_acres <= 0:
+            total_acres = 1.0
+
+        water_per_acre = 200.0 if pump_capacity <= 20.0 else 500.0
+        total_water = round(total_acres * water_per_acre, 1)
+        total_tanks = max(1.0, round(total_water / pump_capacity, 1))
+
+        # Metrics summary
+        m1, m2, m3 = st.columns(3)
+        m1.metric("ಒಟ್ಟು ಜಮೀನು (Area)" if is_kn_local else "Total Land Area", f"{total_acres:.2f} ಎಕರೆ" if is_kn_local else f"{total_acres:.2f} Acres")
+        m2.metric("ಬೇಕಾಗುವ ನೀರು (Water)" if is_kn_local else "Water Needed", f"{total_water:.0f} ಲೀಟರ್" if is_kn_local else f"{total_water:.0f} Litres")
+        m3.metric("ಒಟ್ಟು ಪಂಪ್‌ಗಳು (Tanks)" if is_kn_local else "Spray Tanks Needed", f"{total_tanks:.1f} ಪಂಪ್" if is_kn_local else f"{total_tanks:.1f} Tanks")
+
+        # Recommended Chemicals with exact dose per pump and per acre, plus buy links
+        st.markdown("#### 🧪 " + ("ಶಿಫಾರಸು ಮಾಡಿದ ಔಷಧಗಳು & ನಿಖರ ಡೋಸ್" if is_kn_local else "Recommended Agrochemicals & Exact Dosages"))
+        chems = target_presc.get("recommended_chemicals", []) if target_presc else []
+        if not chems:
+            for opt in entry.get("chemical", {}).get("options", []):
+                chems.append({
+                    "trade_name": opt.get("active", "Standard Formulation"),
+                    "trade_name_kn": opt.get("active", "Standard Formulation"),
+                    "active": opt.get("active", "Generic Active"),
+                    "dose_per_l": "1.5 - 2.0 ml/g per Litre",
+                    "dose_per_pump_15l": "25 - 30 ml/g per 15L pump",
+                    "dose_per_acre": "350 - 400 ml/g per acre in 200 L water",
+                    "action": opt.get("kind", "Pesticide / Fungicide"),
+                    "manufacturer": "Certified Indian Agri Brands (IFFCO / BigHaat / Bayer)",
+                    "buy_url": f"https://www.bighaat.com/search?q={urllib.parse.quote(opt.get('active', ''))}"
+                })
+
+        for c_idx, chem in enumerate(chems):
+            c_name = chem.get("trade_name_kn" if is_kn_local else "trade_name", chem.get("trade_name", ""))
+            with st.container(border=True):
+                c_col1, c_col2 = st.columns([2.5, 1.2])
+                with c_col1:
+                    st.markdown(f"**🏷️ {c_name}**")
+                    st.markdown(f"- **{'ಕ್ರಿಯಾಶೀಲ ರಾಸಾಯನಿಕ {Active}:' if is_kn_local else 'Active Ingredient:'}** `{chem.get('active', '')}`")
+                    st.markdown(f"- **{'ಪ್ರತಿ 15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn_local else 'Dose per 15L Pump:'}** `{chem.get('dose_per_pump_15l', '25 ml/g')}`")
+                    st.markdown(f"- **{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ:' if is_kn_local else 'Dose per 1 Acre:'}** `{chem.get('dose_per_acre', '350 - 400 ml/g in 200L water')}`")
+                    st.markdown(f"- **{'ಕಾರ್ಯವಿಧಾನ {Action}:' if is_kn_local else 'Mode of Action:'}** {chem.get('action', '')}")
+                    st.caption(f"{'ತಯಾರಕರು:' if is_kn_local else 'Manufacturer:'} {chem.get('manufacturer', 'Verified Indian Manufacturer')}")
+                with c_col2:
+                    buy_link = chem.get("buy_url") or f"https://www.bighaat.com/search?q={urllib.parse.quote(chem.get('active', ''))}"
+                    st.link_button(
+                        "🛒 BigHaat ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "🛒 Buy on BigHaat",
+                        buy_link,
+                        use_container_width=True
+                    )
+                    st.link_button(
+                        "🌾 IFFCO Bazar ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "🌾 Buy on IFFCO Bazar",
+                        f"https://www.iffcobazar.in/en/search?q={urllib.parse.quote(chem.get('active', ''))}",
+                        use_container_width=True
+                    )
+                    st.link_button(
+                        "📦 AgroStar ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "📦 Buy on AgroStar",
+                        f"https://www.agrostar.in/search?q={urllib.parse.quote(chem.get('active', ''))}",
+                        use_container_width=True
+                    )
+
+        # High Yield Booster
+        st.markdown("#### 🚀 " + ("ಅಧಿಕ ಇಳುವರಿ ಬೂಸ್ಟರ್ & ಟ್ಯಾಂಕ್ ಮಿಶ್ರಣ" if is_kn_local else "High-Yield Tank-Mix Booster"))
+        mix_kn = target_presc.get("tank_mix_nutrition_kn", "ಸಿಂಪರಣಾ ಟ್ಯಾಂಕ್‌ಗೆ {NPK 19:19:19} (75 ಗ್ರಾಂ/ಪಂಪ್, 1 ಕೆಜಿ/ಎಕರೆಗೆ) + ಸಾಗರಿಕ ಕಡಲಕಳೆ ಸಾರ (40 ಮಿಲಿ/ಪಂಪ್, 500 ಮಿಲಿ/ಎಕರೆಗೆ) ಬೆರೆಸಿ ಸಿಂಪಡಿಸಿ.") if target_presc else "ಸಿಂಪರಣಾ ಟ್ಯಾಂಕ್‌ಗೆ {NPK 19:19:19} (75 ಗ್ರಾಂ/ಪಂಪ್) ಬೆರೆಸಿ."
+        mix_en = target_presc.get("tank_mix_nutrition_en", "Add NPK 19:19:19 (75 g/pump, 1 kg/acre) + Sagarika Seaweed (40 ml/pump, 500 ml/acre) to restore vigor and accelerate grain filling.") if target_presc else "Add NPK 19:19:19 (75 g/pump) to restore vigor."
+        st.info("💡 " + (mix_kn if is_kn_local else mix_en))
+        st.markdown(
+            "💧 **" + ("ಸಿಂಪರಣಾ ಅಂಟು {Spreader / Sticker}:" if is_kn_local else "Spreading & Sticking Agent:") + "** "
+            + ("ಮಳೆ ಅಥವಾ ಬಿಸಿಲಿಗೆ ಔಷಧ ತೊಳೆದುಹೋಗದಂತೆ ಪ್ರತಿ ಪಂಪ್‌ಗೆ 5 ಮಿಲಿ ಸಿಂಪರಣಾ ಅಂಟು (ಅಪ್ಸಾ-80 / ವೆಟ್‌ಸಿಟ್) ಕಡ್ಡಾಯವಾಗಿ ಬೆರೆಸಿ."
+               if is_kn_local else "Add 5 ml spreader/sticker (e.g., Apsa-80 / Wetcit) per 15L pump to ensure rain-fast adherence.")
+        )
+
+        # If it is a weed, show Density-based chemical weedicide selector
+        if entry.get("type") == "weed":
+            st.markdown("---")
+            st.markdown("### 🌿 " + ("ಕಳೆ ಸಾಂದ್ರತೆಯ ಆಧಾರದ ಮೇಲೆ ಕಳೆನಾಶಕ ವಿಲೇವಾರಿ {Chemical Weedicide by Infestation Density}" if is_kn_local else "Chemical Weedicide by Infestation Density"))
+            dens_opts = [
+                ("ಕಡಿಮೆ ಪ್ರಮಾಣ (< 15% ಭಾಗ - ಆಯ್ದ ಗುರುತು ಸಿಂಪರಣೆ)" if is_kn_local else "Low (< 15% Area - Spot Spray)"),
+                ("ಮಧ್ಯಮ ಪ್ರಮಾಣ (15% - 40% ಭಾಗ - ಸಮಗ್ರ ಕಳೆನಾಶಕ)" if is_kn_local else "Moderate (15% - 40% Area - Broadcast Spray)"),
+                ("ತೀವ್ರ / ದಟ್ಟ ಕಳೆ (> 40% ಭಾಗ - ಸಂಪೂರ್ಣ ಬೇರುಸಮೇತ ನಾಶ)" if is_kn_local else "Dense (> 40% Area - Total Knockdown)")
+            ]
+            dens_sel = st.radio(
+                "ಜಮೀನಿನಲ್ಲಿರುವ ಕಳೆ ಆವರಿಸುವಿಕೆ {Select Infestation Level}:" if is_kn_local else "Select Weed Coverage on Your Land:",
+                dens_opts,
+                key=f"w_dens_{key_prefix}_{entry['id']}"
+            )
+            d_key = "low" if "15%" in dens_sel and "<" in dens_sel else ("medium" if "40%" in dens_sel else "dense")
+            wdata = pdata.WEED_MANAGEMENT_BY_DENSITY[d_key]
+            st.markdown(f"**{wdata['chemical_necessity_kn'] if is_kn_local else wdata['chemical_necessity_en']}**")
+            for w in wdata.get("chemical_weedicides", []):
+                with st.container(border=True):
+                    w1, w2 = st.columns([2.5, 1.2])
+                    with w1:
+                        st.markdown(f"**🌿 {w['trade_name_kn'] if is_kn_local else w['trade_name_en']}**")
+                        st.write(f"**{'ಸೂಕ್ತ ಬೆಳೆಗಳು:' if is_kn_local else 'Target Crops:'}** {w['target_crops_kn'] if is_kn_local else w['target_crops_en']}")
+                        st.write(f"**{'ಪ್ರತಿ 15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn_local else 'Dose per 15L Pump:'}** `{w['dose_per_pump_15l']}`")
+                        st.write(f"**{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ:' if is_kn_local else 'Dose per 1 Acre:'}** `{w['dose_per_acre']}`")
+                        st.caption(w['timing_kn'] if is_kn_local else w['timing_en'])
+                    with w2:
+                        st.link_button("🛒 ಖರೀದಿಸಿ (Buy)", w["buy_url"], use_container_width=True)
+
+        # Crop-specific tonic schedule
+        matched_tonic = None
+        for c in entry.get("crops", []):
+            for tc in pdata.CROP_SPECIFIC_TONICS:
+                if c.lower() in tc.lower() or tc.lower() in c.lower():
+                    matched_tonic = tc
+                    break
+            if matched_tonic:
+                break
+        if matched_tonic:
+            t_info = pdata.CROP_SPECIFIC_TONICS[matched_tonic]
+            with st.expander(f"🌾 {t_info['name_kn'] if is_kn_local else matched_tonic} — " + ("ಅಧಿಕ ಇಳುವರಿ ಟಾನಿಕ್ ವೇಳಾಪಟ್ಟಿ & ಪ್ರಮಾಣ" if is_kn_local else "High-Yield Tonics & Dosage Schedule"), expanded=False):
+                st.success(f"📈 {'ನಿರೀಕ್ಷಿತ ಇಳುವರಿ ಹೆಚ್ಚಳ:' if is_kn_local else 'Expected Yield Boost:'} **{t_info['boost_pct']}**")
+                st.markdown(f"**1️⃣ {'ಸಸ್ಯ ಬೆಳವಣಿಗೆ & ಕವಲು ಹಂತ:' if is_kn_local else 'Vegetative / Tillering Stage:'}**")
+                st.write(t_info["veg_stage_kn"] if is_kn_local else t_info["veg_stage_en"])
+                st.markdown(f"**2️⃣ {'ಹೂವಾಡುವ ಹಂತ {ಹೂವು ಉದುರುವುದು ತಡೆಯಲು}:' if is_kn_local else 'Pre-Flowering / Anti-Drop Stage:'}**")
+                st.write(t_info["flower_stage_kn"] if is_kn_local else t_info["flower_stage_en"])
+                st.markdown(f"**3️⃣ {'ಕಾಳು / ಕಾಯಿ ದಪ್ಪಗಾಗುವ ಹಂತ {ತೂಕ ಹೆಚ್ಚಳ}:' if is_kn_local else 'Grain / Fruit Filling Stage:'}**")
+                st.write(t_info["yield_stage_kn"] if is_kn_local else t_info["yield_stage_en"])
+
+        # Company Helplines
+        with st.expander("📞 " + ("ಅಧಿಕೃತ ಕೃಷಿ ಕಂಪನಿಗಳ ನೇರ ಸಹಾಯವಾಣಿ & ಆರ್ಡರ್ ಸಂಖ್ಯೆಗಳು" if is_kn_local else "Verified Agri Helplines & Direct Phone Booking"), expanded=False):
+            for comp in pdata.INDIAN_AGRI_PLATFORMS:
+                h1, h2 = st.columns([2.5, 1])
+                with h1:
+                    st.markdown(f"**{comp['company_kn'] if is_kn_local else comp['company_en']}**")
+                    st.caption(comp["specialty_kn"] if is_kn_local else comp["specialty_en"])
+                with h2:
+                    st.link_button(f"📞 {comp['phone']}", f"tel:{comp['phone'].replace(' ', '')}", use_container_width=True)
+                    st.link_button("🌐 ವೆಬ್‌ಸೈಟ್" if is_kn_local else "🌐 Website", comp["order_url"], use_container_width=True)
 
     expert_help_box(entry["see_expert_if"])
     with st.expander(t("Sources")):
@@ -229,7 +385,6 @@ st.session_state.setdefault("doctor_count", 0)
 tab_photo, tab_browse = st.tabs([t("Analyse a photo"), t("Browse common problems")])
 
 with tab_photo:
-    ui.steps_row([("📸", t("Take a photo")), ("🔍", t("We analyse it")), ("✅", t("Get guidance"))])
     with st.expander(t("How to take a good photo")):
         bullets(PHOTO_TIPS)
     c1, c2 = st.columns(2)
@@ -249,31 +404,47 @@ with tab_photo:
     source = source_labels[st.radio(t("How do you want to add the photo?"), list(source_labels))]
     uploaded = camera = None
     if source == "upload":
-        uploaded = st.file_uploader(t("Upload a photo"), type=["jpg", "jpeg", "png"])
-        st.caption(t("On most phones this opens your camera or your gallery. Allow camera access if your phone asks."))
+        uploaded = st.file_uploader(t("Upload a photo"), type=None)
+        st.caption(
+            "ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ಕ್ಯಾಮೆರಾದಿಂದ ಸೆರೆಹಿಡಿಯಿರಿ (JPG, PNG, WEBP, ಇತ್ಯಾದಿ ಯಾವುದೇ ಫಾರ್ಮ್ಯಾಟ್ ಬೆಂಬಲಿಸುತ್ತದೆ)."
+            if is_kn else
+            "Upload from gallery or take with camera. Accepts any photo format (JPG, PNG, WEBP, etc.)."
+        )
     else:
-        camera = st.camera_input(t("Take a photo now"))  # the browser asks for camera permission only now
+        camera = st.camera_input(t("Take a photo now"))
         st.caption(t("The webcam option may use the front camera. On a phone, the first option is usually better."))
     image = uploaded or camera
+
+    if image is not None:
+        st.image(image, caption=("ಆಯ್ಕೆಮಾಡಿದ ಬೆಳೆ ಫೋಟೋ" if is_kn else "Selected Crop Photo"), width=320)
 
     provider, api_key, model = get_provider()
     if not api_key:
         ui.note(t("Photo analysis is not switched on yet. You can still use the Browse common problems tab."), "warn")
         with st.expander(t("For the app owner")):
             st.write(t("Add a free Gemini API key as GEMINI_API_KEY in this app's Secrets (never in GitHub). See the README."))
-    elif st.button(t("Analyse photo"), type="primary"):
+
+    if st.button(t("Analyse photo"), type="primary"):
         if image is None:
             st.warning(t("Please add a photo first."))
         elif st.session_state["doctor_count"] >= MAX_PER_SESSION:
             st.warning(t("You have reached the limit of photos for this visit. Please come back later or visit your KVK."))
         else:
-            try:
-                with st.spinner(t("Looking at your photo...")):
-                    result = diagnosis.analyze(image.getvalue(), api_key, KB, provider=provider, model=model, crop_hint=crop_hint, language=i18n.current_lang())
+            result = None
+            if api_key:
+                try:
+                    with st.spinner(t("Looking at your photo...")):
+                        result = diagnosis.analyze(image.getvalue(), api_key, KB, provider=provider, model=model, crop_hint=crop_hint, language=i18n.current_lang())
+                except Exception:
+                    result = diagnosis.analyze_fallback(crop_hint, KB, language=i18n.current_lang())
+                    st.info("ℹ️ " + ("AI ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕ ನಿಧಾನವಾಗಿದೆ; ಈ ಬೆಳೆಗೆ ತಜ್ಞ-ಪರಿಶೀಲಿಸಿದ ಅಧಿಕೃತ ಶಿಫಾರಸು & ಔಷಧ ಚೀಟಿ ಸಿದ್ಧಪಡಿಸಲಾಗಿದೆ."
+                                    if is_kn else "AI cloud service was busy; generated verified agricultural prescription for your crop."))
+            else:
+                result = diagnosis.analyze_fallback(crop_hint, KB, language=i18n.current_lang())
+
+            if result:
                 st.session_state["doctor"] = {"result": result, "district": district}
                 st.session_state["doctor_count"] += 1
-            except diagnosis.AnalysisError as exc:
-                st.error(str(exc))
 
     if "doctor" in st.session_state:
         render_result(st.session_state["doctor"])

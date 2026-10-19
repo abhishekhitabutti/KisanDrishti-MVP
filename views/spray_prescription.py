@@ -251,6 +251,21 @@ with tab_weed_density:
         for stp in steps:
             st.markdown(f"- {stp}")
 
+        if "chemical_weedicides" in w_plan:
+            st.markdown("---")
+            st.markdown(f"**{'ಶಿಫಾರಸು ಮಾಡಿದ ಕಳೆನಾಶಕಗಳು & ನಿಖರ ಡೋಸ್ {Chemical Weedicides}:' if is_kn else 'Recommended Chemical Weedicides & Exact Dosages:'}**")
+            for cw in w_plan["chemical_weedicides"]:
+                with st.container(border=True):
+                    cw_col1, cw_col2 = st.columns([2.5, 1])
+                    with cw_col1:
+                        st.markdown(f"**🌿 {cw['trade_name_kn'] if is_kn else cw['trade_name_en']}**")
+                        st.write(f"**{'ಸೂಕ್ತ ಬೆಳೆಗಳು:' if is_kn else 'Target Crops:'}** {cw['target_crops_kn'] if is_kn else cw['target_crops_en']}")
+                        st.write(f"**{'15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn else 'Dose per 15L Pump:'}** `{cw['dose_per_pump_15l']}`")
+                        st.write(f"**{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ:' if is_kn else 'Dose per 1 Acre:'}** `{cw['dose_per_acre']}`")
+                        st.caption(cw['timing_kn'] if is_kn else cw['timing_en'])
+                    with cw_col2:
+                        st.link_button("🛒 ಖರೀದಿಸಿ (Buy)", cw["buy_url"], use_container_width=True)
+
     st.markdown("---")
     st.markdown(
         "#### ♻️ ಕಳೆ ತ್ಯಾಜ್ಯದಿಂದ ಅಧಿಕ ತಾಪಮಾನದ ಜೈವಿಕ ಕಾಂಪೋಸ್ಟ್ ತಯಾರಿಕೆ {Thermophilic Composting}:"
@@ -301,7 +316,9 @@ with tab_yield:
             with col_b:
                 st.markdown(f"**{'15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn else 'Dose per 15L Pump:'}**")
                 st.markdown(f"### `{item['dose_per_pump_15l'].split()[0]}`")
-                st.caption(item["dose_per_litre"])
+                st.caption(f"{'ಲೀಟರ್‌ಗೆ:' if is_kn else 'Per Litre:'} {item['dose_per_litre']}")
+                st.markdown(f"**{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ:' if is_kn else 'Dose per Acre:'}**")
+                st.info(item.get("dose_per_acre", "500 ml/1 kg in 200L water"))
                 st.markdown(f"**ತಯಾರಕರು:** `{item['manufacturer']}`")
                 st.link_button(
                     "🛒 ನೇರ ಖರೀದಿ" if is_kn else "🛒 Order Online",
