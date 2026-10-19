@@ -279,3 +279,4 @@ footer_text = (
     "© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."
 )
 st.caption(footer_text)
+

@@ -143,35 +143,47 @@ with t_borewell:
             "ಬೋರ್‌ವೆಲ್ ಕೊರೆಯುವ ಮುನ್ನ ಕೇಂದ್ರ ಅಂತರ್ಜಲ ಮಂಡಳಿ {CGWB} ಮತ್ತು ರಾಜ್ಯ ಅಂತರ್ಜಲ ನಿರ್ದೇಶನಾಲಯದ ದತ್ತಾಂಶವನ್ನು ಆಧರಿಸಿ "
             "ನೀರು ಸಿಗುವ ನಿಖರ ಆಳ, ಸಂಭವನೀಯತೆ, ಮತ್ತು ಆರ್ಥಿಕ ಬಜೆಟ್ ಅನ್ನು ಈ ಉಪಕರಣವು ಅಂದಾಜಿಸುತ್ತದೆ.\n\n"
             "**ಬಳಸುವ 3 ಹಂತಗಳು:**\n"
-            "1. **ಜಿಲ್ಲೆ ಮತ್ತು ಭೂಸ್ವರೂಪ ಆರಿಸಿ:** ನಿಮ್ಮ ಜಿಲ್ಲೆ, ಹೊಲದ ಎತ್ತರ-ತಗ್ಗು, ಮತ್ತು 500 ಮೀಟರ್ ಒಳಗೆ ನದಿ/ಕೆರೆ ಇದೆಯೇ ಎಂದು ತಿಳಿಸಿ.\n"
-            "2. **ನೆರೆಯ ಕೊಳವೆಬಾವಿಗಳ ಸ್ಥಿತಿ:** ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ 500 ಮೀಟರ್ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಎಷ್ಟು ಕೊಳವೆಬಾವಿಗಳು ನೀರು ಕೊಡುತ್ತಿವೆ ಎಂದು ನಮೂದಿಸಿ.\n"
-            "3. **ವೈಜ್ಞಾನಿಕ ವಿಶ್ಲೇಷಣೆ:** ನೀರು ಸಿಗುವ ಸರಾಸರಿ ಆಳ, ಅಂದಾಜು ಒಟ್ಟು ಕೊರೆಯುವಿಕೆ ವೆಚ್ಚ (ಕೇಸಿಂಗ್ ಪೈಪ್ ಸೇರಿ), ಮತ್ತು ಬೇಸಿಗೆಯಲ್ಲಿ ಬತ್ತಿಹೋಗುವ ಅಪಾಯವನ್ನು ಪರಿಶೀಲಿಸಿ."
+            "1. **ಜಿಪಿಎಸ್ ಅಥವಾ ಜಿಲ್ಲೆ-ತಾಲೂಕು ಆರಿಸಿ:** ನಿಮ್ಮ ಮೊಬೈಲ್‌ನ ಜಿಪಿಎಸ್ {GPS} ಅಕ್ಷಾಂಶ-ರೇಖಾಂಶಗಳನ್ನು ನಮೂದಿಸಿ ಅಥವಾ ಜಿಲ್ಲೆ-ತಾಲೂಕು ಆರಿಸಿ.\n"
+            "2. **ನೆರೆಯ ಕೊಳವೆಬಾವಿಗಳ ಸ್ಥಿತಿ:** ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ 500 ಮೀಟರ್ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಎಷ್ಟು ಕೊಳವೆಬಾವಿಗಳು ನೀರು ಕೊಡುತ್ತಿವೆ ಎಂದು ತಿಳಿಸಿ.\n"
+            "3. **ಭಾರತ-ವಾರಿಸ್ {India-WRIS} ವರದಿ:** ನೀರು ಸಿಗುವ ನಿಖರ ಆಳ, ನೀರಿನ ಜಲಬಲ (ಇಂಚುಗಳಲ್ಲಿ), ವೈಜ್ಞಾನಿಕ ಖಾತರಿ ಪ್ರಮಾಣ (%), ಮತ್ತು ಆರ್ಥಿಕ ಬಜೆಟ್ ಪರಿಶೀಲಿಸಿ."
         )
     else:
         st.markdown(
-            "Before spending ₹2,00,000 on drilling, this advisory predicts groundwater strike depth, success probability, "
-            "and drilling budgets using Central Ground Water Board (CGWB) hydrogeological data and nearby well ground truth.\n\n"
+            "Before spending ₹2,00,000 on drilling, this advisory predicts groundwater strike depth, water discharge force (in inches & LPM), "
+            "and scientific assurance using Government of India-WRIS / CGWB observation well records and nearby well ground truth.\n\n"
             "**3 Steps to use:**\n"
-            "1. **Select District & Topography:** Specify your district, land elevation (valley vs ridge), and proximity to surface water.\n"
+            "1. **Select GPS or District-Taluk:** Provide your phone's GPS coordinates or choose your district and taluk.\n"
             "2. **Report Local Wells:** Enter working vs dry borewells within 500 meters to calibrate spatial probability.\n"
-            "3. **Review Estimates:** Check recommended strike depth, casing requirement, estimated budget, and summer desiccation risks."
+            "3. **Review India-WRIS Report:** Check recommended strike depth, water force in inches, scientific assurance score, and budget."
         )
 
     with st.container(border=True):
-        st.markdown(f"**🎮 {'ನೇರ ಡೆಮೊ: ಕೊಳವೆಬಾವಿ ಮುನ್ನೋಟ' if is_kn else 'Live Demo: Borewell Feasibility'}**")
+        st.markdown(f"**🎮 {'ನೇರ ಡೆಮೊ: ಕೊಳವೆಬಾವಿ ಜಲಬಲ & ಖಾತರಿ ಮುನ್ನೋಟ' if is_kn else 'Live Demo: Borewell Force & Feasibility'}**")
         demo_dist = st.selectbox(
             "ಜಿಲ್ಲೆಯನ್ನು ಆರಿಸಿ" if is_kn else "Select district",
             ["Belagavi (ಬೆಳಗಾವಿ)", "Kolar (ಕೋಲಾರ)", "Raichur (ರಾಯಚೂರು)"],
             key="demo_borewell_dist"
         )
         if "Belagavi" in demo_dist:
-            st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "240 - 360 ft", "76% " + ("ಸಂಭವನೀಯತೆ" if is_kn else "Probability"))
-            st.info("ಬೆಳಗಾವಿ: ಸುರಕ್ಷಿತ ವಲಯ {Safe}. ನದಿ ಕಣಿವೆಯಲ್ಲಿ ಜಲಮಟ್ಟ ಉತ್ತಮವಾಗಿದೆ." if is_kn else "Belagavi: Safe CGWB category with robust river basin replenishment.")
+            dcol_a, dcol_b = st.columns(2)
+            with dcol_a:
+                st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "180 - 280 ft", "94% " + ("ಖಾತರಿ" if is_kn else "Assurance"))
+            with dcol_b:
+                st.metric("ನೀರಿನ ಜಲಬಲ" if is_kn else "Water Force", "2.0 - 2.5 " + ("ಇಂಚು ನೀರು" if is_kn else "Inches"), "120-180 LPM (5 HP)")
+            st.info("ಬೆಳಗಾವಿ: ಚಿಕ್ಕೋಡಿ ಡಿಡಬ್ಲ್ಯುಎಲ್‌ಆರ್ ನಿಲ್ದಾಣ {CGWB-KN-BEL-012}. ಸುರಕ್ಷಿತ ವಲಯ." if is_kn else "Belagavi: Chikkodi DWLR Station (CGWB-KN-BEL-012). Safe hydrograph zone.")
         elif "Kolar" in demo_dist:
-            st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "750 - 1,150 ft", "38% " + ("ಸಂಭವನೀಯತೆ" if is_kn else "Probability"))
+            dcol_a, dcol_b = st.columns(2)
+            with dcol_a:
+                st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "650 - 1,050 ft", "38% " + ("ಖಾತರಿ" if is_kn else "Assurance"))
+            with dcol_b:
+                st.metric("ನೀರಿನ ಜಲಬಲ" if is_kn else "Water Force", "1.0 - 1.5 " + ("ಇಂಚು ನೀರು" if is_kn else "Inches"), "35-75 LPM (7.5 HP)")
             st.warning("ಕೋಲಾರ: ಅತೀಯಾಗಿ ಬಳಸಿದ ವಲಯ {Over-Exploited}. ಕಡ್ಡಾಯವಾಗಿ ಜಿಯೋಫಿಸಿಕಲ್ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ." if is_kn else "Kolar: Over-Exploited CGWB category. Geophysical resistivity survey is mandatory.")
         else:
-            st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "380 - 580 ft", "62% " + ("ಸಂಭವನೀಯತೆ" if is_kn else "Probability"))
+            dcol_a, dcol_b = st.columns(2)
+            with dcol_a:
+                st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "220 - 360 ft", "82% " + ("ಖಾತರಿ" if is_kn else "Assurance"))
+            with dcol_b:
+                st.metric("ನೀರಿನ ಜಲಬಲ" if is_kn else "Water Force", "1.75 - 2.25 " + ("ಇಂಚು ನೀರು" if is_kn else "Inches"), "95-150 LPM (5 HP)")
             st.info("ರಾಯಚೂರು: ಅರೆ-ನಿರ್ಣಾಯಕ ವಲಯ {Semi-Critical}. ಕಪ್ಪು ಮಣ್ಣಿಗೆ 80 ಅಡಿ ಕೇಸಿಂಗ್ ಪೈಪ್ ಅಗತ್ಯ." if is_kn else "Raichur: Semi-Critical category. Deep black soil needs 80 ft casing pipe.")
 
     ui.page_link("views/borewell.py", "ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ ಪುಟಕ್ಕೆ ಹೋಗಿ" if is_kn else "Go to Borewell Advisory Page", "💧")
