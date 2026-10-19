@@ -1,8 +1,11 @@
 """
 KrushiNudi Module: Smart Spray & High-Yield Nutrition Prescription (ಔಷಧ ಚೀಟಿ & ಅಧಿಕ ಇಳುವರಿ ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್)
+Seamlessly connected to Crop Doctor (ಬೆಳೆ ವೈದ್ಯ) for direct prescription generation.
 Features:
-- Crop-specific disease & pest chemical options with exact dosages (per L & per 15L pump)
-- High-yield nutrition boosters (IFFCO Sagarika, Nano Urea, Nano DAP, WSF 19:19:19, 00:52:34, 13:00:45, Boron, Zinc, Planofix)
+- Direct diagnosis integration with Crop Doctor
+- Crop-wise diseases & pests with exact chemical actives and dosages (per L & per 15L pump)
+- Crop-specific growth & nutritional tonics separately for EVERY crop (Vegetative, Flowering, Yield Booster)
+- Weed disposal & suppression methods tailored by weed infestation density (Low, Moderate, Heavy)
 - Digital Farm Prescription Calculator based on land area (Acres & Guntas) and sprayer type
 - Tank-mix compatibility matrix & safe mixing sequence
 - Verified Indian agricultural companies, direct purchase portals, and toll-free helpline numbers.
@@ -10,7 +13,7 @@ Features:
 """
 
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from html import escape
 from pathlib import Path
 
@@ -28,28 +31,61 @@ is_kn = (i18n.current_lang() == "kn")
 # --- HERO SECTION ---
 hero_title = "ಔಷಧ & ಪೋಷಕಾಂಶ ಚೀಟಿ" if is_kn else "Smart Spray Prescription"
 hero_sub = (
-    "ಬೆಳೆ ರೋಗ-ಕೀಟ ನಿಯಂತ್ರಣ, ಅಧಿಕ ಇಳುವರಿ ಪೋಷಕಾಂಶ ಸೂತ್ರಗಳು, ಜಮೀನಿನ ಅಳತೆಯ ಡಿಜಿಟಲ್ ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್ ಮತ್ತು ಭಾರತೀಯ ಕೃಷಿ ಕಂಪನಿಗಳಿಂದ ನೇರ ಖರೀದಿ."
+    "ಬೆಳೆ ವೈದ್ಯರಿಗೆ {Crop Doctor} ನೇರವಾಗಿ ಸಂಪರ್ಕಿತ: ರೋಗ-ಕೀಟ ನಿಯಂತ್ರಣ, ಪ್ರತ್ಯೇಕ ಬೆಳೆವಾರು ಪೋಷಕಾಂಶ ಟಾನಿಕ್‌ಗಳು, ಕಳೆ ಸಾಂದ್ರತೆ ವಿಲೇವಾರಿ, ಮತ್ತು ಜಮೀನಿನ ಅಳತೆಯ ಡಿಜಿಟಲ್ ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್."
     if is_kn else
-    "Crop disease & pest treatments, high-yield nutrition boosters, digital farm prescription calculator, and direct Indian agri-procurement."
+    "Directly connected to Crop Doctor: disease/pest treatments, crop-specific nutritional tonics, density-based weed disposal, and land-size prescription slip."
 )
 ui.hero(hero_title, hero_sub, "💊")
 
 steps_row = [
-    ("🔬", "ರೋಗ ನಿರ್ಣಯ" if is_kn else "Problem diagnosis"),
+    ("🩺", "ಬೆಳೆ ವೈದ್ಯ" if is_kn else "Crop Doctor"),
     ("💧", "ನಿಖರ ಡೋಸ್" if is_kn else "Exact dosage"),
+    ("🌾", "ಬೆಳೆ ಟಾನಿಕ್" if is_kn else "Growth tonic"),
     ("🧮", "ಔಷಧ ಚೀಟಿ" if is_kn else "Prescription slip"),
     ("🚚", "ನೇರ ಖರೀದಿ" if is_kn else "Direct buy"),
 ]
 ui.steps_row(steps_row)
 
+# --- DIRECT CONNECTION BANNER WITH CROP DOCTOR ---
+presc_target_id = st.session_state.get("presc_target_id")
+target_crop_obj = None
+if presc_target_id:
+    target_crop_obj = next((p for p in pdata.CROP_PRESCRIPTIONS if p["id"] == presc_target_id), None)
+
+c_banner1, c_banner2 = st.columns([3, 1])
+with c_banner1:
+    if target_crop_obj:
+        st.success(
+            f"🩺 **{'ಬೆಳೆ ವೈದ್ಯರಿಂದ ನೇರ ಶಿಫಾರಸು:' if is_kn else 'Direct from Crop Doctor Diagnosis:'}** "
+            f"**{target_crop_obj['crop_kn'] if is_kn else target_crop_obj['crop_en']}** — "
+            f"*{target_crop_obj['problem_kn'] if is_kn else target_crop_obj['problem_en']}*"
+        )
+    else:
+        st.info(
+            "🩺 " + (
+                "ಹೊಸ ರೋಗದ ಲಕ್ಷಣಗಳು ಕಂಡಿವೆಯೇ? ಫೋಟೋ ತೆಗೆದು ಪರೀಕ್ಷಿಸಲು **ಬೆಳೆ ವೈದ್ಯರನ್ನು** ಬಳಸಿ."
+                if is_kn else
+                "Notice disease symptoms on your crop? Photograph leaves to identify issues using **Crop Doctor**."
+            )
+        )
+with c_banner2:
+    ui.page_link(
+        "views/crop_doctor.py",
+        "📸 " + ("ಬೆಳೆ ವೈದ್ಯ" if is_kn else "Crop Doctor"),
+        icon="🩺"
+    )
+
+# --- MAIN TABS ---
 tab_labels = [
     "📋 ಬೆಳೆ ರೋಗ & ಕೀಟನಾಶಕ ಮಾರ್ಗದರ್ಶಿ" if is_kn else "📋 Disease & Pest Advisory",
-    "🚀 ಅಧಿಕ ಇಳುವರಿ & ಪೋಷಕಾಂಶ ಸೂತ್ರಗಳು" if is_kn else "🚀 High Yield Promoters",
+    "🌾 ಬೆಳೆವಾರು ಬೆಳವಣಿಗೆ & ಟಾನಿಕ್‌ಗಳು" if is_kn else "🌾 Crop-Wise Tonics",
+    "🌿 ಕಳೆ ಸಾಂದ್ರತೆ & ವಿಲೇವಾರಿ" if is_kn else "🌿 Weed Disposal by Density",
+    "🚀 ಅಧಿಕ ಇಳುವರಿ ಪ್ರವರ್ಧಕಗಳು" if is_kn else "🚀 High-Yield Promoters",
     "🧮 ಡಿಜಿಟಲ್ ಔಷಧ ಚೀಟಿ (ಕ್ಯಾಲ್ಕುಲೇಟರ್)" if is_kn else "🧮 Prescription Calculator",
     "⚠️ ಟ್ಯಾಂಕ್-ಮಿಕ್ಸ್ ನಿಯಮಗಳು" if is_kn else "⚠️ Tank-Mix Rules",
     "🛒 ಭಾರತೀಯ ಕೃಷಿ ಕಂಪನಿಗಳು & ಕರೆ" if is_kn else "🛒 Indian Agri Companies",
 ]
-tab_pest, tab_yield, tab_calc, tab_mix, tab_companies = st.tabs(tab_labels)
+tab_pest, tab_crop_tonics, tab_weed_density, tab_yield, tab_calc, tab_mix, tab_companies = st.tabs(tab_labels)
 
 
 # ==============================================================================
@@ -66,11 +102,22 @@ with tab_pest:
     )
 
     crop_options = {
-        (p["crop_kn"] if is_kn else p["crop_en"]): p["id"] for p in pdata.CROP_PRESCRIPTIONS
+        (p["crop_kn"] if is_kn else p["crop_en"]) + " - " + (p["problem_kn"] if is_kn else p["problem_en"]): p["id"]
+        for p in pdata.CROP_PRESCRIPTIONS
     }
+    crop_keys = list(crop_options.keys())
+
+    default_idx = 0
+    if presc_target_id:
+        for idx, key in enumerate(crop_keys):
+            if crop_options[key] == presc_target_id:
+                default_idx = idx
+                break
+
     selected_crop_label = st.selectbox(
         "ಬೆಳೆ ಮತ್ತು ಸಮಸ್ಯೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ:" if is_kn else "Select Crop & Problem:",
-        list(crop_options.keys())
+        crop_keys,
+        index=default_idx
     )
     selected_id = crop_options[selected_crop_label]
     p_item = next(p for p in pdata.CROP_PRESCRIPTIONS if p["id"] == selected_id)
@@ -108,7 +155,121 @@ with tab_pest:
 
 
 # ==============================================================================
-# TAB 2: HIGH-YIELD NUTRITION & GROWTH PROMOTERS
+# TAB 2: CROP-WISE GROWTH & NUTRITIONAL TONICS (SEPARATE FOR EVERY CROP)
+# ==============================================================================
+with tab_crop_tonics:
+    st.markdown(
+        "### " + ("🌾 ಪ್ರತಿ ಬೆಳೆಗೂ ಪ್ರತ್ಯೇಕ ಬೆಳವಣಿಗೆ & ಪೋಷಕಾಂಶ ಟಾನಿಕ್ ವೇಳಾಪಟ್ಟಿ" if is_kn else "🌾 Dedicated Stage-Wise Nutritional Tonics for Every Crop")
+    )
+    st.caption(
+        "ಪ್ರತಿಯೊಂದು ಬೆಳೆಗೂ ಸಸಿ ಹಂತ, ಹೂವಾಡುವ ಹಂತ ಮತ್ತು ಕಾಯಿ/ಕಾಳು ತುಂಬುವ ಹಂತಗಳಲ್ಲಿ ಸಿಂಪಡಿಸಬೇಕಾದ ಅತ್ಯುತ್ತಮ ಟಾನಿಕ್‌ಗಳು ಮತ್ತು ನಿಖರ ಡೋಸ್‌ಗಳು."
+        if is_kn else
+        "Tailored stage-specific growth boosters, bio-stimulants, and foliar nutrients designed specifically for each major crop."
+    )
+
+    tonic_crops = list(pdata.CROP_SPECIFIC_TONICS.keys())
+    sel_tonic_crop = st.selectbox(
+        "ಬೆಳೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ:" if is_kn else "Select Crop for Nutrition Plan:",
+        tonic_crops
+    )
+    t_plan = pdata.CROP_SPECIFIC_TONICS[sel_tonic_crop]
+
+    st.markdown(f"#### 🎯 {t_plan['name_kn'] if is_kn else sel_tonic_crop} — 3-ಹಂತದ ಇಳುವರಿ ಬೂಸ್ಟರ್ ವೇಳಾಪಟ್ಟಿ")
+    st.markdown(f"**ನಿರೀಕ್ಷಿತ ಇಳುವರಿ ಹೆಚ್ಚಳ:** {ui.badge(t_plan['boost_pct'], 'healthy')}", unsafe_allow_html=True)
+
+    col_t1, col_t2, col_t3 = st.columns(3)
+    with col_t1:
+        with st.container(border=True):
+            st.markdown(f"**🌱 {'ಹಂತ 1: ಸಸಿ & ಕವಲು ಹಂತ' if is_kn else 'Stage 1: Vegetative Flush'}**")
+            st.caption(t_plan["veg_stage_kn"] if is_kn else t_plan["veg_stage_en"])
+    with col_t2:
+        with st.container(border=True):
+            st.markdown(f"**🌸 {'ಹಂತ 2: ಹೂವಾಡುವ ಹಂತ' if is_kn else 'Stage 2: Flowering Booster'}**")
+            st.caption(t_plan["flower_stage_kn"] if is_kn else t_plan["flower_stage_en"])
+    with col_t3:
+        with st.container(border=True):
+            st.markdown(f"**🌾 {'ಹಂತ 3: ಕಾಳು / ಕಾಯಿ ಮಾಗುವಿಕೆ' if is_kn else 'Stage 3: Grain / Fruit Size'}**")
+            st.caption(t_plan["yield_stage_kn"] if is_kn else t_plan["yield_stage_en"])
+
+    st.markdown("---")
+    st.markdown("**🛒 ಭಾರತದ ಅಧಿಕೃತ ಪೋಷಕಾಂಶಗಳ ನೇರ ಖರೀದಿ ಲಿಂಕ್‌ಗಳು:**")
+    quick_prods = [
+        ("IFFCO Sagarika Liquid (ಕಡಲಕಳೆ ಟಾನಿಕ್)", "https://www.iffcobazar.in/en/product/sagarika-liquid"),
+        ("IFFCO Nano Urea Plus (ನ್ಯಾನೋ ಯೂರಿಯಾ)", "https://www.iffcobazar.in/en/product/iffco-nano-urea-liquid"),
+        ("WSF 19:19:19 (ಕರಗುವ ಗೊಬ್ಬರ)", "https://www.iffcobazar.in/en/product/wsf-19-19-19-fertiliser"),
+        ("WSF 00:52:34 (ಹೂವು ಉತ್ತೇಜಕ)", "https://www.bighaat.com/products/0-52-34-fertilizer"),
+        ("Chelated Boron 20% (ಬೋರಾನ್)", "https://www.bighaat.com/products/multiplex-boron"),
+    ]
+    qp_cols = st.columns(len(quick_prods))
+    for col, (name, link) in zip(qp_cols, quick_prods):
+        col.link_button(name, link, use_container_width=True)
+
+
+# ==============================================================================
+# TAB 3: WEED DISPOSAL BY INFESTATION DENSITY & LAND PORTION
+# ==============================================================================
+with tab_weed_density:
+    st.markdown(
+        "### " + ("🌿 ಜಮೀನಿನ ಕಳೆ ಸಾಂದ್ರತೆಗೆ ಅನುಗುಣವಾಗಿ ವಿಲೇವಾರಿ & ನಿಯಂತ್ರಣ ವಿಧಾನಗಳು" if is_kn else "🌿 Weed Disposal & Suppression Methods Tailored by Infestation Density")
+    )
+    st.write(
+        "ಜಮೀನಿನಲ್ಲಿ ಕಳೆ ಆವರಿಸಿರುವ ವಿಸ್ತೀರ್ಣಕ್ಕೆ (ಕಡಿಮೆ, ಮಧ್ಯಮ ಅಥವಾ ತೀವ್ರ ದಟ್ಟ) ತಕ್ಕಂತೆ ಸೂಕ್ತ ನೈಸರ್ಗಿಕ, ಯಾಂತ್ರಿಕ ಮತ್ತು ಕಾಂಪೋಸ್ಟ್ ವಿಲೇವಾರಿ ಕ್ರಮಗಳು."
+        if is_kn else
+        "Strategic weed disposal and suppression methods calibrated to the portion and density of weeds acquired by the land."
+    )
+
+    density_mode = st.radio(
+        "ನಿಮ್ಮ ಜಮೀನಿನಲ್ಲಿ ಕಳೆಯ ಸಾಂದ್ರತೆ ಎಷ್ಟಿದೆ?" if is_kn else "Current Weed Infestation Level on Your Plot:",
+        [
+            "ಕಡಿಮೆ ಸಾಂದ್ರತೆ (< 15% ಭಾಗ) - Low Infestation",
+            "ಮಧ್ಯಮ ಸಾಂದ್ರತೆ (15% - 40% ಭಾಗ) - Moderate Infestation",
+            "ತೀವ್ರ ದಟ್ಟ ಸಾಂದ್ರತೆ (> 40% ಬೆಳೆ ಮುಳುಗಿಸುವ ಕಳೆ) - Dense Infestation"
+        ],
+        horizontal=True
+    )
+
+    if "Low" in density_mode:
+        density_key = "low"
+    elif "Moderate" in density_mode:
+        density_key = "medium"
+    else:
+        density_key = "dense"
+
+    w_plan = pdata.WEED_MANAGEMENT_BY_DENSITY[density_key]
+
+    with st.container(border=True):
+        st.markdown(f"#### 🔍 {w_plan['title_kn'] if is_kn else w_plan['title_en']}")
+        st.markdown(
+            f"**ರಾಸಾಯನಿಕ ಅಗತ್ಯತೆ:** "
+            f"<span style='background:{w_plan['badge_color']}; color:#fff; padding:0.2rem 0.6rem; border-radius:12px; font-weight:bold;'>"
+            f"{w_plan['chemical_necessity_kn'] if is_kn else w_plan['chemical_necessity_en']}</span>",
+            unsafe_allow_html=True
+        )
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown(f"**{'ಕೈಗೊಳ್ಳಬೇಕಾದ ಕ್ರಮಗಳು & ವಿಲೇವಾರಿ ವಿಧಾನಗಳು:' if is_kn else 'Action Steps & Organic Disposal Methods:'}**")
+        steps = w_plan["action_steps_kn"] if is_kn else w_plan["action_steps_en"]
+        for stp in steps:
+            st.markdown(f"- {stp}")
+
+    st.markdown("---")
+    st.markdown(
+        "#### ♻️ ಕಳೆ ತ್ಯಾಜ್ಯದಿಂದ ಅಧಿಕ ತಾಪಮಾನದ ಜೈವಿಕ ಕಾಂಪೋಸ್ಟ್ ತಯಾರಿಕೆ {Thermophilic Composting}:"
+        if is_kn else
+        "#### ♻️ Converting Weed Residue into Safe Organic Compost (Thermophilic Composting):"
+    )
+    st.info(
+        "ಕಳೆಗಳನ್ನು ಬದು ಅಥವಾ ಕಾಲುವೆಗೆ ಎಸೆಯುವುದರಿಂದ ಮಳೆ ನೀರಿನಲ್ಲಿ ಬೀಜಗಳು ಹರಡಿ ಮುಂದಿನ ವರ್ಷ 10 ಪಟ್ಟು ಹೆಚ್ಚು ಕಳೆ ಬರುತ್ತದೆ! "
+        "ಕೀಳಲಾದ ಕಳೆಯನ್ನು 1 ಮೀಟರ್ ಆಳದ ಗುಂಡಿಯಲ್ಲಿ ಸೆಗಣಿ ಗಂಜಲ, ಕೃಷಿ ತ್ಯಾಜ್ಯ ಮತ್ತು ಟ್ರೈಕೋಡರ್ಮದೊಂದಿಗೆ ಪದರಗಳಾಗಿ ಹಾಕಿ. "
+        "ಗುಂಡಿಯಲ್ಲಿ ಉಂಟಾಗುವ 55°C ತಾಪಮಾನಕ್ಕೆ ಎಲ್ಲಾ ಕಳೆ ಬೀಜಗಳು ಸತ್ತು ಉತ್ತಮ ಸಾರಜನಕಯುಕ್ತ ಸಾವಯವ ಗೊಬ್ಬರವಾಗುತ್ತದೆ."
+        if is_kn else
+        "Throwing weeds on field bunds spreads dormant weed seeds into irrigation channels, causing a 10x heavier infestation next season! "
+        "Instead, layer weeds in a 1-meter deep pit with cattle dung slurry and Trichoderma. "
+        "The resulting 55°C thermophilic fermentation heat sterilizes all weed seed banks, turning residue into rich organic fertilizer."
+    )
+
+
+# ==============================================================================
+# TAB 4: HIGH-YIELD BIOSTIMULANTS & PROMOTERS
 # ==============================================================================
 with tab_yield:
     st.markdown(
@@ -150,7 +311,7 @@ with tab_yield:
 
 
 # ==============================================================================
-# TAB 3: DIGITAL PRESCRIPTION CALCULATOR
+# TAB 5: DIGITAL PRESCRIPTION CALCULATOR
 # ==============================================================================
 with tab_calc:
     st.markdown(
@@ -165,11 +326,21 @@ with tab_calc:
     c_in1, c_in2, c_in3 = st.columns([2, 1, 1])
     with c_in1:
         calc_crop_options = {
-            (p["crop_kn"] if is_kn else p["crop_en"]): p for p in pdata.CROP_PRESCRIPTIONS
+            (p["crop_kn"] if is_kn else p["crop_en"]) + " - " + (p["problem_kn"] if is_kn else p["problem_en"]): p
+            for p in pdata.CROP_PRESCRIPTIONS
         }
+        calc_keys = list(calc_crop_options.keys())
+        default_calc_idx = 0
+        if presc_target_id:
+            for idx, key in enumerate(calc_keys):
+                if calc_crop_options[key]["id"] == presc_target_id:
+                    default_calc_idx = idx
+                    break
+
         sel_crop_name = st.selectbox(
             "ಬೆಳೆ & ಸಮಸ್ಯೆ ಆಯ್ಕೆಮಾಡಿ:" if is_kn else "Select Crop & Problem:",
-            list(calc_crop_options.keys()),
+            calc_keys,
+            index=default_calc_idx,
             key="calc_crop_sel"
         )
         active_presc = calc_crop_options[sel_crop_name]
@@ -206,7 +377,7 @@ with tab_calc:
         selected_booster = growth_booster_options[sel_booster_label]
 
     # Calculations
-    is_veg = any(v in active_presc["id"] for v in ["chilli", "tomato"])
+    is_veg = any(v in active_presc["id"] for v in ["chilli", "tomato", "onion"])
     pumps_per_acre = sprayer_cfg["pumps_per_acre_vegetables"] if is_veg else sprayer_cfg["pumps_per_acre_field_crop"]
     total_pumps = round(pumps_per_acre * total_acres, 1)
     if total_pumps < 1.0 and total_acres > 0:
@@ -214,18 +385,12 @@ with tab_calc:
     total_water_litres = int(total_pumps * sprayer_cfg["volume_l"])
 
     primary_chem = active_presc["recommended_chemicals"][0]
-    
-    # Quantitative calculations
-    # Parse dosage
-    dose_text = primary_chem["dose_per_pump_15l"]
-    ratio_mult = sprayer_cfg["volume_l"] / 15.0
 
     st.markdown("---")
     st.markdown(
         f"### 📋 {'ಅಧಿಕೃತ ಕೃಷಿ ಔಷಧ ಚೀಟಿ {Farm Prescription Slip}' if is_kn else 'Official Farm Prescription Slip'}"
     )
 
-    # UI Prescription Card
     now_date = datetime.now().strftime("%d-%b-%Y")
     st.markdown(f"""
     <div style="background-color: #F8FBF8; border: 2px solid #2E7D32; border-radius: 12px; padding: 1.2rem; font-family: sans-serif;">
@@ -302,7 +467,7 @@ with tab_calc:
 
 
 # ==============================================================================
-# TAB 4: TANK-MIX COMPATIBILITY RULES & SAFETY
+# TAB 6: TANK-MIX COMPATIBILITY RULES & SAFETY
 # ==============================================================================
 with tab_mix:
     st.markdown(
@@ -340,7 +505,7 @@ with tab_mix:
 
 
 # ==============================================================================
-# TAB 5: INDIAN AGRI COMPANIES & DIRECT PURCHASE PLATFORMS
+# TAB 7: INDIAN AGRI COMPANIES & DIRECT PURCHASE PLATFORMS
 # ==============================================================================
 with tab_companies:
     st.markdown(
@@ -359,7 +524,7 @@ with tab_companies:
                 st.markdown(f"#### 🏢 {comp['company_kn'] if is_kn else comp['company_en']}")
                 st.write(comp["specialty_kn"] if is_kn else comp["specialty_en"])
                 st.markdown(f"**🚚 {'ಡೆಲಿವರಿ ವಿವರ:' if is_kn else 'Delivery info:'}** {comp['delivery_note_kn'] if is_kn else comp['delivery_note_en']}")
-                
+
                 prods_str = " · ".join(f"`{p}`" for p in comp["popular_products"])
                 st.markdown(f"**{'ಪ್ರಮುಖ ಉತ್ಪನ್ನಗಳು:' if is_kn else 'Top Products:'}** {prods_str}")
 

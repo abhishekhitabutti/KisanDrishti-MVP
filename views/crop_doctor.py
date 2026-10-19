@@ -13,6 +13,7 @@ import diagnosis  # noqa: E402
 import i18n  # noqa: E402
 import spray_weather  # noqa: E402
 import ui  # noqa: E402
+import prescription_data as pdata  # noqa: E402
 from districts import DISTRICTS, DISTRICTS_KN  # noqa: E402
 from i18n import t  # noqa: E402
 
@@ -114,7 +115,7 @@ def spray_window_box(district):
     st.caption(t("Forecast for {district}. Simple rules: wait if rain is 2.5 mm or more or gusts reach 30 km/h.", district=district))
 
 
-def render_entry(entry, district, confirm=False):
+def render_entry(entry, district, confirm=False, key_prefix="browse"):
     if confirm:
         ui.note(t("This is a likely match, not a certain one. Confirm with your KVK or agriculture officer before you spray anything."), "warn")
     reference_image(entry["id"])
@@ -155,6 +156,27 @@ def render_entry(entry, district, confirm=False):
             bullets(entry["precautions"])
         st.markdown("**" + t("For every spray") + "**")
         bullets(diagnosis.SAFETY)
+
+    # --- CONNECT DIRECTLY TO SMART SPRAY PRESCRIPTION ---
+    target_presc_id = None
+    for p in pdata.CROP_PRESCRIPTIONS:
+        if p["id"] in entry["id"] or entry["id"] in p["id"] or any(c in p["crop_en"].lower() for c in entry.get("crops", [])):
+            target_presc_id = p["id"]
+            break
+    if not target_presc_id and pdata.CROP_PRESCRIPTIONS:
+        target_presc_id = pdata.CROP_PRESCRIPTIONS[0]["id"]
+
+    is_kn_local = (i18n.current_lang() == "kn")
+    with st.container(border=True):
+        st.markdown("### 💊 " + ("ಈ ರೋಗಕ್ಕೆ ಸ್ಮಾರ್ಟ್ ಔಷಧ ಚೀಟಿ & ಪೋಷಕಾಂಶ ಪ್ರಿಸ್ಕ್ರಿಪ್ಷನ್ ಪಡೆಯಿರಿ" if is_kn_local else "Generate Smart Spray & Nutrition Prescription"))
+        st.write(
+            "ನಿಮ್ಮ ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ (ಎಕರೆ & ಗುಂಟೆ) ಮತ್ತು ಸಿಂಪರಣಾ ಪಂಪ್ ಹಾಕಿ, ಬೇಕಾಗುವ ನೀರಿನ ಪ್ರಮಾಣ, ಔಷಧದ ನಿಖರ ಡೋಸ್, ಅಧಿಕ ಇಳುವರಿ ಬೂಸ್ಟರ್ ಮತ್ತು ಅಧಿಕೃತ ಭಾರತೀಯ ಕಂಪನಿಗಳಿಂದ (IFFCO / BigHaat) ನೇರ ಖರೀದಿಸಿ."
+            if is_kn_local else
+            "Calculate the exact water volume, chemical dosage, crop yield booster, and buy directly from verified Indian manufacturers."
+        )
+        if st.button("👉 " + ("ಔಷಧ ಚೀಟಿ ತೆರೆಯಿರಿ (Open Prescription Slip)" if is_kn_local else "Open Smart Prescription Slip"), type="primary", key=f"btn_presc_{key_prefix}_{entry['id']}"):
+            st.session_state["presc_target_id"] = target_presc_id
+            st.switch_page("views/spray_prescription.py")
 
     expert_help_box(entry["see_expert_if"])
     with st.expander(t("Sources")):
@@ -200,7 +222,7 @@ def render_result(state):
         ])
         expert_help_box()
     else:
-        render_entry(decision["entry"], district, decision.get("confirm", False))
+        render_entry(decision["entry"], district, decision.get("confirm", False), key_prefix="diag")
 
 
 st.session_state.setdefault("doctor_count", 0)
