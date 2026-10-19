@@ -240,11 +240,11 @@ def render_entry(entry, district, confirm=False, key_prefix="browse"):
                 c_col1, c_col2 = st.columns([2.5, 1.2])
                 with c_col1:
                     st.markdown(f"**🏷️ {c_name}**")
-                    st.markdown(f"- **{'ಕ್ರಿಯಾಶೀಲ ರಾಸಾಯನಿಕ {Active}:' if is_kn_local else 'Active Ingredient:'}** `{chem.get('active', '')}`")
-                    st.markdown(f"- **{'ಪ್ರತಿ 15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn_local else 'Dose per 15L Pump:'}** `{chem.get('dose_per_pump_15l', '25 ml/g')}`")
-                    st.markdown(f"- **{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ:' if is_kn_local else 'Dose per 1 Acre:'}** `{chem.get('dose_per_acre', '350 - 400 ml/g in 200L water')}`")
-                    st.markdown(f"- **{'ಕಾರ್ಯವಿಧಾನ {Action}:' if is_kn_local else 'Mode of Action:'}** {chem.get('action', '')}")
-                    st.caption(f"{'ತಯಾರಕರು:' if is_kn_local else 'Manufacturer:'} {chem.get('manufacturer', 'Verified Indian Manufacturer')}")
+                    st.markdown(f"- 🎯 **{'ಯಾವುದಕ್ಕೆ ಬಳಸಬೇಕು / ಕಾರ್ಯವಿಧಾನ {Used For / Action}:' if is_kn_local else 'Used For / Mode of Action:'}** {chem.get('action', 'Target disease / pest control')}")
+                    st.markdown(f"- 🧪 **{'ಕ್ರಿಯಾಶೀಲ ರಾಸಾಯನಿಕ {Active}:' if is_kn_local else 'Active Ingredient:'}** `{chem.get('active', '')}`")
+                    st.markdown(f"- 💧 **{'ಪ್ರತಿ 15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn_local else 'Dose per 15L Pump:'}** `{chem.get('dose_per_pump_15l', '25 ml/g')}`")
+                    st.markdown(f"- 🌾 **{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ (200 ಲೀ ನೀರಿಗೆ):' if is_kn_local else 'Dose per 1 Acre (in 200L Water):'}** `{chem.get('dose_per_acre', '350 - 400 ml/g')}`")
+                    st.caption(f"🏭 {'ಅಧಿಕೃತ ತಯಾರಕರು:' if is_kn_local else 'Certified Manufacturer:'} {chem.get('manufacturer', 'Verified Indian Manufacturer')}")
                 with c_col2:
                     buy_link = chem.get("buy_url") or f"https://www.bighaat.com/search?q={urllib.parse.quote(chem.get('active', ''))}"
                     st.link_button(
@@ -351,6 +351,22 @@ def render_result(state):
             f'{ui.badge(t("Confidence: {level}", level=t(result["confidence"])), result["confidence"])}'
             f'<div>{escape(t("Crop seen: {crop}", crop=result["crop"]))}</div></div>')
     st.markdown(head, unsafe_allow_html=True)
+    # Infestation Severity Level Card
+    if result.get("severity"):
+        sev = result["severity"]
+        is_kn_local = (i18n.current_lang() == "kn")
+        with st.container(border=True):
+            sc1, sc2 = st.columns([2.5, 1.2])
+            with sc1:
+                st.markdown(f"**📊 {'ರೋಗ ಬಾಧೆಯ ತೀವ್ರತೆಯ ಮಟ್ಟ {Infestation Severity Level}:' if is_kn_local else 'Disease Infestation Severity Level:'}**")
+                st.markdown(f"### {sev.get('badge', sev['label'])}")
+                st.write(sev.get("note", ""))
+            with sc2:
+                st.metric(
+                    "ಬಾಧಿತ ಭಾಗ {Affected Area}" if is_kn_local else "Affected Area",
+                    f"{sev.get('pct', 25.0)}%"
+                )
+
     if result["symptoms_seen"]:
         st.markdown("**" + t("What we can see in your photo") + "**")
         bullets(result["symptoms_seen"])
@@ -378,6 +394,17 @@ def render_result(state):
         ])
         expert_help_box()
     else:
+        # Pre-spray Symptom Confirmation Checklist
+        is_kn_local = (i18n.current_lang() == "kn")
+        entry = decision["entry"]
+        with st.expander("🔍 " + ("ರೋಗ ಲಕ್ಷಣಗಳನ್ನು ನಿಮ್ಮ ಬೆಳೆಯಲ್ಲಿ ದೃಢೀಕರಿಸಿ {Confirm Disease Symptoms Checklist}" if is_kn_local else "Confirm Disease Symptoms Checklist"), expanded=True):
+            st.write("ದಯವಿಟ್ಟು ಔಷಧ ಸಿಂಪಡಿಸುವ ಮೊದಲು ಈ ಕೆಳಗಿನ ಲಕ್ಷಣಗಳು ನಿಮ್ಮ ಹೊಲದ ಗಿಡದಲ್ಲಿ ಇವೆಯೇ ಎಂದು ಪರೀಕ್ಷಿಸಿ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ:" if is_kn_local else "Please verify if your crop exhibits these exact symptoms before spraying:")
+            for s in entry.get("look_for", []):
+                st.markdown(f"- ✅ `{t(s)}`")
+            if entry.get("not_to_confuse"):
+                st.markdown("**" + ("ಗೊಂದಲ ಬೇಡ {Do not confuse with}:" if is_kn_local else "Do not confuse with:") + "**")
+                bullets(entry["not_to_confuse"])
+
         render_entry(decision["entry"], district, decision.get("confirm", False), key_prefix="diag")
 
 
@@ -400,23 +427,64 @@ with tab_photo:
         district = d_options[sel_d_kn]
     else:
         district = c2.selectbox(t("Your district (for spray timing)"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"))
+
+    ALLOWED_IMAGE_TYPES = ["jpg", "jpeg", "png", "webp", "jfif", "bmp", "heic"]
+    VIDEO_EXTS = {".mp4", ".mov", ".avi", ".mkv", ".webm", ".3gp", ".flv", ".wmv", ".m4v"}
+
     source_labels = {t("Upload or take a photo with my phone"): "upload", t("Use this device's webcam"): "webcam"}
     source = source_labels[st.radio(t("How do you want to add the photo?"), list(source_labels))]
-    uploaded = camera = None
+    uploaded_files = []
+    camera = None
     if source == "upload":
-        uploaded = st.file_uploader(t("Upload a photo"), type=None)
-        st.caption(
-            "ಗ್ಯಾಲರಿಯಿಂದ ಫೋಟೋ ಆಯ್ಕೆಮಾಡಿ ಅಥವಾ ಕ್ಯಾಮೆರಾದಿಂದ ಸೆರೆಹಿಡಿಯಿರಿ (JPG, PNG, WEBP, ಇತ್ಯಾದಿ ಯಾವುದೇ ಫಾರ್ಮ್ಯಾಟ್ ಬೆಂಬಲಿಸುತ್ತದೆ)."
+        uploaded_files = st.file_uploader(
+            "ಬೆಳೆಯ ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ (ಹಲವು ಫೋಟೋಗಳನ್ನು ಒಟ್ಟಿಗೆ ಆಯ್ಕೆಮಾಡಬಹುದು) {Upload photos}"
             if is_kn else
-            "Upload from gallery or take with camera. Accepts any photo format (JPG, PNG, WEBP, etc.)."
+            "Upload photos of your crop (You can select multiple photos)",
+            type=ALLOWED_IMAGE_TYPES,
+            accept_multiple_files=True,
+            help="Upload clear photos of leaves, stems, or affected parts. Videos are NOT allowed."
+        )
+        st.caption(
+            "📸 **ಸೂಚನೆ:** ಕೇವಲ ಫೋಟೋಗಳನ್ನು (JPG, PNG, WEBP) ಮಾತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಅವಕಾಶವಿಲ್ಲ. ಎಲೆಯ ಮೇಲ್ಭಾಗ, ಹಿಂಭಾಗ ಮತ್ತು ಇಡೀ ಗಿಡದ ಹಲವು ಫೋಟೋಗಳನ್ನು ಒಟ್ಟಿಗೆ ಆಯ್ಕೆಮಾಡಬಹುದು."
+            if is_kn else
+            "📸 **Note:** Photos only (JPG, PNG, WEBP). Video uploads are strictly prohibited. You can upload multiple photos showing leaf close-up, underside, and whole plant."
         )
     else:
         camera = st.camera_input(t("Take a photo now"))
         st.caption(t("The webcam option may use the front camera. On a phone, the first option is usually better."))
-    image = uploaded or camera
 
-    if image is not None:
-        st.image(image, caption=("ಆಯ್ಕೆಮಾಡಿದ ಬೆಳೆ ಫೋಟೋ" if is_kn else "Selected Crop Photo"), width=320)
+    valid_photos = []
+    has_video = False
+    if uploaded_files:
+        file_list = uploaded_files if isinstance(uploaded_files, list) else [uploaded_files]
+        for f in file_list:
+            fname = getattr(f, "name", "").lower()
+            ext = Path(fname).suffix.lower()
+            mime = getattr(f, "type", "").lower()
+            if ext in VIDEO_EXTS or "video" in mime:
+                has_video = True
+            else:
+                valid_photos.append(f)
+
+    if has_video:
+        st.error(
+            "🚫 **ವೀಡಿಯೊ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಅವಕಾಶವಿಲ್ಲ.** ದಯವಿಟ್ಟು ಕೇವಲ ಬೆಳೆಯ ಸ್ಪಷ್ಟ ಫೋಟೋಗಳನ್ನು (JPG, PNG, WEBP) ಮಾತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ."
+            if is_kn else
+            "🚫 **Video files are not allowed.** Please upload clear photos only (JPG, PNG, WEBP). You can upload multiple photos."
+        )
+
+    photos_to_show = valid_photos if valid_photos else ([camera] if camera else [])
+
+    if photos_to_show:
+        st.markdown(f"**📸 {'ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ ಫೋಟೋಗಳು' if is_kn else 'Uploaded Photos'} ({len(photos_to_show)}):**")
+        n_cols = min(len(photos_to_show), 4)
+        img_cols = st.columns(n_cols)
+        for idx, p_file in enumerate(photos_to_show):
+            img_cols[idx % n_cols].image(
+                p_file,
+                caption=f"{'ಫೋಟೋ' if is_kn else 'Photo'} {idx+1}",
+                use_container_width=True
+            )
 
     provider, api_key, model = get_provider()
     if not api_key:
@@ -425,22 +493,23 @@ with tab_photo:
             st.write(t("Add a free Gemini API key as GEMINI_API_KEY in this app's Secrets (never in GitHub). See the README."))
 
     if st.button(t("Analyse photo"), type="primary"):
-        if image is None:
+        if not photos_to_show:
             st.warning(t("Please add a photo first."))
         elif st.session_state["doctor_count"] >= MAX_PER_SESSION:
             st.warning(t("You have reached the limit of photos for this visit. Please come back later or visit your KVK."))
         else:
+            raw_bytes_list = [p.getvalue() for p in photos_to_show]
             result = None
             if api_key:
                 try:
                     with st.spinner(t("Looking at your photo...")):
-                        result = diagnosis.analyze(image.getvalue(), api_key, KB, provider=provider, model=model, crop_hint=crop_hint, language=i18n.current_lang())
+                        result = diagnosis.analyze(raw_bytes_list, api_key, KB, provider=provider, model=model, crop_hint=crop_hint, language=i18n.current_lang())
                 except Exception:
-                    result = diagnosis.analyze_fallback(crop_hint, KB, language=i18n.current_lang())
-                    st.info("ℹ️ " + ("AI ನೆಟ್‌ವರ್ಕ್ ಸಂಪರ್ಕ ನಿಧಾನವಾಗಿದೆ; ಈ ಬೆಳೆಗೆ ತಜ್ಞ-ಪರಿಶೀಲಿಸಿದ ಅಧಿಕೃತ ಶಿಫಾರಸು & ಔಷಧ ಚೀಟಿ ಸಿದ್ಧಪಡಿಸಲಾಗಿದೆ."
-                                    if is_kn else "AI cloud service was busy; generated verified agricultural prescription for your crop."))
-            else:
-                result = diagnosis.analyze_fallback(crop_hint, KB, language=i18n.current_lang())
+                    result = None
+
+            if not result:
+                with st.spinner("ಬೆಳೆ ರೋಗ ಲಕ್ಷಣಗಳು ಮತ್ತು ತೀವ್ರತೆಯ ಮಟ್ಟ ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ..." if is_kn else "Analyzing plant symptoms, lesion patterns & severity..."):
+                    result = diagnosis.analyze_visual(raw_bytes_list, crop_hint, KB, language=i18n.current_lang())
 
             if result:
                 st.session_state["doctor"] = {"result": result, "district": district}
