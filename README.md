@@ -1,4 +1,8 @@
-# KrushiNudi
+# KrushiNudi (ಕೃಷಿನುಡಿ)
+
+**The Voice of Intelligent Agriculture.**
+
+*Category: Smart Farm Advisory*
 
 A farmer-first advisory web app for Karnataka: crop suggestions, a photo-based Crop Doctor, weather precautions, and step-by-step help with schemes and safe buying of inputs.
 
