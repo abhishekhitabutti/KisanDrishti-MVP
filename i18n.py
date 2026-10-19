@@ -37,11 +37,11 @@ def t(text, **kw):
 
 
 def crop(name):
-    """Crop name: in Kannada mode show pure Kannada name."""
+    """Crop name: in Kannada mode show Kannada name with English reference."""
     if current_lang() == "kn":
         kn = _kannada().get(f"crop:{name}")
         if kn:
-            return kn
+            return f"{kn} ({name})"
     return name
 
 

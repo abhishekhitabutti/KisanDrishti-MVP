@@ -132,12 +132,15 @@ CARDS = [
     ("💧", "Borewell advisory", "Groundwater depth, feasibility and drilling budget.", "views/borewell.py"),
     ("🌿", "Weed & nutrient advisory", "Non-chemical weed suppression, compost and fertilizer savings.", "views/weed_nutrient.py"),
     ("🩺", "Crop Doctor", "Photograph a sick plant, pest or weed and get safe, sourced advice.", "views/crop_doctor.py"),
+    ("💊", "Spray & nutrition prescription", "Crop protection, dosages, high-yield boosters and prescription slip.", "views/spray_prescription.py"),
     ("🗓️", "Season planner", "What to do before sowing, while growing and at harvest.", "views/season_planner.py"),
     ("⛈️", "Weather precautions", "7-day forecast by district and what to do before bad weather.", "views/weather.py"),
     ("📋", "Schemes and help", "Documents and steps for crop insurance, PM-KISAN and loans.", "views/schemes.py"),
 ]
-for row in (CARDS[:2], CARDS[2:4], CARDS[4:]):
-    for col, (icon, title, text, path) in zip(st.columns(2), row):
+for i in range(0, len(CARDS), 2):
+    row = CARDS[i:i+2]
+    cols = st.columns(len(row))
+    for col, (icon, title, text, path) in zip(cols, row):
         with col.container(border=True):
             st.markdown(f"**{icon} {t(title)}**")
             st.caption(t(text))

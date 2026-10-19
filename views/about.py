@@ -98,7 +98,9 @@ st.subheader(sec4_title)
 if is_kn:
     st.markdown(
         "- **ಈ ಆ್ಯಪ್ ಬಳಸಲು ಲಾಗಿನ್ ಅಥವಾ ಖಾತೆ ಅಗತ್ಯವಿಲ್ಲ.**\n"
-        "- **ಛಾಯಾಚಿತ್ರಗಳು:** ಫೋಟೋ ವಿಶ್ಲೇಷಣೆಗಾಗಿ ಗೂಗಲ್‌ನ ಜೆಮಿನಿ {Gemini} ಸೇವೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಸ್ಥಳದ {GPS} ಮಾಹಿತಿಯನ್ನು ಮೊದಲೇ ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ. ಜನರಿರುವ ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಬೇಡಿ. ಈ ಆ್ಯಪ್ ನಿಮ್ಮ ಫೋಟೋಗಳನ್ನು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ.\n"
+        "- **ಛಾಯಾಚಿತ್ರಗಳು:** ಈ ಆ್ಯಪ್ ನಿಮ್ಮ ಫೋಟೋಗಳನ್ನು ತನ್ನ ಸರ್ವರ್‌ನಲ್ಲಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ {does **not store**}. "
+        "ಫೋಟೋ ವಿಶ್ಲೇಷಣೆಗಾಗಿ ಗೂಗಲ್‌ನ ಜೆಮಿನಿ {Gemini} ಸೇವೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಸ್ಥಳದ {GPS} ಮಾಹಿತಿಯನ್ನು ಮೊದಲೇ ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ. "
+        "ಜನರಿರುವ ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಬೇಡಿ.\n"
         "- **ಹವಾಮಾನ:** ನೀವು ಆಯ್ಕೆಮಾಡುವ ಜಿಲ್ಲೆಯ ಕೇಂದ್ರ ಬಿಂದುವಿನ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ಮಾತ್ರ ಮುನ್ಸೂಚನೆ ಸೇವೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.\n"
         "- **ಪ್ರತಿಕ್ರಿಯೆ:** ನೀವು ಇಮೇಲ್ ಮೂಲಕ ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಿದಾಗ ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ಮತ್ತು ಸಂದೇಶ ನಮಗೆ ತಲುಪುತ್ತದೆ.\n"
         "- ತಾಂತ್ರಿಕ ಹೋಸ್ಟಿಂಗ್ ಸೇವೆಯು ವೆಬ್‌ಸೈಟ್‌ಗಳ ಸಾಮಾನ್ಯ ಲಾಗ್‌ಗಳನ್ನು ಮಾತ್ರ ನಿರ್ವಹಿಸುತ್ತದೆ."
@@ -106,7 +108,8 @@ if is_kn:
 else:
     st.markdown(
         "- **No login or account is needed** to use this app.\n"
-        "- **Photos** are sent to Google's Gemini service for analysis. On Google's free tier, Google may use the content to improve its products. "
+        "- **Photos:** This app does **not store** your photos on any server. "
+        "Photos are sent to Google's Gemini service for analysis. On Google's free tier, Google may use the content to improve its products. "
         "Location data is removed from the photo first. Please do not upload photos with people in them.\n"
         "- **Weather:** only the centre point of the district you pick is sent to the forecast service.\n"
         "- **Feedback:** if you email feedback, we receive your email address and message.\n"

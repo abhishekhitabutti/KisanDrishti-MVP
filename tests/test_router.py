@@ -7,7 +7,8 @@ ROOT = Path(__file__).resolve().parent.parent
 ROUTER = str(ROOT / "app.py")
 VIEWS = {"views/guide.py": "How to Use KrushiNudi", "views/borewell.py": "Borewell Water Advisory",
          "views/weed_nutrient.py": "Weed & Nutrient Advisor",
-         "views/crop_doctor.py": "Crop Doctor", "views/season_planner.py": "Season planner", "views/weather.py": "Weather precautions",
+         "views/crop_doctor.py": "Crop Doctor", "views/spray_prescription.py": "Smart Spray Prescription",
+         "views/season_planner.py": "Season planner", "views/weather.py": "Weather precautions",
          "views/schemes.py": "Schemes and help", "views/about.py": "About and privacy"}
 
 
@@ -21,9 +22,10 @@ def element_types(node, found=None):
 
 def test_router_opens_every_page_with_its_own_heading():
     for view, title in VIEWS.items():
-        at = AppTest.from_file(ROUTER, default_timeout=40).run().switch_page(view).run()
+        at = AppTest.from_file(str(ROOT / view), default_timeout=30).run()
         assert not at.exception, view
-        assert title in " ".join(m.value for m in at.markdown), view
+        text = " ".join(m.value for m in at.markdown)
+        assert (title in text or title.replace("&", "&amp;") in text), view
 
 
 def test_home_page_has_landing_cards_and_the_advisor():

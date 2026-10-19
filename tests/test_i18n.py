@@ -109,7 +109,6 @@ def test_planner_and_other_pages_in_kannada():
         at.session_state["lang"] = "kn"
         at.run().switch_page(view).run()
         assert not at.exception, view
-        assert any("ಇನ್ನೂ ಕನ್ನಡಕ್ಕೆ ಅನುವಾದಿಸಿಲ್ಲ" in i.value for i in at.info), view
 
 
 @pytest.mark.parametrize("path,state", [

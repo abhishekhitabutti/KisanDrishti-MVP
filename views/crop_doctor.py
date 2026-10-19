@@ -141,6 +141,13 @@ def render_entry(entry, district, confirm=False):
         spray_window_box(district)
         st.markdown("**" + t("Spray timing rules for every product") + "**")
         bullets(diagnosis.SPRAY_TIMING)
+        st.info("💡 " + (
+            "ನಿಮ್ಮ ಜಮೀನಿನ ಅಳತೆಯ ಆಧಾರದ ಮೇಲೆ ನಿಖರ ಔಷಧ ಪ್ರಮಾಣ, ಇಳುವರಿ ಬೂಸ್ಟರ್ ಟ್ಯಾಂಕ್-ಮಿಶ್ರಣ ಮತ್ತು ಅಧಿಕೃತ ಭಾರತೀಯ ಕಂಪನಿಗಳಿಂದ ನೇರ ಖರೀದಿಗೆ "
+            "ನಮ್ಮ **'ಔಷಧ & ಪೋಷಕಾಂಶ ಚೀಟಿ'** {Smart Spray Prescription} ಪುಟವನ್ನು ಬಳಸಿ."
+            if (i18n.current_lang() == "kn") else
+            "Need an exact dosage prescription slip calculated for your land acreage, yield booster tank-mix, and direct Indian purchase links? "
+            "Use the **Smart Spray Prescription** page."
+        ))
 
     with st.expander(t("Precautions and safety"), expanded=True):
         if entry.get("precautions"):

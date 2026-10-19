@@ -80,7 +80,8 @@ def test_schemes_page_checklist():
 
 PAGES = [ROOT / "views" / "home.py", ROOT / "views" / "weather.py", ROOT / "views" / "schemes.py",
          ROOT / "views" / "crop_doctor.py", ROOT / "views" / "season_planner.py", ROOT / "views" / "about.py",
-         ROOT / "views" / "guide.py", ROOT / "views" / "borewell.py", ROOT / "views" / "weed_nutrient.py"]
+         ROOT / "views" / "guide.py", ROOT / "views" / "borewell.py", ROOT / "views" / "weed_nutrient.py",
+         ROOT / "views" / "spray_prescription.py"]
 
 
 def all_markdown(at):
@@ -110,5 +111,13 @@ def test_weed_nutrient_page_renders_cleanly():
     at = AppTest.from_file(str(ROOT / "views" / "weed_nutrient.py"), default_timeout=30).run()
     assert not at.exception
     text = all_markdown(at)
-    assert "Weed & Nutrient Advisor" in text or "ಕಳೆ & ಸಾವಯವ ಪೋಷಕಾಂಶ" in text
+    assert ("Weed & Nutrient Advisor" in text or "Weed &amp; Nutrient Advisor" in text or "ಕಳೆ & ಸಾವಯವ ಪೋಷಕಾಂಶ" in text or "ಕಳೆ &amp; ಸಾವಯವ ಪೋಷಕಾಂಶ" in text)
+
+
+def test_spray_prescription_page_renders_cleanly():
+    at = AppTest.from_file(str(ROOT / "views" / "spray_prescription.py"), default_timeout=30).run()
+    assert not at.exception
+    text = all_markdown(at)
+    assert ("Smart Spray Prescription" in text or "ಔಷಧ & ಪೋಷಕಾಂಶ ಚೀಟಿ" in text or "ಔಷಧ &amp; ಪೋಷಕಾಂಶ ಚೀಟಿ" in text)
+
 
