@@ -75,7 +75,7 @@ def markdown_text(at):
 def test_home_page_in_kannada(monkeypatch):
     at = run_in_kannada(HOME)
     assert not at.exception
-    assert "ಕಿಸಾನ್ ದೃಷ್ಟಿ" in markdown_text(at)
+    assert "ಕೃಷಿನುಡಿ" in markdown_text(at)
     at.button[0].click().run()
     assert not at.exception
     assert any("ಅತ್ಯುತ್ತಮ ಹೊಂದಾಣಿಕೆ" in s.value for s in at.success)
@@ -83,11 +83,11 @@ def test_home_page_in_kannada(monkeypatch):
 
 def test_switching_with_the_radio_changes_language():
     at = AppTest.from_file(ROUTER, default_timeout=40).run()
-    assert "KisanDrishti" in markdown_text(at)
+    assert "KrushiNudi" in markdown_text(at)
     at.radio(key="lang_radio").set_value("ಕನ್ನಡ").run()
-    assert "ಕಿಸಾನ್ ದೃಷ್ಟಿ" in markdown_text(at) and not at.exception
+    assert "ಕೃಷಿನುಡಿ" in markdown_text(at) and not at.exception
     at.radio(key="lang_radio").set_value("English").run()
-    assert "KisanDrishti" in markdown_text(at)
+    assert "KrushiNudi" in markdown_text(at)
 
 
 def test_crop_doctor_in_kannada_shows_safety_text_in_kannada():

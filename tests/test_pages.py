@@ -79,7 +79,8 @@ def test_schemes_page_checklist():
 
 
 PAGES = [ROOT / "views" / "home.py", ROOT / "views" / "weather.py", ROOT / "views" / "schemes.py",
-         ROOT / "views" / "crop_doctor.py", ROOT / "views" / "season_planner.py", ROOT / "views" / "about.py"]
+         ROOT / "views" / "crop_doctor.py", ROOT / "views" / "season_planner.py", ROOT / "views" / "about.py",
+         ROOT / "views" / "guide.py", ROOT / "views" / "borewell.py"]
 
 
 def all_markdown(at):

@@ -1,5 +1,5 @@
 {
- "KisanDrishti": "ಕಿಸಾನ್ ದೃಷ್ಟಿ",
+  "KrushiNudi": "ಕೃಷಿನುಡಿ",
  "Crop advice, a photo-based crop doctor, weather precautions and scheme help for Karnataka farmers.": "ಕರ್ನಾಟಕದ ರೈತರಿಗಾಗಿ ಬೆಳೆ ಸಲಹೆ, ಫೋಟೋ ಆಧಾರಿತ ಬೆಳೆ ವೈದ್ಯ, ಹವಾಮಾನ ಮುನ್ನೆಚ್ಚರಿಕೆಗಳು ಮತ್ತು ಯೋಜನೆಗಳ ಸಹಾಯ.",
  "Your field": "ನಿಮ್ಮ ಹೊಲ",
  "N, P and K are on the same scale as the training data, not lab readings in kg per hectare.": "N, P ಮತ್ತು K ಮೌಲ್ಯಗಳು ತರಬೇತಿ ಡೇಟಾದ ಅಳತೆಯಲ್ಲಿವೆ. ಇವು ಪ್ರಯೋಗಾಲಯದ ಕೆ.ಜಿ. ಪ್ರತಿ ಹೆಕ್ಟೇರ್ ಅಳತೆಗಳಲ್ಲ.",
@@ -255,5 +255,15 @@
  "Upload or take a photo with my phone": "ನನ್ನ ಫೋನಿನಿಂದ ಫೋಟೋ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ತೆಗೆಯಿರಿ",
  "Use this device's webcam": "ಈ ಸಾಧನದ ವೆಬ್‌ಕ್ಯಾಮ್ ಬಳಸಿ",
  "On most phones this opens your camera or your gallery. Allow camera access if your phone asks.": "ಹೆಚ್ಚಿನ ಫೋನ್‌ಗಳಲ್ಲಿ ಇದು ನಿಮ್ಮ ಕ್ಯಾಮೆರಾ ಅಥವಾ ಗ್ಯಾಲರಿಯನ್ನು ತೆರೆಯುತ್ತದೆ. ನಿಮ್ಮ ಫೋನ್ ಕೇಳಿದರೆ ಕ್ಯಾಮೆರಾ ಅನುಮತಿಸಿ.",
- "The webcam option may use the front camera. On a phone, the first option is usually better.": "ವೆಬ್‌ಕ್ಯಾಮ್ ಆಯ್ಕೆ ಮುಂದಿನ ಕ್ಯಾಮೆರಾ ಬಳಸಬಹುದು. ಫೋನ್‌ನಲ್ಲಿ ಮೊದಲ ಆಯ್ಕೆ ಸಾಮಾನ್ಯವಾಗಿ ಉತ್ತಮ."
+ "The webcam option may use the front camera. On a phone, the first option is usually better.": "ವೆಬ್‌ಕ್ಯಾಮ್ ಆಯ್ಕೆ ಮುಂದಿನ ಕ್ಯಾಮೆರಾ ಬಳಸಬಹುದು. ಫೋನ್‌ನಲ್ಲಿ ಮೊದಲ ಆಯ್ಕೆ ಸಾಮಾನ್ಯವಾಗಿ ಉತ್ತಮ.",
+ "How to use": "ಆ್ಯಪ್ ಬಳಕೆ ಮಾರ್ಗದರ್ಶಿ",
+ "Demo & Guide": "ಡೆಮೊ ಮತ್ತು ಬಳಕೆ ಮಾರ್ಗದರ್ಶಿ",
+ "How to use the app": "ಆ್ಯಪ್ ಬಳಕೆ ಮಾರ್ಗದರ್ಶಿ ಮತ್ತು ಡೆಮೊ",
+ "Step-by-step guide and live demo of all KrushiNudi tools": "ಕೃಷಿನುಡಿಯ ಎಲ್ಲಾ ಕೃಷಿ ಉಪಕರಣಗಳ ಹಂತ ಹಂತದ ಮಾರ್ಗದರ್ಶಿ ಮತ್ತು ನೇರ ಡೆಮೊ",
+ "Step-by-step guide and live demo of all KisanDrishti tools": "ಕೃಷಿನುಡಿಯ ಎಲ್ಲಾ ಕೃಷಿ ಉಪಕರಣಗಳ ಹಂತ ಹಂತದ ಮಾರ್ಗದರ್ಶಿ ಮತ್ತು ನೇರ ಡೆಮೊ",
+ "KisanDrishti": "ಕೃಷಿನುಡಿ",
+ "Smart Farm Advisory": "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ",
+ "The Voice of Intelligent Agriculture": "ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ",
+ "Smarter Insights. Better Farming.": "ಚತುರ ಒಳನೋಟಗಳು. ಉತ್ತಮ ಕೃಷಿ.",
+ "Borewell advisory": "ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ"
 }

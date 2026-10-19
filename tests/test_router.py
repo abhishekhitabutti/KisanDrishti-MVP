@@ -5,7 +5,8 @@ from streamlit.testing.v1 import AppTest
 
 ROOT = Path(__file__).resolve().parent.parent
 ROUTER = str(ROOT / "app.py")
-VIEWS = {"views/crop_doctor.py": "Crop Doctor", "views/season_planner.py": "Season planner", "views/weather.py": "Weather precautions",
+VIEWS = {"views/guide.py": "How to Use KrushiNudi", "views/borewell.py": "Borewell Water Advisory",
+         "views/crop_doctor.py": "Crop Doctor", "views/season_planner.py": "Season planner", "views/weather.py": "Weather precautions",
          "views/schemes.py": "Schemes and help", "views/about.py": "About and privacy"}
 
 

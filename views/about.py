@@ -26,8 +26,14 @@ hero_sub = (
 ui.hero(hero_title, hero_sub, "ℹ️")
 
 # Section 1: What it is
-sec1_title = "ಕಿಸಾನ್ ದೃಷ್ಟಿ {KisanDrishti} ಎಂದರೇನು?" if is_kn else "What KisanDrishti is"
+sec1_title = "ಕೃಷಿನುಡಿ {KrushiNudi} ಎಂದರೇನು?" if is_kn else "What KrushiNudi is"
 st.subheader(sec1_title)
+tagline_display = (
+    "**ಕೃಷಿನುಡಿ {KrushiNudi}** · ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ {Smart Farm Advisory} · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {The Voice of Intelligent Agriculture}\n\n*✨ ಚತುರ ಒಳನೋಟಗಳು. ಉತ್ತಮ ಕೃಷಿ. {Smarter Insights. Better Farming.}*"
+    if is_kn else
+    "**KrushiNudi** · Smart Farm Advisory · The Voice of Intelligent Agriculture\n\n*✨ Smarter Insights. Better Farming.*"
+)
+st.markdown(tagline_display)
 sec1_body = (
     "ಕರ್ನಾಟಕದ ರೈತರಿಗಾಗಿ ಅಭಿವೃದ್ಧಿಪಡಿಸಲಾದ ಉಚಿತ ಕೃಷಿ ಸಲಹಾ ತಂತ್ರಾಂಶ. ಇದನ್ನು ಬೆಂಗಳೂರಿನ ಅಮಿಟಿ ವಿಶ್ವವಿದ್ಯಾಲಯದ {Amity University Bengaluru} "
     "ಬಿ.ಟೆಕ್ ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಮತ್ತು ಯಂತ್ರ ಕಲಿಕೆ {B.Tech CSE (AI & ML)} ವಿದ್ಯಾರ್ಥಿ ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ {Abhishek Hitabutti} ರೂಪಿಸಿದ್ದಾರೆ. "
@@ -91,7 +97,7 @@ sec4_title = "ಗೌಪ್ಯತೆ ಮತ್ತು ಸುರಕ್ಷತೆ" if
 st.subheader(sec4_title)
 if is_kn:
     st.markdown(
-        "- ಭದ್ರತೆಗಾಗಿ 1 ಗಂಟೆ ನಿಷ್ಕ್ರಿಯತೆಯ ನಂತರ ಖಾತೆಯಿಂದ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ನಿರ್ಗಮಿಸಲಾಗುತ್ತದೆ. ಲಾಗಿನ್ ಮತ್ತು ನೋಂದಣಿ ವಿವರಗಳನ್ನು ಆಡಿಟ್ ಲಾಗ್‌ನಲ್ಲಿ ಸುರಕ್ಷಿತವಾಗಿಡಲಾಗುತ್ತದೆ.\n"
+        "- **ಈ ಆ್ಯಪ್ ಬಳಸಲು ಲಾಗಿನ್ ಅಥವಾ ಖಾತೆ ಅಗತ್ಯವಿಲ್ಲ.**\n"
         "- **ಛಾಯಾಚಿತ್ರಗಳು:** ಫೋಟೋ ವಿಶ್ಲೇಷಣೆಗಾಗಿ ಗೂಗಲ್‌ನ ಜೆಮಿನಿ {Gemini} ಸೇವೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ. ಸ್ಥಳದ {GPS} ಮಾಹಿತಿಯನ್ನು ಮೊದಲೇ ತೆಗೆದುಹಾಕಲಾಗುತ್ತದೆ. ಜನರಿರುವ ಫೋಟೋಗಳನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಬೇಡಿ. ಈ ಆ್ಯಪ್ ನಿಮ್ಮ ಫೋಟೋಗಳನ್ನು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ.\n"
         "- **ಹವಾಮಾನ:** ನೀವು ಆಯ್ಕೆಮಾಡುವ ಜಿಲ್ಲೆಯ ಕೇಂದ್ರ ಬಿಂದುವಿನ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ಮಾತ್ರ ಮುನ್ಸೂಚನೆ ಸೇವೆಗೆ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.\n"
         "- **ಪ್ರತಿಕ್ರಿಯೆ:** ನೀವು ಇಮೇಲ್ ಮೂಲಕ ಪ್ರತಿಕ್ರಿಯೆ ಕಳುಹಿಸಿದಾಗ ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ಮತ್ತು ಸಂದೇಶ ನಮಗೆ ತಲುಪುತ್ತದೆ.\n"
@@ -99,7 +105,7 @@ if is_kn:
     )
 else:
     st.markdown(
-        "- Secure authentication requires login. Sessions automatically time out after 1 hour of inactivity for anti-theft protection. Audit records track session access.\n"
+        "- **No login or account is needed** to use this app.\n"
         "- **Photos** are sent to Google's Gemini service for analysis. On Google's free tier, Google may use the content to improve its products. "
         "Location data is removed from the photo first. Please do not upload photos with people in them.\n"
         "- **Weather:** only the centre point of the district you pick is sent to the forecast service.\n"

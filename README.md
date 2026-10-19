@@ -1,92 +1,128 @@
 # KrushiNudi (ಕೃಷಿನುಡಿ)
 
-**The Voice of Intelligent Agriculture.**
+**Smart Farm Advisory · The Voice of Intelligent Agriculture**  
+*Smarter Insights. Better Farming.*
 
-*Category: Smart Farm Advisory*
+**Live Application:** https://krushinudi-mvp.streamlit.app/  
+**Source Code:** https://github.com/abhishekhitabutti/KisanDrishti-MVP
 
-A farmer-first advisory web app for Karnataka: crop suggestions, a photo-based Crop Doctor, weather precautions, and step-by-step help with schemes and safe buying of inputs.
+---
 
-**Live demo:** https://KrushiNudi-mvp.streamlit.app/
+## About KrushiNudi
+
+KrushiNudi is a farmer-first, bilingual (Kannada and English) precision agriculture platform engineered for Karnataka smallholder farmers. Developed by Abhishek Hitabutti, a B.Tech CSE (AI & ML) student at Amity University Bengaluru and the son of a farmer, KrushiNudi provides data-driven, actionable guidance across the entire crop season:
+- **Pre-Sowing:** Soil nutrient-crop matching, seed germination rate testing, and scientific borewell groundwater feasibility advisory.
+- **Sowing & Input Planning:** Non-chemical weed suppression, compost recycling, and minimum-effective-dose fertilizer guidance.
+- **Growing Season:** Photo-based disease diagnosis with verified non-chemical cultural steps, integrated spray timing, and 7-day weather hazard forecasting.
+- **Post-Harvest & Protection:** PMFBY 72-hour localized damage reporting assistance, PM-KISAN, KCC low-interest loan documentation, and grain storage precautions.
+
+---
 
 ## Languages
 
-English and Kannada (switch at the top of every page). Phase 1 covers the home page, Crop Doctor menus, results and safety rules, and the Season Planner menus. The long guidance texts (knowledge base entries, planner practices, scheme steps, weather precautions) are still English and fall back to English when a Kannada text is missing. Translations live in `translations/kn.json` and were made with machine help, so they need a native-speaker review before wide use. When the photo analysis runs in Kannada mode it is asked to write its photo-specific text in Kannada.
+Full bilingual support for **English** and **ಕನ್ನಡ (Kannada)** with a simple toggle on every page.
+- In Kannada mode, interface text is 100% pure Kannada, with scientific and technical acronyms like `{N}`, `{P}`, `{K}`, `{pH}`, `{PMFBY}`, `{KCC}`, `{KVK}`, `{RSK}`, and `{AI}` preserved in clear braces.
+- All 31 Karnataka districts are translated natively (`DISTRICTS_KN`).
+- Developer and credit attributions are consistently localized as **ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ**.
 
-## Structure
+---
 
-`app.py` is the entry point: page setup, language switch and the navigation menu. Each page is a file in `views/` (`home.py`, `crop_doctor.py`, `season_planner.py`, `weather.py`, `schemes.py`, `about.py`). Shared code: `i18n.py` (language), `ui.py` (look and feel), `diagnosis.py` (photo analysis rules), `spray_weather.py`, `planner_data.py`, `districts.py`. If an old `pages/` folder is still in your repo, delete it.
+## Application Structure
 
-## Pages
+`app.py` is the application entry point providing page routing, language state management, and configuration.
 
-- **Crop advisor (home):** enter 7 field measures and get the top 3 crops with confidence and nutrient pointers. "Check any crop" shows how your field fits each of the 22 crops in the training data.
-- **Crop Doctor:** upload or take a photo of a plant problem, pest or weed. An AI vision model (free Gemini tier) identifies it. Treatment advice never comes from the AI: it comes from a reviewed knowledge base (`knowledge/issues.json`) with sources, and only when the match is confident. Otherwise the app sends the farmer to an expert. Photos can be uploaded, taken with the phone camera through the upload button, or taken with a webcam. The webcam is switched on only when the person chooses it. Includes spray-timing check from the weather forecast, and safety precautions.
-- **Weather precautions:** 7-day forecast by district, hazard flags, matching precautions, and entry of an official IMD warning.
-- **Season planner:** practices for each stage of the season (seed germination test with a calculator, summer ploughing and solarisation, stale seedbed, cover crops, compost, fertilizer use, safe grain storage, renting machinery), each with its sources and no doses.
-- **About and privacy:** what the app is, where advice comes from, its limits, how data is handled, and credits.
-- **Schemes and help:** document checklists and steps for PMFBY, PM-KISAN, KCC and Soil Health Card; safe buying of fertilizer and pesticide.
+### Core Modules (`views/`)
+1. **🌾 Crop Advisor (`views/home.py`):**  
+   Evaluates 7 soil and climate parameters (Nitrogen, Phosphorus, Potassium, Soil pH, Temperature, Humidity, and Rainfall) against a trained Random Forest model. Recommends the highest-confidence crop among 22 varieties, maps field suitability, and flags nutrient deficiency pointers without prescribing unverified chemical doses.
+2. **📖 User Guide & Interactive Demo (`views/guide.py`):**  
+   A step-by-step interactive manual with built-in live simulation sandboxes for all tools, seed germination vigor calculator, weather hazard simulation, and document readiness meters.
+3. **💧 Borewell Water Advisory (`views/borewell.py`):**  
+   Data-backed groundwater feasibility analysis using Central Ground Water Board (CGWB) records across all 31 Karnataka districts. Estimates strike depth, extraction sustainability status, financial budgeting, and hard-stop drilling depth limits to protect farmers from dry-borewell debt traps.
+4. **🩺 Crop Doctor (`views/crop_doctor.py`):**  
+   Camera or gallery photo diagnosis powered by AI computer vision (Google Gemini free tier / Anthropic API). Diagnostic identification maps to a reviewed agricultural knowledge base (`knowledge/issues.json`) sourced from ICAR, TNAU, and State Agricultural Universities. Prioritizes non-chemical cultural practices first, displays approved active ingredients, and enforces weather-dependent spray rules.
+5. **🗓️ Season Planner (`views/season_planner.py`):**  
+   Practical guidelines for each lifecycle phase: Before Sowing, Sowing, Growing, and Harvest & Storage. Includes an interactive seed germination rate calculator and Custom Hiring Centre (CHC / ಕೃಷಿ ಯಂತ್ರಧಾರೆ) machinery rental awareness.
+6. **⛈️ Weather Precautions (`views/weather.py`):**  
+   Real-time 7-day agro-meteorological forecast from Open-Meteo across all 31 Karnataka districts. Features automated hazard triggers (heavy rainfall, wind gusts, heat stress, dry spells), an IMD warning tracker, and a chemical spray window planner (delay spray if rain ≥ 2.5 mm or gusts ≥ 30 km/h).
+7. **📋 Schemes & Help (`views/schemes.py`):**  
+   Interactive document readiness checklists and step-by-step application procedures for PMFBY (Crop Insurance with the critical 72-hour localized intimation rule), PM-KISAN, Kisan Credit Card (KCC), and Soil Health Card, plus certified input purchasing safety rules.
+8. **ℹ️ About & Privacy (`views/about.py`):**  
+   Full disclosure of AI/ML data sources, model boundaries, privacy commitments, and open-source credits.
 
-## How the Crop Doctor stays safe
+---
 
-1. The model returns only an identification (crop, category, matching knowledge-base id, confidence). It is told not to give treatment or doses.
-2. `diagnosis.decide()` allows chemical guidance only for a medium or high confidence match with a reviewed entry for that crop. Everything else is "get expert help".
-3. The knowledge base never contains doses (a test enforces this). Doses come from the product label or the agriculture officer.
-4. Photo quality and low confidence lead to a "retake photo" or "see an expert" screen, not a guess.
+## Authentication & Access Control
 
-## Setting up photo analysis (free)
+- **Frictionless Farmer Access:** Login is completely deactivated so farmers, village kiosks, and judges can access all tools immediately without any registration or passwords.
+- **Enterprise Security Gate (Optional):** All underlying authentication logic, salted SHA-256 password hashing, persistent SQLite database storage (`kisan_users.db`), and Fast2SMS cellular SMS OTP verification are preserved in `auth.py` and can be re-enabled anytime by uncommenting `auth.require_auth()` in `app.py`.
 
-Photo analysis uses Google's Gemini API free tier. No credit card is needed.
+---
 
-1. Open aistudio.google.com, sign in with a Google account, choose Get API key, then Create API key.
-2. In Streamlit Cloud open your app, then Settings, then Secrets, and paste:
+## Safety & Ethics Principles
 
-```
-GEMINI_API_KEY = "your-key"
-```
+1. **No Unverified Doses:** Neither the ML model nor the AI vision API prescribes pesticide or fertilizer dosages. Dosages must always be verified on the official manufacturer label or with local KVK / Raitha Samparka Kendra officials.
+2. **Non-Chemical First:** Cultural management (pruning, field sanitation, water drainage) is always prioritized before recommending chemical active ingredients.
+3. **Data Privacy:** Photo GPS/location metadata is stripped before analysis. User plant photos are never stored permanently on the server.
+4. **Weather-Gated Application:** Spraying is flagged as unsafe whenever rain or high winds would cause chemical wash-off or drift.
 
-3. Never put the key in GitHub, and do not enable billing on the Google project, or the free tier no longer applies.
-4. If a photo gives a model error, add `GEMINI_MODEL = "name"` to Secrets using a model name shown in AI Studio.
+---
 
-Free-tier limits are shown per project in AI Studio and can change. Each visit is limited to 5 photos to protect the free quota. When the limit is reached, the page tells the farmer to use the Browse tab.
+## Setting Up Photo Analysis (Free Tier)
 
-**Privacy:** on Google's free tier, Google may use the content to improve its products. The app says so on the page, removes location data from every photo before sending, asks users not to upload photos with people, and does not store photos. If you prefer a paid service with different terms, set `ANTHROPIC_API_KEY` instead; the free Gemini key is used first when both exist. Without any key, the page works in browse mode and sends nothing anywhere.
+Photo analysis utilizes Google AI Studio's free Gemini API tier:
 
-## Feedback
+1. Obtain a free API key at [aistudio.google.com](https://aistudio.google.com/).
+2. In Streamlit Cloud Settings > Secrets (or local `.streamlit/secrets.toml`), configure:
+   ```toml
+   GEMINI_API_KEY = "your_actual_key"
+   ```
+3. Never commit API keys to version control. The app gracefully falls back to "Browse Common Problems" mode if no API key is provided.
 
-Every page has a Send feedback link. By default it opens an email. To use a form instead (for example a free Google Form), add `FEEDBACK_URL = "https://..."` to Streamlit Secrets. No code change is needed.
+---
 
-## Data and limits
+## Running Locally
 
-- Crop model: public crop recommendation dataset (2,200 rows, 22 crops) described as built by augmenting rainfall, climate and fertilizer data for India. Hold-out accuracy is 99.5%, but it is not field-collected data, so real-farm accuracy can be lower.
-- Crop Doctor knowledge base: 6 reviewed entries so far (rice blast, maize fall armyworm, tomato early and late blight, parthenium, nutgrass). Some sources are from outside India. It needs review by an agriculture expert before wide use. More entries are added only with sources.
-- Weather hazard thresholds are simple rules, except rainfall classes which follow IMD. Scheme rules and dates change.
+### Prerequisites
+- Python 3.10+
+- Virtual environment recommended
 
-## Run locally
-
-```
+### Installation
+```bash
+git clone https://github.com/abhishekhitabutti/KisanDrishti-MVP.git
+cd KisanDrishti-MVP
 pip install -r requirements.txt
-python train.py
+```
+
+### Launch Application
+```bash
 streamlit run app.py
 ```
 
-## Tests
+---
 
+## Running Tests
+
+Automated testing is built using `pytest` and Streamlit's headless `AppTest` framework:
+```bash
+pytest -v
 ```
-pip install pytest
-pytest -q
-```
 
-GitHub Actions runs the tests on every push.
+---
 
-## Roadmap
+## Project Roadmap (Smart India Hackathon / SIH Focus)
 
-1. More reviewed Crop Doctor and Season Planner entries, reviewed by a KVK or agricultural university
-2. Crop library for more crops (needs a reviewed open dataset)
-3. Kannada and English toggle with native-speaker review
-4. Farmer and agriculture officer feedback form
-5. Mandi prices, weather-linked disease risk, borewell water estimate
+- **Module 1 (Pre-Sowing):** Borewell water table depth & feasibility estimation (Implemented) + Soil-crop matching (Implemented) + Seed germination testing (Implemented).
+- **Module 2 (Sowing Season):** Non-chemical weed suppression planning and residue/livestock manure composting calculators to reduce synthetic DAP/urea dependency.
+- **Module 3 (Growing Season):** Microclimate and humidity-driven fungal disease prediction (blast and blight early warning).
+- **Module 4 (Harvest & Market):** Real-time Agmarknet / e-NAM mandi price tracking and cold storage accessibility.
 
-## Author
+---
 
-Abhishek Hitabutti, B.Tech CSE (AI & ML), Amity University Bengaluru. GitHub: https://github.com/abhishekhitabutti
+## Author & Attribution
 
-(c) 2026 Abhishek Hitabutti. All rights reserved.
+**Abhishek Hitabutti (ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ)**  
+B.Tech CSE (AI & ML), Amity University Bengaluru  
+GitHub: [github.com/abhishekhitabutti](https://github.com/abhishekhitabutti)  
+Email: [abhishekhitabutti@gmail.com](mailto:abhishekhitabutti@gmail.com)
+
+© 2026 Abhishek Hitabutti. All rights reserved.

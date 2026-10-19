@@ -1,4 +1,4 @@
-"""Shared look and feel for KisanDrishti pages."""
+"""Shared look and feel for KrushiNudi pages."""
 from html import escape
 
 import streamlit as st
@@ -71,7 +71,7 @@ def feedback_box():
     url = url or os.environ.get("FEEDBACK_URL")
     if not url:
         body = "Page I used:\nWhat was wrong or missing:\nI am a (farmer / agriculture officer / student):\n"
-        url = "mailto:abhishekhitabutti@gmail.com?subject=" + quote("KisanDrishti feedback") + "&body=" + quote(body)
+        url = "mailto:abhishekhitabutti@gmail.com?subject=" + quote("KrushiNudi feedback") + "&body=" + quote(body)
     with st.container(border=True):
         st.markdown("**" + t("Feedback") + "**")
         st.write(t("Something wrong or missing? Tell us. Farmers and agriculture officers: your feedback makes this app safer."))

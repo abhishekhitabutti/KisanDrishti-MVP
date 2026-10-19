@@ -1,4 +1,4 @@
-"""Schemes, documents, safe buying and crop disease help for KisanDrishti.
+"""Schemes, documents, safe buying and crop disease help for KrushiNudi.
 Fully bilingual: 100% pure Kannada localization with technical terms in braces {...}.
 """
 import sys

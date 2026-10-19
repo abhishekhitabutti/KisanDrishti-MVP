@@ -1,5 +1,5 @@
 """
-KisanDrishti Security & Authentication Module
+KrushiNudi Security & Authentication Module
 - Permanent user credentials: user registrations and login details NEVER expire
 - Dual-storage architecture: persistent SQLite (kisan_users.db) + users.json synchronization
 - Salted SHA-256 password encryption
@@ -421,7 +421,7 @@ def render_login_screen():
         
     is_kn = (lang_choice == "ಕನ್ನಡ")
     
-    title = "🔒 ಕಿಸಾನ್ ದೃಷ್ಟಿ - ಸುರಕ್ಷಿತ ಲಾಗಿನ್ ವ್ಯವಸ್ಥೆ" if is_kn else "🔒 KisanDrishti - Secure Portal Login"
+    title = "🔒 ಕೃಷಿನುಡಿ {KrushiNudi} - ಸುರಕ್ಷಿತ ಲಾಗಿನ್ ವ್ಯವಸ್ಥೆ" if is_kn else "🔒 KrushiNudi - Secure Portal Login"
     subtitle = (
         "ಕರ್ನಾಟಕದ ರೈತರಿಗಾಗಿ ಶಾಶ್ವತ ಮತ್ತು ಸುರಕ್ಷಿತ ಕೃಷಿ ವೇದಿಕೆ. ಖಾತೆ ವಿವರಗಳು ಶಾಶ್ವತವಾಗಿರುತ್ತವೆ; 30 ನಿಮಿಷ ನಿಷ್ಕ್ರಿಯತೆಯ ನಂತರ ಸೆಷನ್ ಮಾತ್ರ ನಿರ್ಗಮಿಸುತ್ತದೆ."
         if is_kn else
@@ -644,12 +644,14 @@ def render_sidebar_logout():
 
 def require_auth() -> bool:
     """
-    Main security barrier. Halts execution if user is not authenticated.
+    Security Gate: Currently DEACTIVATED.
+    Direct access is permitted without login.
+    To re-activate later after building the project, uncomment the checks below.
     """
-    check_inactivity()
-    if not st.session_state.get("authenticated", False):
-        render_login_screen()
-        st.stop()
-        return False
-    render_sidebar_logout()
+    # check_inactivity()
+    # if not st.session_state.get("authenticated", False):
+    #     render_login_screen()
+    #     st.stop()
+    #     return False
+    # render_sidebar_logout()
     return True

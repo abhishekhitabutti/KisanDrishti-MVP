@@ -1,3 +1,5 @@
+import os
+
 import streamlit as st
 
 import auth
@@ -5,14 +7,19 @@ import i18n
 import ui
 from i18n import t
 
-st.set_page_config(page_title="KisanDrishti", page_icon="🌾", initial_sidebar_state="expanded")
+st.set_page_config(page_title="KrushiNudi", page_icon="🌾", initial_sidebar_state="expanded")
 ui.inject_css()
 
-# Security Gate: Enforce password login, user registration, and 1-hour inactivity timeout
-auth.require_auth()
+
+# Security Gate: Completely DEACTIVATED.
+# Anyone can use KrushiNudi directly without any login or registration.
+# To re-activate later after building the project, uncomment the line below:
+# auth.require_auth()
 
 pages = [
     st.Page("views/home.py", title=t("Crop advisor"), icon="🌾", default=True),
+    st.Page("views/guide.py", title=t("How to use"), icon="📖", url_path="guide"),
+    st.Page("views/borewell.py", title=t("Borewell advisory"), icon="💧", url_path="borewell"),
     st.Page("views/crop_doctor.py", title=t("Crop Doctor"), icon="🩺", url_path="doctor"),
     st.Page("views/season_planner.py", title=t("Season planner"), icon="🗓️", url_path="season"),
     st.Page("views/weather.py", title=t("Weather precautions"), icon="⛈️", url_path="weather"),

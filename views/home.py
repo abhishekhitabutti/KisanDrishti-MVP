@@ -1,4 +1,4 @@
-"""KisanDrishti: crop advisor (home view). The router in app.py shows it with the other views."""
+"""KrushiNudi: crop advisor (home view). The router in app.py shows it with the other views."""
 import json
 import sys
 import pickle
@@ -101,11 +101,32 @@ def explorer_table(crop, profiles, values):
 model, profiles, metrics = load_artifacts()
 crops = sorted(profiles)
 
-ui.hero(t("KisanDrishti"), t("Crop advice, a photo-based crop doctor, weather precautions and scheme help for Karnataka farmers."), "🌾")
+is_kn = (i18n.current_lang() == "kn")
+hero_title = "ಕೃಷಿನುಡಿ {KrushiNudi}" if is_kn else "KrushiNudi"
+hero_sub = (
+    "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {Smart Farm Advisory · The Voice of Intelligent Agriculture}"
+    if is_kn else
+    "Smart Farm Advisory · The Voice of Intelligent Agriculture"
+)
+ui.hero(hero_title, hero_sub, "🌾")
+promo_tagline = (
+    "✨ *ಚತುರ ಒಳನೋಟಗಳು. ಉತ್ತಮ ಕೃಷಿ. {Smarter Insights. Better Farming.}*"
+    if is_kn else
+    "✨ *Smarter Insights. Better Farming.*"
+)
+st.markdown(promo_tagline)
 
 st.markdown(ui.badge(t("Beta"), "medium") + escape(t("Guidance comes from published sources and expert review is in progress.")), unsafe_allow_html=True)
 ui.stat_row([(len(crops), t("crops in the advisor")), (len(DISTRICTS), t("Karnataka districts")),
              (len(diagnosis.load_kb()), t("problems with sourced guidance"))])
+
+with st.container(border=True):
+    gc1, gc2 = st.columns([3, 1])
+    with gc1:
+        st.markdown(f"**📖 {t('How to use the app')}**")
+        st.caption(t("Step-by-step guide and live demo of all KrushiNudi tools"))
+    with gc2:
+        ui.page_link("views/guide.py", t("Demo & Guide"), "👉")
 
 CARDS = [
     ("🩺", "Crop Doctor", "Photograph a sick plant, pest or weed and get safe, sourced advice.", "views/crop_doctor.py"),

@@ -1,4 +1,4 @@
-"""Weather precautions page for KisanDrishti.
+"""Weather precautions page for KrushiNudi.
 Live forecast from Open-Meteo with automated agricultural hazard flags.
 Fully localized in pure Kannada and English.
 """
@@ -342,4 +342,4 @@ else:
 
 ui.feedback_box()
 st.markdown("---")
-st.caption("© 2026 ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ. ಕಿಸಾನ್ ದೃಷ್ಟಿ {AI} ಕೃಷಿ ಸಲಹಾ ವೇದಿಕೆ. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ." if is_kn else "© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited.")
+st.caption("© 2026 ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ. ಕೃಷಿನುಡಿ {KrushiNudi} · ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ {Smart Farm Advisory}. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ." if is_kn else "© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited.")

@@ -263,6 +263,7 @@ with tab_browse:
             browse_district = b_options[sel_b_kn]
         else:
             browse_district = st.selectbox(t("Your district"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"), key="browse_district")
+        pick = st.selectbox(t("Choose a problem"), list(options))
         render_entry(options[pick], browse_district)
     else:
         st.info(t("The guidance library could not be loaded."))
