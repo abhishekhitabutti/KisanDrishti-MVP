@@ -212,20 +212,21 @@ with tab_bio:
     )
 
     for bio in wdata.BIO_FORMULATIONS:
-        with st.expander(f"🏺 {bio['name_kn'] if is_kn else bio['name_en']}", expanded=(bio["id"] == "jeevamrutha")):
+        bio_title = bio.get("name_kn", bio.get("name_en", "")) if is_kn else bio.get("name_en", "")
+        with st.expander(f"🏺 {bio_title}", expanded=(bio.get("id") == "jeevamrutha")):
             st.markdown(f"**{'ಉದ್ದೇಶ & ಪ್ರಯೋಜನ:' if is_kn else 'Purpose & Benefit:'}**")
-            st.write(bio["purpose_kn"] if is_kn else bio["purpose_en"])
+            st.write(bio.get("purpose_kn" if is_kn else "purpose_en", ""))
             
             st.markdown(f"**🛒 {'ಬೇಕಾಗುವ ಸಾಮಗ್ರಿಗಳು:' if is_kn else 'Ingredients:'}**")
-            ingrs = bio["ingredients_kn"] if is_kn else bio["ingredients_en"]
+            ingrs = bio.get("ingredients_kn" if is_kn else "ingredients_en", [])
             for ing in ingrs:
                 st.markdown(f"- {ing}")
                 
             st.markdown(f"**⏳ {'ತಯಾರಿಸುವ ವಿಧಾನ:' if is_kn else 'Preparation Method:'}**")
-            st.write(bio["preparation_kn"] if is_kn else bio["preparation_en"])
+            st.write(bio.get("preparation_kn" if is_kn else "preparation_en", ""))
             
             st.markdown(f"**💧 {'ಬಳಸುವ ಪ್ರಮಾಣ & ಹಂತ:' if is_kn else 'Application Rate & Timing:'}**")
-            st.info(bio["application_kn"] if is_kn else bio["application_en"])
+            st.info(bio.get("application_kn" if is_kn else "application_en", ""))
 
 
 # ==========================================

@@ -233,6 +233,7 @@ BIO_FORMULATIONS = [
     {
         "id": "jeevamrutha",
         "name_en": "Liquid Jeevamrutha (ಜೀವಾಮೃತ)",
+        "name_kn": "ದ್ರವ ಜೀವಾಮೃತ {Liquid Jeevamrutha}",
         "purpose_en": "Microbial inoculant that activates beneficial bacteria and earthworms in the soil.",
         "purpose_kn": "ಮಣ್ಣಿನಲ್ಲಿ ನೈಸರ್ಗಿಕ ಎರೆಹುಳುಗಳು ಮತ್ತು ಪ್ರಯೋಜನಕಾರಿ ಸೂಕ್ಷ್ಮಜೀವಿಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುವ ಜೈವಿಕ ದ್ರಾವಣ.",
         "ingredients_en": [
@@ -259,6 +260,7 @@ BIO_FORMULATIONS = [
     {
         "id": "beejamrutha",
         "name_en": "Beejamrutha Seed Treatment (ಬೀಜಾಮೃತ)",
+        "name_kn": "ಬೀಜಾಮೃತ ಬೀಜೋಪಚಾರ {Beejamrutha}",
         "purpose_en": "Protects newly sown seeds from soil-borne fungi, collar rot, and bacterial wilt while enhancing early germination.",
         "purpose_kn": "ಬಿತ್ತಿದ ಬೀಜಗಳಿಗೆ ಬರುವ ಶಿಲೀಂಧ್ರ ರೋಗಗಳು, ಬೇರು ಕೊಳೆತ ಮತ್ತು ಸೊರಗು ರೋಗಗಳನ್ನು ತಡೆದು ಆರಂಭಿಕ ಮೊಳಕೆ ಸಾಮರ್ಥ್ಯ ಹೆಚ್ಚಿಸುತ್ತದೆ.",
         "ingredients_en": [
@@ -283,6 +285,7 @@ BIO_FORMULATIONS = [
     {
         "id": "ghana_jeevamrutha",
         "name_en": "Ghana Jeevamrutha (ಘನ ಜೀವಾಮೃತ - Dry Form)",
+        "name_kn": "ಘನ ಜೀವಾಮೃತ {Ghana Jeevamrutha}",
         "purpose_en": "Solid organic microbial fertilizer ideal for rainfed dryland farming where drip/flood irrigation is unavailable.",
         "purpose_kn": "ಹನಿ ನೀರಾವರಿ ಇಲ್ಲದ ಒಣಭೂಮಿ ಮತ್ತು ಮಳೆಯಾಶ್ರಿತ ಜಮೀನುಗಳಿಗೆ ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ಸಾಲಿನಲ್ಲಿ ಹಾಕಬಹುದಾದ ಘನ ಗೊಬ್ಬರ.",
         "ingredients_en": [
@@ -301,6 +304,7 @@ BIO_FORMULATIONS = [
     {
         "id": "neemastra",
         "name_en": "Neemastra / Agniastra (ನೀಮಾಸ್ತ್ರ)",
+        "name_kn": "ನೀಮಾಸ್ತ್ರ / ಅಗ್ನಿಯಸ್ತ್ರ {Neemastra}",
         "purpose_en": "Natural botanical pest repellent against sap-sucking pests (aphids, thrips, whiteflies) and small caterpillars.",
         "purpose_kn": "ರಸಹೀರುವ ಕೀಟಗಳು (ಜಿಗಟು, ನುಸಿ, ಬಿಳಿ ನೊಣ) ಮತ್ತು ಎಳೆಯ ಲದ್ದಿ ಹುಳುಗಳನ್ನು ನಿಯಂತ್ರಿಸುವ ನೈಸರ್ಗಿಕ ಕಷಾಯ.",
         "ingredients_en": [
