@@ -20,6 +20,7 @@ pages = [
     st.Page("views/home.py", title=t("Crop advisor"), icon="🌾", default=True),
     st.Page("views/guide.py", title=t("How to use"), icon="📖", url_path="guide"),
     st.Page("views/borewell.py", title=t("Borewell advisory"), icon="💧", url_path="borewell"),
+    st.Page("views/weed_nutrient.py", title=t("Weed & nutrient advisory"), icon="🌿", url_path="weed-nutrient"),
     st.Page("views/crop_doctor.py", title=t("Crop Doctor"), icon="🩺", url_path="doctor"),
     st.Page("views/season_planner.py", title=t("Season planner"), icon="🗓️", url_path="season"),
     st.Page("views/weather.py", title=t("Weather precautions"), icon="⛈️", url_path="weather"),

@@ -55,6 +55,8 @@ st.markdown("---")
 # --- INTERACTIVE TABS ---
 tab_titles = [
     "🌾 ಬೆಳೆ ಸಲಹೆಗಾರ" if is_kn else "🌾 Crop Advisor",
+    "💧 ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ" if is_kn else "💧 Borewell Advisory",
+    "🌿 ಕಳೆ & ಕಾಂಪೋಸ್ಟ್" if is_kn else "🌿 Weed & Nutrient",
     "🩺 ಬೆಳೆ ವೈದ್ಯ" if is_kn else "🩺 Crop Doctor",
     "🗓️ ಋತು ಯೋಜಕ" if is_kn else "🗓️ Season Planner",
     "⛈️ ಹವಾಮಾನ ರಕ್ಷಣೆ" if is_kn else "⛈️ Weather Precautions",
@@ -62,7 +64,7 @@ tab_titles = [
     "🔒 ಖಾತೆ & ಸುರಕ್ಷತೆ" if is_kn else "🔒 Account & Privacy",
 ]
 
-t1, t2, t3, t4, t5, t6 = st.tabs(tab_titles)
+t1, t_borewell, t_weed, t2, t3, t4, t5, t6 = st.tabs(tab_titles)
 
 # ==========================================
 # TAB 1: CROP ADVISOR
@@ -129,6 +131,86 @@ with t1:
             st.info(f"**{'ಪೋಷಕಾಂಶಗಳ ಸ್ಥಿತಿ' if is_kn else 'Nutrient Status'}:** {demo_n_status}\n\n*{demo_advice}*")
 
     ui.page_link("views/home.py", "ಬೆಳೆ ಸಲಹೆಗಾರ ಪುಟಕ್ಕೆ ಹೋಗಿ" if is_kn else "Go to Crop Advisor Page", "🌾")
+
+
+# ==========================================
+# TAB: BOREWELL ADVISORY
+# ==========================================
+with t_borewell:
+    st.subheader("ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ {Borewell Advisory} ಹೇಗೆ ಬಳಸುವುದು?" if is_kn else "How to use the Borewell Advisory")
+    if is_kn:
+        st.markdown(
+            "ಬೋರ್‌ವೆಲ್ ಕೊರೆಯುವ ಮುನ್ನ ಕೇಂದ್ರ ಅಂತರ್ಜಲ ಮಂಡಳಿ {CGWB} ಮತ್ತು ರಾಜ್ಯ ಅಂತರ್ಜಲ ನಿರ್ದೇಶನಾಲಯದ ದತ್ತಾಂಶವನ್ನು ಆಧರಿಸಿ "
+            "ನೀರು ಸಿಗುವ ನಿಖರ ಆಳ, ಸಂಭವನೀಯತೆ, ಮತ್ತು ಆರ್ಥಿಕ ಬಜೆಟ್ ಅನ್ನು ಈ ಉಪಕರಣವು ಅಂದಾಜಿಸುತ್ತದೆ.\n\n"
+            "**ಬಳಸುವ 3 ಹಂತಗಳು:**\n"
+            "1. **ಜಿಲ್ಲೆ ಮತ್ತು ಭೂಸ್ವರೂಪ ಆರಿಸಿ:** ನಿಮ್ಮ ಜಿಲ್ಲೆ, ಹೊಲದ ಎತ್ತರ-ತಗ್ಗು, ಮತ್ತು 500 ಮೀಟರ್ ಒಳಗೆ ನದಿ/ಕೆರೆ ಇದೆಯೇ ಎಂದು ತಿಳಿಸಿ.\n"
+            "2. **ನೆರೆಯ ಕೊಳವೆಬಾವಿಗಳ ಸ್ಥಿತಿ:** ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ 500 ಮೀಟರ್ ವ್ಯಾಪ್ತಿಯಲ್ಲಿ ಎಷ್ಟು ಕೊಳವೆಬಾವಿಗಳು ನೀರು ಕೊಡುತ್ತಿವೆ ಎಂದು ನಮೂದಿಸಿ.\n"
+            "3. **ವೈಜ್ಞಾನಿಕ ವಿಶ್ಲೇಷಣೆ:** ನೀರು ಸಿಗುವ ಸರಾಸರಿ ಆಳ, ಅಂದಾಜು ಒಟ್ಟು ಕೊರೆಯುವಿಕೆ ವೆಚ್ಚ (ಕೇಸಿಂಗ್ ಪೈಪ್ ಸೇರಿ), ಮತ್ತು ಬೇಸಿಗೆಯಲ್ಲಿ ಬತ್ತಿಹೋಗುವ ಅಪಾಯವನ್ನು ಪರಿಶೀಲಿಸಿ."
+        )
+    else:
+        st.markdown(
+            "Before spending ₹2,00,000 on drilling, this advisory predicts groundwater strike depth, success probability, "
+            "and drilling budgets using Central Ground Water Board (CGWB) hydrogeological data and nearby well ground truth.\n\n"
+            "**3 Steps to use:**\n"
+            "1. **Select District & Topography:** Specify your district, land elevation (valley vs ridge), and proximity to surface water.\n"
+            "2. **Report Local Wells:** Enter working vs dry borewells within 500 meters to calibrate spatial probability.\n"
+            "3. **Review Estimates:** Check recommended strike depth, casing requirement, estimated budget, and summer desiccation risks."
+        )
+
+    with st.container(border=True):
+        st.markdown(f"**🎮 {'ನೇರ ಡೆಮೊ: ಕೊಳವೆಬಾವಿ ಮುನ್ನೋಟ' if is_kn else 'Live Demo: Borewell Feasibility'}**")
+        demo_dist = st.selectbox(
+            "ಜಿಲ್ಲೆಯನ್ನು ಆರಿಸಿ" if is_kn else "Select district",
+            ["Belagavi (ಬೆಳಗಾವಿ)", "Kolar (ಕೋಲಾರ)", "Raichur (ರಾಯಚೂರು)"],
+            key="demo_borewell_dist"
+        )
+        if "Belagavi" in demo_dist:
+            st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "240 - 360 ft", "76% " + ("ಸಂಭವನೀಯತೆ" if is_kn else "Probability"))
+            st.info("ಬೆಳಗಾವಿ: ಸುರಕ್ಷಿತ ವಲಯ {Safe}. ನದಿ ಕಣಿವೆಯಲ್ಲಿ ಜಲಮಟ್ಟ ಉತ್ತಮವಾಗಿದೆ." if is_kn else "Belagavi: Safe CGWB category with robust river basin replenishment.")
+        elif "Kolar" in demo_dist:
+            st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "750 - 1,150 ft", "38% " + ("ಸಂಭವನೀಯತೆ" if is_kn else "Probability"))
+            st.warning("ಕೋಲಾರ: ಅತೀಯಾಗಿ ಬಳಸಿದ ವಲಯ {Over-Exploited}. ಕಡ್ಡಾಯವಾಗಿ ಜಿಯೋಫಿಸಿಕಲ್ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ." if is_kn else "Kolar: Over-Exploited CGWB category. Geophysical resistivity survey is mandatory.")
+        else:
+            st.metric("ಶಿಫಾರಸು ಮಾಡಿದ ಆಳ" if is_kn else "Recommended Depth", "380 - 580 ft", "62% " + ("ಸಂಭವನೀಯತೆ" if is_kn else "Probability"))
+            st.info("ರಾಯಚೂರು: ಅರೆ-ನಿರ್ಣಾಯಕ ವಲಯ {Semi-Critical}. ಕಪ್ಪು ಮಣ್ಣಿಗೆ 80 ಅಡಿ ಕೇಸಿಂಗ್ ಪೈಪ್ ಅಗತ್ಯ." if is_kn else "Raichur: Semi-Critical category. Deep black soil needs 80 ft casing pipe.")
+
+    ui.page_link("views/borewell.py", "ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ ಪುಟಕ್ಕೆ ಹೋಗಿ" if is_kn else "Go to Borewell Advisory Page", "💧")
+
+
+# ==========================================
+# TAB: WEED & NUTRIENT ADVISORY
+# ==========================================
+with t_weed:
+    st.subheader("ಕಳೆ & ಸಾವಯವ ಕಾಂಪೋಸ್ಟ್ {Weed & Nutrient} ಹೇಗೆ ಬಳಸುವುದು?" if is_kn else "How to use Weed & Nutrient Advisor")
+    if is_kn:
+        st.markdown(
+            "ಕಳೆನಾಶಕ ಮತ್ತು ದುಬಾರಿ ರಾಸಾಯನಿಕ ಗೊಬ್ಬರಗಳ ಮೇಲಿನ ವೆಚ್ಚವನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಈ ಉಪಕರಣವು ಎರಡು ಪ್ರಮುಖ ಸೌಲಭ್ಯಗಳನ್ನು ನೀಡುತ್ತದೆ:\n\n"
+            "1. **ಕಳೆಗಳ ನೈಸರ್ಗಿಕ ನಿರ್ಮೂಲನೆ:** ಬೇಸಿಗೆಯ ಆಳವಾದ ಉಳುಮೆ, ಹಳೆಯ ಬಿತ್ತನೆ ಮಡಿ {Stale Seedbed}, ಸೌರ ತಾಪನ {Solarization}, ಮತ್ತು ಸಣಬು/ಅಲಸಂದೆಯಂತಹ ಸಹಬೆಳೆಗಳ ಮೂಲಕ ಹಠಮಾರಿ ಕಳೆಗಳನ್ನು ನಿಯಂತ್ರಿಸಿ.\n"
+            "2. **ಕಾಂಪೋಸ್ಟ್ & ಉಳಿತಾಯ ಲೆಕ್ಕಾಚಾರ:** ನಿಮ್ಮ ಹೊಲದ ಕಡ್ಡಿ-ಕಸ, ಒಣ ಹುಲ್ಲು ಮತ್ತು ದನಗಳ ಸಗಣಿಯಿಂದ ಎಷ್ಟು ಕಾಂಪೋಸ್ಟ್ ತಯಾರಿಸಬಹುದು ಮತ್ತು ಎಷ್ಟು ಯೂರಿಯಾ/DAP ಚೀಲಗಳ ಹಣ ಉಳಿಯುತ್ತದೆ ಎಂದು ಲೆಕ್ಕ ಹಾಕಿ."
+        )
+    else:
+        st.markdown(
+            "This module slashes input costs through two practical scientific components:\n\n"
+            "1. **Non-Chemical Weed Depletion:** Suppresses notorious perennial weeds (nutgrass, harike, parthenium) through summer ploughing, solarization, stale seedbeds, and allelopathic smother crops.\n"
+            "2. **On-Farm Composting Calculator:** Computes exact finished compost tonnage, organic N-P-K additions, and direct rupee savings on chemical Urea and DAP bags."
+        )
+
+    with st.container(border=True):
+        st.markdown(f"**🎮 {'ನೇರ ಡೆಮೊ: ಕಾಂಪೋಸ್ಟ್ ಉಳಿತಾಯ ಲೆಕ್ಕ' if is_kn else 'Live Demo: Compost Savings'}**")
+        demo_cows = st.slider("ನಿಮ್ಮಲ್ಲಿರುವ ದನಗಳ ಸಂಖ್ಯೆ" if is_kn else "Number of cattle/cows", 1, 10, 2, key="demo_guide_cows")
+        est_tons = round(demo_cows * 1.35, 1)
+        est_urea = round(demo_cows * 1.0, 1)
+        est_dap = round(demo_cows * 0.4, 1)
+        est_rs = round(demo_cows * 1250)
+        
+        gcol1, gcol2 = st.columns(2)
+        with gcol1:
+            st.metric("ತಯಾರಾಗುವ ಕಾಂಪೋಸ್ಟ್" if is_kn else "Finished Compost", f"{est_tons} ಟನ್ / Ton")
+        with gcol2:
+            st.metric("ಉಳಿತಾಯವಾಗುವ ಹಣ" if is_kn else "Estimated Savings", f"₹{est_rs:,}")
+        st.caption(f"ಉಳಿತಾಯ: ~{est_urea} ಚೀಲ ಯೂರಿಯಾ ಮತ್ತು ~{est_dap} ಚೀಲ DAP ಗೊಬ್ಬರ." if is_kn else f"Saves ~{est_urea} bags Urea and ~{est_dap} bags DAP.")
+
+    ui.page_link("views/weed_nutrient.py", "ಕಳೆ & ಪೋಷಕಾಂಶ ಪುಟಕ್ಕೆ ಹೋಗಿ" if is_kn else "Go to Weed & Nutrient Page", "🌿")
 
 
 # ==========================================

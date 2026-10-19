@@ -80,7 +80,7 @@ def test_schemes_page_checklist():
 
 PAGES = [ROOT / "views" / "home.py", ROOT / "views" / "weather.py", ROOT / "views" / "schemes.py",
          ROOT / "views" / "crop_doctor.py", ROOT / "views" / "season_planner.py", ROOT / "views" / "about.py",
-         ROOT / "views" / "guide.py", ROOT / "views" / "borewell.py"]
+         ROOT / "views" / "guide.py", ROOT / "views" / "borewell.py", ROOT / "views" / "weed_nutrient.py"]
 
 
 def all_markdown(at):
@@ -104,3 +104,11 @@ def test_feedback_form_link_can_be_set_without_code_changes(monkeypatch):
 def test_home_page_points_to_more_crops():
     at = AppTest.from_file(str(PAGES[0]), default_timeout=30).run()
     assert "gaez.fao.org/pages/ecocrop-search" in all_markdown(at)
+
+
+def test_weed_nutrient_page_renders_cleanly():
+    at = AppTest.from_file(str(ROOT / "views" / "weed_nutrient.py"), default_timeout=30).run()
+    assert not at.exception
+    text = all_markdown(at)
+    assert "Weed & Nutrient Advisor" in text or "ಕಳೆ & ಸಾವಯವ ಪೋಷಕಾಂಶ" in text
+

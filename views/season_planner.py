@@ -117,6 +117,12 @@ for tab, stage in zip(tabs, stages_list):
                 
         for item in items_dict.get(stage, []):
             render_item(item, is_kn)
+
+        if (is_kn and stage == "ಬಿತ್ತನೆಗೆ ಮುನ್ನ") or (not is_kn and stage == "Before sowing"):
+            ui.page_link("views/borewell.py", "ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ ತೆರೆಯಿರಿ" if is_kn else "Open Borewell Advisory", "💧")
+
+        if (is_kn and stage == "ಬಿತ್ತನೆ ಕಾಲ") or (not is_kn and stage == "Sowing season"):
+            ui.page_link("views/weed_nutrient.py", "ಕಳೆ & ಸಾವಯವ ಪೋಷಕಾಂಶ ಸಲಹೆಗಾರ ತೆರೆಯಿರಿ" if is_kn else "Open Weed & Nutrient Advisor", "🌿")
             
         if (is_kn and stage == "ಕೊಯ್ಲು ಮತ್ತು ಸಂಗ್ರಹಣೆ") or (not is_kn and stage == "Harvest and storage"):
             insurance_note = (
