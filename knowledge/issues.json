@@ -392,5 +392,507 @@
       }
     ],
     "last_checked": "2026-10"
+  },
+  {
+    "id": "paddy_bph",
+    "type": "pest",
+    "name": "Brown planthopper (Nilaparvata lugens)",
+    "crops": [
+      "rice"
+    ],
+    "look_for": [
+      "Small brown insects crowding at the stem base near water level",
+      "Leaves turning yellow and drying in circular patches known as hopper burn",
+      "Sticky honeydew with sooty black mould at the plant base"
+    ],
+    "not_to_confuse": [
+      "White backed planthopper has distinct white stripe down the back",
+      "Drought stress dries leaves evenly rather than in circular burnt patches"
+    ],
+    "why_it_happens": "Favoured by continuous flooding, close planting, excessive nitrogen fertilizer, and indiscriminate spraying of synthetic pyrethroids.",
+    "act_now": [
+      "Drain standing water from the field for three to four days to break the pest cycle.",
+      "Create alleyways or walking paths every two metres for aeration and sunlight.",
+      "Do not apply further nitrogen or urea into water.",
+      "Encourage natural predators like spiders and mirid bugs."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Pymetrozine",
+          "kind": "Selective planthopper inhibitor",
+          "note": "Paralyzes sucking mouthparts immediately."
+        },
+        {
+          "active": "Triflumezopyrim",
+          "kind": "Systemic insecticide",
+          "note": "Provides extended control of nymphs and adults."
+        }
+      ],
+      "when": [
+        "Direct spray towards the base of the plant where hoppers feed.",
+        "Spray when population reaches economic threshold of five to ten insects per hill.",
+        "Do not spray broad-spectrum pyrethroids which kill beneficial spider predators."
+      ]
+    },
+    "precautions": [
+      "Wear protective equipment and direct spray nozzle low into the crop canopy.",
+      "Stop spraying twenty-one days before harvest."
+    ],
+    "see_expert_if": [
+      "Hopper burn patches expand rapidly across the field",
+      "The problem keeps spreading after one treatment"
+    ],
+    "sources": [
+      {
+        "title": "IRRI: Brown planthopper management",
+        "url": "https://knowledgebank.irri.org/step-by-step-production/growth/pests-and-diseases/brown-planthopper"
+      },
+      {
+        "title": "ICAR-NRRI: Planthopper advisory",
+        "url": "https://icar-nrri.gov.in"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "cotton_pink_bollworm",
+    "type": "pest",
+    "name": "Pink bollworm (Pectinophora gossypiella)",
+    "crops": [
+      "cotton"
+    ],
+    "look_for": [
+      "Rosetted flowers that fail to open properly",
+      "Small entry holes in green bolls with brown frass",
+      "Pinkish caterpillars feeding inside developing bolls and seeds",
+      "Premature boll opening and stained lint"
+    ],
+    "not_to_confuse": [
+      "American bollworm feeds from outside with half body inside large holes",
+      "Spotted bollworm attacks terminal shoots first"
+    ],
+    "why_it_happens": "Favoured by continuous cotton cultivation, ratooning, late sowing, and prolonged flowering period.",
+    "act_now": [
+      "Install pheromone traps across the field to monitor male moth activity.",
+      "Collect and destroy rosetted flowers and fallen damaged bolls.",
+      "Do not practice ratoon cotton cropping.",
+      "Terminate crop after first flush of picking."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Chlorantraniliprole",
+          "kind": "Anthranilic diamide insecticide",
+          "note": "Effective against young larvae before entering bolls."
+        },
+        {
+          "active": "Emamectin benzoate",
+          "kind": "Avermectin insecticide",
+          "note": "Penetrates leaf surface to control bollworm larvae."
+        }
+      ],
+      "when": [
+        "Spray at peak squaring and flowering stage when moth catches reach threshold.",
+        "Target eggs and newly hatched larvae before they bore inside bolls.",
+        "Spray in late afternoon when moths are active."
+      ]
+    },
+    "precautions": [
+      "Once larvae enter inside the boll, chemical insecticides have limited reach.",
+      "Follow recommended pre-harvest waiting periods strictly."
+    ],
+    "see_expert_if": [
+      "More than ten percent of green bolls show internal damage",
+      "Pheromone trap catches exceed eight moths per trap per day"
+    ],
+    "sources": [
+      {
+        "title": "CICR: Pink bollworm management strategy",
+        "url": "https://cicr.org.in"
+      },
+      {
+        "title": "UAS Dharwad Cotton Advisory",
+        "url": "https://uasd.edu"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "chilli_murda_complex",
+    "type": "pest",
+    "name": "Chilli leaf curl and thrips complex (Murda roga)",
+    "crops": [
+      "chilli"
+    ],
+    "look_for": [
+      "Upward curling of leaf margins like a boat caused by thrips",
+      "Downward curling of leaves like an inverted cup caused by yellow mites",
+      "Thickened, brittle, leathery leaves with shortened internodes",
+      "Stunted plants with severe flower drop and wrinkled fruit"
+    ],
+    "not_to_confuse": [
+      "Viral leaf curl shows prominent vein clearing and mosaic yellowing",
+      "Moisture stress causes uniform wilting without curling"
+    ],
+    "why_it_happens": "Favoured by warm dry weather with low humidity, excessive nitrogen, and dry spells.",
+    "act_now": [
+      "Install blue sticky traps for thrips and yellow sticky traps for whiteflies.",
+      "Spray cold water misting or neem seed kernel extract early in the morning.",
+      "Eradicate alternate weed hosts around field borders.",
+      "Avoid excess chemical nitrogen fertilizer."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Fipronil",
+          "kind": "Broad-spectrum phenylpyrazole insecticide",
+          "note": "Controls active thrips populations."
+        },
+        {
+          "active": "Diafenthiuron",
+          "kind": "Insecticide and acaricide",
+          "note": "Effective against both thrips and yellow mites."
+        }
+      ],
+      "when": [
+        "Spray in early morning or late afternoon targeting the underside of leaves.",
+        "Rotate active ingredients to prevent thrips resistance.",
+        "Spray before heavy flowering to protect blossom buds."
+      ]
+    },
+    "precautions": [
+      "Do not spray during mid-day heat or in strong wind.",
+      "Ensure complete spray coverage of lower leaf surfaces."
+    ],
+    "see_expert_if": [
+      "New flushes of leaves continue to emerge curled and leathery",
+      "Severe flower drop threatens fruit set"
+    ],
+    "sources": [
+      {
+        "title": "IIHR Bangalore: Chilli pest management",
+        "url": "https://iihr.res.in"
+      },
+      {
+        "title": "TNAU Agritech Chilli Crop Protection",
+        "url": "https://agritech.tnau.ac.in"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "groundnut_tikka",
+    "type": "disease",
+    "name": "Tikka leaf spot (early and late leaf spot)",
+    "crops": [
+      "groundnut"
+    ],
+    "look_for": [
+      "Circular dark brown spots with prominent yellow halos on upper leaves",
+      "Nearly circular dark black spots without halos on lower leaves",
+      "Severe defoliation and premature leaf drop leaving bare stems",
+      "Reduced pod development and weak pegs"
+    ],
+    "not_to_confuse": [
+      "Rust disease produces orange-brown powdery pustules on lower leaf surface",
+      "Alternaria leaf blight has irregular concentric rings"
+    ],
+    "why_it_happens": "Favoured by prolonged leaf wetness, high relative humidity, warm temperatures, and continuous groundnut mono-cropping.",
+    "act_now": [
+      "Collect and burn or deeply bury infected crop residue after harvest.",
+      "Practice crop rotation with cereals like pearl millet or sorghum.",
+      "Provide balanced nutrition and avoid water stagnation.",
+      "Use certified disease-free treated seed."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Mancozeb",
+          "kind": "Contact dithiocarbamate fungicide",
+          "note": "Preventive protection across leaf surface."
+        },
+        {
+          "active": "Tebuconazole",
+          "kind": "Systemic triazole fungicide",
+          "note": "Curative and translaminar systemic action."
+        }
+      ],
+      "when": [
+        "Begin spraying when initial spots appear around thirty to forty days after sowing.",
+        "Repeat spray at two-week intervals if humid weather continues.",
+        "Ensure spray reaches lower and interior leaf layers."
+      ]
+    },
+    "precautions": [
+      "Do not harvest pods before the mandatory waiting period expires.",
+      "Never apply during rain or when leaves are soaked with morning dew."
+    ],
+    "see_expert_if": [
+      "Leaves drop heavily before sixty days of crop growth",
+      "Spots spread rapidly across entire field"
+    ],
+    "sources": [
+      {
+        "title": "ICRISAT: Groundnut diseases",
+        "url": "https://exploreit.icrisat.org"
+      },
+      {
+        "title": "UAS Bangalore Groundnut Package of Practices",
+        "url": "https://uasbangalore.edu.in"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "ragi_blast",
+    "type": "disease",
+    "name": "Finger millet blast (leaf, neck and finger blast)",
+    "crops": [
+      "ragi"
+    ],
+    "look_for": [
+      "Spindle-shaped brown lesions with greyish centers on young leaves",
+      "Dark brown to black discoloration at the base of earheads causing neck blast",
+      "Infected fingers turn black, crack, and fail to fill grains"
+    ],
+    "not_to_confuse": [
+      "Helminthosporium leaf spot produces uniform small oval brown spots",
+      "Foot rot affects root crowns at soil level"
+    ],
+    "why_it_happens": "Favoured by cloudy weather, intermittent drizzle, high humidity, cool nights, and dense sowing.",
+    "act_now": [
+      "Adopt recommended spacing and avoid overcrowding.",
+      "Apply nitrogen in split applications rather than single heavy dose.",
+      "Use blast tolerant varieties recommended by agricultural universities.",
+      "Intercrop with pulses like cowpea or redgram."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Kitazin",
+          "kind": "Organophosphorus systemic fungicide",
+          "note": "Effective against leaf and neck blast."
+        },
+        {
+          "active": "Azoxystrobin",
+          "kind": "Strobilurin broad-spectrum fungicide",
+          "note": "Preventive and curative action on earhead blast."
+        }
+      ],
+      "when": [
+        "Spray at tillering stage if leaf blast lesions exceed economic threshold.",
+        "Apply protective spray just at head emergence stage to prevent neck blast.",
+        "Spray on calm days after morning dew dries."
+      ]
+    },
+    "precautions": [
+      "Neck and finger blast cause maximum yield loss once earheads emerge.",
+      "Check local agricultural university variety recommendations."
+    ],
+    "see_expert_if": [
+      "Neck blast affects more than two percent of emerging earheads",
+      "Seedlings in nursery show widespread blighting"
+    ],
+    "sources": [
+      {
+        "title": "ICAR-IIMR: Millets crop health",
+        "url": "https://millets.res.in"
+      },
+      {
+        "title": "UAS Bangalore Finger Millet Advisory",
+        "url": "https://uasbangalore.edu.in"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "tur_pod_borer",
+    "type": "pest",
+    "name": "Pigeonpea pod borer (Helicoverpa armigera)",
+    "crops": [
+      "tur"
+    ],
+    "look_for": [
+      "Circular bore holes on flower buds, flowers, and pods",
+      "Greenish or brownish caterpillars feeding with head inside the pod",
+      "Defoliated flower clusters and dropped young pods",
+      "Frass pellets visible near pod entry holes"
+    ],
+    "not_to_confuse": [
+      "Pod fly larvae feed entirely inside the pod without visible exterior holes",
+      "Plume moth caterpillars are smaller and spiny"
+    ],
+    "why_it_happens": "Favoured by warm humid weather during flowering and pod development, and presence of alternate host crops.",
+    "act_now": [
+      "Install pheromone traps to monitor adult moth arrival.",
+      "Shake plants vigorously over collection sheets to dislodge larvae early morning.",
+      "Plant African marigold as trap crop around field borders.",
+      "Provide bird perches across the field to encourage insectivorous birds."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Chlorantraniliprole",
+          "kind": "Diamide insecticide",
+          "note": "Long residual control of young larvae."
+        },
+        {
+          "active": "Indoxacarb",
+          "kind": "Oxadiazine insecticide",
+          "note": "Controls resistant pod borer caterpillars."
+        }
+      ],
+      "when": [
+        "Apply when egg laying or young caterpillar count reaches one larva per plant.",
+        "Spray at fifty percent flowering stage for best flower retention.",
+        "Spray in late afternoon when bees have finished pollination."
+      ]
+    },
+    "precautions": [
+      "Do not spray during peak bee activity in morning hours.",
+      "Always rotate chemistry to prevent insecticide resistance."
+    ],
+    "see_expert_if": [
+      "Pod damage exceeds ten percent in green pod stage",
+      "Heavy moth catches continue in pheromone traps"
+    ],
+    "sources": [
+      {
+        "title": "ICRISAT: Pigeonpea IPM guide",
+        "url": "https://exploreit.icrisat.org"
+      },
+      {
+        "title": "UAS Raichur Redgram Advisory",
+        "url": "https://uasraichur.edu.in"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "onion_purple_blotch",
+    "type": "disease",
+    "name": "Onion purple blotch (Alternaria porri)",
+    "crops": [
+      "onion"
+    ],
+    "look_for": [
+      "Small water-soaked lesions on leaves and seed stalks turning brown with purple centers",
+      "Concentric dark rings within the purple lesions",
+      "Leaves collapse from the point of infection and break over",
+      "Stalk infection causes lodging before bulb maturity"
+    ],
+    "not_to_confuse": [
+      "Stemphylium blight spots are longer, yellowish, and lack distinct purple centers",
+      "Downy mildew produces violet-grey fuzzy mold"
+    ],
+    "why_it_happens": "Favoured by warm temperatures, high humidity, frequent rain, and continuous overhead sprinkler irrigation.",
+    "act_now": [
+      "Ensure good field drainage and avoid overhead sprinkler watering in late evening.",
+      "Maintain proper plant spacing for air circulation between rows.",
+      "Destroy crop debris after bulb harvest.",
+      "Practice two-year crop rotation with non-allium crops."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Difenoconazole",
+          "kind": "Systemic triazole fungicide",
+          "note": "Controls established blotch lesions."
+        },
+        {
+          "active": "Chlorothalonil",
+          "kind": "Multi-site contact fungicide",
+          "note": "Broad protectant barrier against spore germination."
+        }
+      ],
+      "when": [
+        "Spray upon first detection of purple spots on foliage.",
+        "Add a sticking agent to ensure spray adheres to waxy onion leaves.",
+        "Repeat spray at ten to twelve day intervals during wet periods."
+      ]
+    },
+    "precautions": [
+      "Onion leaves have a slippery waxy cuticle; always include non-ionic sticker.",
+      "Stop spraying fourteen days before bulb harvest."
+    ],
+    "see_expert_if": [
+      "Blotch lesions girdle the seed stalks causing flower heads to fall",
+      "Foliage collapses prematurely reducing bulb size"
+    ],
+    "sources": [
+      {
+        "title": "DOGR Pune: Onion disease management",
+        "url": "https://dogr.icar.gov.in"
+      },
+      {
+        "title": "TNAU Agritech Onion Protection",
+        "url": "https://agritech.tnau.ac.in"
+      }
+    ],
+    "last_checked": "2026-10"
+  },
+  {
+    "id": "arecanut_koleroga",
+    "type": "disease",
+    "name": "Areca nut fruit rot (Koleroga / Mahali)",
+    "crops": [
+      "areca nut"
+    ],
+    "look_for": [
+      "Dark green water-soaked lesions at the base of green nuts",
+      "White felt-like fungal growth covering fallen rotting nuts",
+      "Massive premature dropping of green nuts forming carpet on ground",
+      "Infection spreading to crown causing bud rot and palm death"
+    ],
+    "not_to_confuse": [
+      "Physiological nut drop lacks fungal felt growth and occurs in hot dry weather",
+      "Anaberoga affects base of the trunk with bracket fungus"
+    ],
+    "why_it_happens": "Favoured by heavy southwest monsoon rains, continuous cloudy weather, high humidity, and poor sunlight penetration in dense gardens.",
+    "act_now": [
+      "Tie polythene covers over arecanut bunches before monsoon onset.",
+      "Collect and burn all fallen infected nuts and diseased bunches.",
+      "Provide proper drainage channels to prevent waterlogging.",
+      "Thin overcrowded palm fronds to improve sunlight penetration."
+    ],
+    "chemical": {
+      "options": [
+        {
+          "active": "Bordeaux mixture",
+          "kind": "Copper-based protectant fungicide",
+          "note": "Traditional preventive pre-monsoon cover."
+        },
+        {
+          "active": "Metalaxyl",
+          "kind": "Systemic oomycete fungicide",
+          "note": "Curative systemic action against fruit rot."
+        }
+      ],
+      "when": [
+        "First spray must be completed before the onset of monsoon rains.",
+        "Second spray given forty to forty-five days later during a break in rain.",
+        "Ensure complete coverage of all developing nut bunches."
+      ]
+    },
+    "precautions": [
+      "Apply spray only during rain-free breaks and mix sticker thoroughly.",
+      "Bordeaux mixture must be prepared fresh with correct pH."
+    ],
+    "see_expert_if": [
+      "Bud rot develops in the growing point of palm crown",
+      "Heavy nut dropping continues despite spraying"
+    ],
+    "sources": [
+      {
+        "title": "CPCRI: Arecanut Koleroga management",
+        "url": "https://cpcri.icar.gov.in"
+      },
+      {
+        "title": "UHS Bagalkot Arecanut Advisory",
+        "url": "https://uhsbagalkot.karnataka.gov.in"
+      }
+    ],
+    "last_checked": "2026-10"
   }
 ]

@@ -451,20 +451,106 @@ with tab_photo:
     st.caption(t(PRIVACY[provider]) + " " + t("The AI only identifies the problem. Treatment advice comes from reviewed sources. Always confirm before you spray."))
 
 with tab_browse:
-    st.write(t("Reviewed guidance for common problems. More are added as they are checked by experts."))
+    st.markdown("### 🌿 " + ("ಬೆಳೆವಾರು ರೋಗ, ಕೀಟ ಹಾಗೂ ಕಳೆ ಸಮಗ್ರ ನಿರ್ವಹಣಾ ಮಾರ್ಗದರ್ಶಿ" if is_kn else "Crop-Wise Disease, Pest & Weed Management Guide"))
+    st.caption(
+        "ಕರ್ನಾಟಕದ ಎಲ್ಲಾ ಪ್ರಮುಖ ಬೆಳೆಗಳಿಗೆ ತಗಲುವ ರೋಗಗಳು, ಕೀಟಗಳು ಮತ್ತು ಕಳೆಗಳ ಅಧಿಕೃತ ವಿಶ್ವವಿದ್ಯಾಲಯ ಶಿಫಾರಸುಗಳು. "
+        "ಎಡಭಾಗದಲ್ಲಿ ನಿಮ್ಮ ಬೆಳೆ ಮತ್ತು ರೋಗವನ್ನು ಆರಿಸಿ, ಲಕ್ಷಣಗಳನ್ನು ದೃಢೀಕರಿಸಿ ಬಲಭಾಗದಲ್ಲಿ ಸಂಪೂರ್ಣ ಔಷಧ ಚೀಟಿ ಪಡೆಯಿರಿ."
+        if is_kn else
+        "Comprehensive reviewed management guide for all major Karnataka crops. "
+        "Select your crop and problem variant on the left panel, confirm symptoms, and view full dosage prescriptions on the right panel."
+    )
+
     options = {f"{t(e['name'])} ({type_label(e['type'])})": e for e in KB}
     if options:
-        if is_kn:
-            b_options = {DISTRICTS_KN.get(d, d): d for d in sorted(DISTRICTS)}
-            b_keys = list(b_options.keys())
-            b_default = DISTRICTS_KN.get("Mysuru", "ಮೈಸೂರು")
-            b_idx = b_keys.index(b_default) if b_default in b_keys else 0
-            sel_b_kn = st.selectbox(t("Your district"), b_keys, index=b_idx, key="browse_district")
-            browse_district = b_options[sel_b_kn]
-        else:
-            browse_district = st.selectbox(t("Your district"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"), key="browse_district")
-        pick = st.selectbox(t("Choose a problem"), list(options))
-        render_entry(options[pick], browse_district)
+        bc1, bc2 = st.columns([1.5, 2.5])
+        with bc1:
+            if is_kn:
+                b_options = {DISTRICTS_KN.get(d, d): d for d in sorted(DISTRICTS)}
+                b_keys = list(b_options.keys())
+                b_default = DISTRICTS_KN.get("Mysuru", "ಮೈಸೂರು")
+                b_idx = b_keys.index(b_default) if b_default in b_keys else 0
+                sel_b_kn = st.selectbox(t("Your district"), b_keys, index=b_idx, key="browse_district")
+                browse_district = b_options[sel_b_kn]
+            else:
+                browse_district = st.selectbox(t("Your district"), sorted(DISTRICTS), index=sorted(DISTRICTS).index("Mysuru"), key="browse_district")
+        with bc2:
+            st.info(
+                f"🌦️ **{browse_district} {'ಜಿಲ್ಲೆಯ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ & ಸಿಂಪರಣಾ ಎಚ್ಚರಿಕೆ:' if is_kn else 'District Weather & Spraying Advisory:'}** "
+                + ("ಗಾಳಿಯ ವೇಗ ಗಂಟೆಗೆ 25 ಕಿ.ಮೀ. ಗಿಂತ ಹೆಚ್ಚಿದ್ದಾಗ ಅಥವಾ ಮಳೆ ನಿರೀಕ್ಷೆಯಿದ್ದಾಗ ಸಿಂಪಡಿಸಬೇಡಿ. ಮೋಡ ಕವಿದ ಹವೆಯಲ್ಲಿ ಬೂಷ್ಟು ರೋಗಗಳು ಶೀಘ್ರ ಹರಡುತ್ತವೆ."
+                   if is_kn else "Avoid spraying during high winds (>25 km/h) or approaching rain. Overcast and humid conditions accelerate fungal blast.")
+            )
+
+        col_left, col_right = st.columns([1.2, 2.0])
+
+        crop_list = [
+            ("ಎಲ್ಲ ಬೆಳೆಗಳು {All Crops}" if is_kn else "All Crops"),
+            ("ಭತ್ತ {Paddy / Rice}" if is_kn else "Paddy / Rice"),
+            ("ಮೆಕ್ಕೆಜೋಳ {Maize}" if is_kn else "Maize"),
+            ("ಟೊಮೆಟೊ {Tomato}" if is_kn else "Tomato"),
+            ("ಹತ್ತಿ {Cotton}" if is_kn else "Cotton"),
+            ("ಮೆಣಸಿನಕಾಯಿ {Chilli}" if is_kn else "Chilli"),
+            ("ಕಡಲೆಕಾಯಿ {Groundnut}" if is_kn else "Groundnut"),
+            ("ರಾಗಿ {Finger Millet / Ragi}" if is_kn else "Ragi"),
+            ("ತೊಗರಿ {Pigeon Pea / Tur}" if is_kn else "Tur (Pigeon Pea)"),
+            ("ಈರುಳ್ಳಿ {Onion}" if is_kn else "Onion"),
+            ("ಅಡಿಕೆ {Areca nut}" if is_kn else "Areca nut"),
+            ("ಕಳೆಗಳು {Weeds}" if is_kn else "Weeds"),
+        ]
+        crop_filter_map = {
+            "ಭತ್ತ": "rice", "paddy": "rice", "ಮೆಕ್ಕೆಜೋಳ": "maize", "maize": "maize",
+            "ಟೊಮೆಟೊ": "tomato", "tomato": "tomato", "ಹತ್ತಿ": "cotton", "cotton": "cotton",
+            "ಮೆಣಸಿನಕಾಯಿ": "chilli", "chilli": "chilli", "ಕಡಲೆಕಾಯಿ": "groundnut", "groundnut": "groundnut",
+            "ರಾಗಿ": "ragi", "millet": "ragi", "ತೊಗರಿ": "tur", "pigeon": "tur",
+            "ಈರುಳ್ಳಿ": "onion", "onion": "onion", "ಅಡಿಕೆ": "arecanut", "areca": "arecanut",
+            "ಕಳೆಗಳು": "weed", "weed": "weed"
+        }
+
+        with col_left:
+            with st.container(border=True):
+                st.markdown("#### 🌾 " + ("ಬೆಳೆ ಆಯ್ಕೆ {Crop}" if is_kn else "Crop Filter"))
+                sel_crop_filter = st.selectbox(
+                    "ಬೆಳೆ ವರ್ಗ {Crop Category}:" if is_kn else "Crop Category:",
+                    crop_list,
+                    key="browse_crop_filter"
+                )
+
+                sel_tag = None
+                for k, val in crop_filter_map.items():
+                    if k.lower() in sel_crop_filter.lower():
+                        sel_tag = val
+                        break
+
+                if sel_tag == "weed":
+                    filtered_kb = [e for e in KB if e.get("type") == "weed"]
+                elif sel_tag:
+                    filtered_kb = [e for e in KB if any(sel_tag in c.lower() for c in e.get("crops", [])) or sel_tag in e.get("id", "").lower()]
+                else:
+                    filtered_kb = KB
+
+                if not filtered_kb:
+                    filtered_kb = KB
+
+                problem_options = {f"{t(e['name'])} ({type_label(e['type'])})": e for e in filtered_kb}
+                st.markdown("#### 🐛 " + ("ರೋಗ / ಕೀಟ ಆರಿಸಿ" if is_kn else "Choose Problem"))
+                pick = st.selectbox(
+                    t("Choose a problem"),
+                    list(problem_options.keys()),
+                    key="browse_problem_choice"
+                )
+                chosen_entry = problem_options[pick]
+
+                st.markdown("---")
+                st.markdown(f"**📷 {t('Reference photo')}:**")
+                reference_image(chosen_entry["id"])
+                st.markdown(f"**🏷️ {t(chosen_entry['name'])}**")
+                st.markdown(ui.badge(type_label(chosen_entry["type"]), chosen_entry["type"]), unsafe_allow_html=True)
+                st.caption(f"**{'ಬಾಧಿತ ಬೆಳೆಗಳು:' if is_kn else 'Target Crops:'}** {', '.join(chosen_entry.get('crops', []))}")
+                st.markdown("**" + ("ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು {Key Signs}:" if is_kn else "Key Identification Signs:") + "**")
+                for sign in chosen_entry.get("look_for", [])[:2]:
+                    st.markdown(f"- `{t(sign)}`")
+
+        with col_right:
+            render_entry(chosen_entry, browse_district, key_prefix="guide")
     else:
         st.info(t("The guidance library could not be loaded."))
 

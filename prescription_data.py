@@ -1066,3 +1066,628 @@ SPRAYER_CONFIGS = {
         "pumps_per_acre_vegetables": 1.25, # 250 L / acre
     }
 }
+
+# ==============================================================================
+# SEASONAL HIGH-YIELD CROP RECOMMENDATIONS BY SOIL TYPE
+# ==============================================================================
+SEASONAL_CROP_RECOMMENDATIONS = {
+    "early_kharif": {
+        "season_en": "Early Kharif (Pre-Monsoon: April - May)",
+        "season_kn": "ಮುಂಗಾರು ಪೂರ್ವ (ಏಪ್ರಿಲ್ - ಮೇ)",
+        "soil_types": {
+            "red_sandy": [
+                {
+                    "crop_en": "Groundnut (Summer/Early Kharif)",
+                    "crop_kn": "ಶೇಂಗಾ / ನೆಲಗಡಲೆ {Groundnut}",
+                    "yield": "12 - 15 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ (1.2 - 1.5 T/acre)",
+                    "varieties": "TMV-2, KDG-128, G2-52, ICGV-91114",
+                    "water": "2-3 ಜೀವ ರಕ್ಷಕ ನೀರಾವರಿ ಅಗತ್ಯ {Light Irrigation}",
+                    "market": "⭐⭐⭐⭐⭐ (ಅಡುಗೆ ಎಣ್ಣೆ ಗಿರಣಿಗಳಿಂದ ಭಾರಿ ಬೇಡಿಕೆ)"
+                },
+                {
+                    "crop_en": "Green Gram (Moong)",
+                    "crop_kn": "ಹೆಸರುಕಾಳು {Green Gram / Moong}",
+                    "yield": "6 - 8 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ (60-65 ದಿನಗಳಲ್ಲಿ ಕಟಾವು)",
+                    "varieties": "DGGV-2, BGS-9, Selection-4",
+                    "water": "ಕಡಿಮೆ ನೀರು {Drought Tolerant}",
+                    "market": "⭐⭐⭐⭐⭐ (ಹೆಸರಿಗೆ ಮಾರುಕಟ್ಟೆಯಲ್ಲಿ ಕ್ವಿಂಟಾಲ್‌ಗೆ ₹8,000+ ಬೆಲೆ)"
+                },
+                {
+                    "crop_en": "Fodder Sorghum / Jowar",
+                    "crop_kn": "ಮೇವಿನ ಜೋಳ {Fodder Sorghum}",
+                    "yield": "18 - 22 ಟನ್ ಹಸಿರು ಮೇವು / ಎಕರೆ",
+                    "varieties": "CoFS-29, SSG-59-3, CSH-24MF",
+                    "water": "ಮಧ್ಯಮ ನೀರು",
+                    "market": "⭐⭐⭐⭐ (ಬೇಸಿಗೆಯಲ್ಲಿ ಹೈನುಗಾರಿಕೆ ಹಾಲಿನ ಇಳುವರಿಗೆ ಅಮೃತ)"
+                }
+            ],
+            "black_cotton": [
+                {
+                    "crop_en": "Sunflower",
+                    "crop_kn": "ಸೂರ್ಯಕಾಂತಿ {Sunflower}",
+                    "yield": "8 - 10 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "KBSH-41, KBSH-53, RSFH-1887",
+                    "water": "ತೇವಾಂಶ ಹಿಡಿದಿಡುವ ಕಪ್ಪು ಮಣ್ಣಿನಲ್ಲಿ ಅತ್ಯುತ್ತಮ",
+                    "market": "⭐⭐⭐⭐⭐ (ಎಣ್ಣೆಕಾಳುಗಳಿಗೆ ಉತ್ತಮ ಎಂಎಸ್‌ಪಿ ಬೆಲೆ)"
+                },
+                {
+                    "crop_en": "Black Gram (Urad)",
+                    "crop_kn": "ಉದ್ದು {Black Gram / Urad}",
+                    "yield": "5 - 7 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "DU-1, LBG-791, Rashmi",
+                    "water": "ಕಡಿಮೆ ನೀರು (ಅಲ್ಪಾವಧಿ 70 ದಿನ)",
+                    "market": "⭐⭐⭐⭐⭐ (ಉದ್ದಿನ ಬೇಳೆಗೆ ಸ್ಥಿರ ಉತ್ತಮ ಧಾರಣೆ)"
+                },
+                {
+                    "crop_en": "Sesame (Til)",
+                    "crop_kn": "ಎಳ್ಳು {Sesame / Til}",
+                    "yield": "4 - 5 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "DS-1, DS-5, Swetha",
+                    "water": "ಬಹಳ ಕಡಿಮೆ ನೀರು",
+                    "market": "⭐⭐⭐⭐⭐ (ಕ್ವಿಂಟಾಲ್‌ಗೆ ₹12,000 ರಿಂದ ₹15,000 ಬೆಲೆ)"
+                }
+            ],
+            "clayey_alluvial": [
+                {
+                    "crop_en": "Maize (Hybrid Corn)",
+                    "crop_kn": "ಮೆಕ್ಕೆಜೋಳ {Hybrid Maize}",
+                    "yield": "30 - 35 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "DKC-9108, CP-818, Bio-9681, NK-6240",
+                    "water": "ನಿಯಮಿತ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐ (ಕೋಳಿ ಆಹಾರ & ಪಿಷ್ಟ ಕಾರ್ಖಾನೆಗಳಿಂದ ನಿರಂತರ ಖರೀದಿ)"
+                },
+                {
+                    "crop_en": "Cowpea (Alsandi)",
+                    "crop_kn": "ಅಲಸಂದಿ {Cowpea}",
+                    "yield": "7 - 9 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "C-152, DC-15, PKB-4",
+                    "water": "ಮಧ್ಯಮ",
+                    "market": "⭐⭐⭐⭐ (ತರಕಾರಿ ಕಾಯಿ & ಧಾನ್ಯ ಎರಡಕ್ಕೂ ಮಾರಾಟ)"
+                }
+            ],
+            "laterite": [
+                {
+                    "crop_en": "Sweet Potato / Tubers",
+                    "crop_kn": "ಗೆಣಸು & ಗೆಡ್ಡೆ ಬೆಳೆಗಳು {Sweet Potato}",
+                    "yield": "8 - 10 ಟನ್ / ಎಕರೆ",
+                    "varieties": "Sree Bhadra, Kanjangad Local",
+                    "water": "ಮಳೆ ಆಧಾರಿತ",
+                    "market": "⭐⭐⭐⭐ (ಕಡಿಮೆ ಖರ್ಚು, ಕರಾವಳಿ-ಮಲೆನಾಡಿಗೆ ಸೂಕ್ತ)"
+                },
+                {
+                    "crop_en": "Watermelon",
+                    "crop_kn": "ಕಲ್ಲಂಗಡಿ {Watermelon}",
+                    "yield": "25 - 30 ಟನ್ / ಎಕರೆ (65 ದಿನ)",
+                    "varieties": "Kiran, Namdhari NS-295, Black Boss",
+                    "water": "ಹನಿ ನೀರಾವರಿ ಅಗತ್ಯ",
+                    "market": "⭐⭐⭐⭐⭐ (ಬೇಸಿಗೆಯಲ್ಲಿ ತ್ವರಿತ ಗರಿಷ್ಠ ಲಾಭ)"
+                }
+            ]
+        }
+    },
+    "kharif": {
+        "season_en": "Main Kharif (Monsoon: June - September)",
+        "season_kn": "ಮುಖ್ಯ ಮುಂಗಾರು (ಜೂನ್ - ಸೆಪ್ಟೆಂಬರ್)",
+        "soil_types": {
+            "red_sandy": [
+                {
+                    "crop_en": "Finger Millet (Ragi)",
+                    "crop_kn": "ರಾಗಿ {Finger Millet / Ragi}",
+                    "yield": "16 - 20 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "MR-1, MR-6, ML-365, KMR-301, GPU-28",
+                    "water": "ಮಳೆ ಆಶ್ರಿತ {Rainfed Best Fit}",
+                    "market": "⭐⭐⭐⭐⭐ (ಸರ್ಕಾರದಿಂದ ₹4,290 ಎಂಎಸ್‌ಪಿ ಖರೀದಿ ಖಾತರಿ)"
+                },
+                {
+                    "crop_en": "Groundnut",
+                    "crop_kn": "ಶೇಂಗಾ {Groundnut}",
+                    "yield": "10 - 14 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "KDG-128, GPBD-4, Kadiri-6, JL-24",
+                    "water": "ಮಳೆ ಆಶ್ರಿತ",
+                    "market": "⭐⭐⭐⭐⭐"
+                },
+                {
+                    "crop_en": "Pigeonpea (Tur / Arhar)",
+                    "crop_kn": "ತೊಗರಿ {Pigeonpea / Tur}",
+                    "yield": "8 - 10 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "GRG-811, BSMR-736, TS-3R, Maruti",
+                    "water": "ಬರ ನಿರೋಧಕ",
+                    "market": "⭐⭐⭐⭐⭐ (ಕ್ವಿಂಟಾಲ್‌ಗೆ ₹9,000+ ಅಧಿಕ ಮೌಲ್ಯ)"
+                }
+            ],
+            "black_cotton": [
+                {
+                    "crop_en": "Bt Cotton",
+                    "crop_kn": "ಹತ್ತಿ {Bt Cotton}",
+                    "yield": "12 - 16 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "Bollgard II, RCH-659, Ajit-155, Jaadoo",
+                    "water": "ಮಳೆ ಆಶ್ರಿತ ಅಥವಾ ರಕ್ಷಣಾತ್ಮಕ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐⭐ (ಉತ್ತರ ಕರ್ನಾಟಕದ ಬಿಳಿ ಬಂಗಾರ)"
+                },
+                {
+                    "crop_en": "Soybean",
+                    "crop_kn": "ಸೋಯಾಬೀನ್ {Soybean}",
+                    "yield": "10 - 12 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ (90 ದಿನ)",
+                    "varieties": "JS-335, DSb-21, JS-9560, KDS-344",
+                    "water": "ಕಪ್ಪು ಮಣ್ಣಿನಲ್ಲಿ ಭರ್ಜರಿ ಇಳುವರಿ",
+                    "market": "⭐⭐⭐⭐⭐ (ಕಡಿಮೆ ಖರ್ಚು, ತ್ವರಿತ ಹಣ)"
+                },
+                {
+                    "crop_en": "Pigeonpea (Tur)",
+                    "crop_kn": "ತೊಗರಿ (ಕಲಬುರಗಿ ಕೆಂಪು ತೊಗರಿ) {Tur}",
+                    "yield": "9 - 12 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "GRG-811 (ವಿಲ್ಟ್ ನಿರೋಧಕ), TS-3R",
+                    "water": "ಮಳೆ ಆಶ್ರಿತ",
+                    "market": "⭐⭐⭐⭐⭐ (GI ಟ್ಯಾಗ್ ಹೊಂದಿರುವ ಕಲ್ಯಾಣ ಕರ್ನಾಟಕದ ಬೆಳೆ)"
+                }
+            ],
+            "clayey_alluvial": [
+                {
+                    "crop_en": "Paddy (Rice)",
+                    "crop_kn": "ಭತ್ತ {Paddy / Rice}",
+                    "yield": "28 - 35 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "Gangavathi Sona (BPT-5204), RNR-15048 (ಶುಗರ್ ಫ್ರೀ), Jaya",
+                    "water": "ಕಾಲುವೆ / ಕೊಳವೆಬಾವಿ ನೀರು ಅಗತ್ಯ",
+                    "market": "⭐⭐⭐⭐⭐ (ಅಕ್ಕಿ ಗಿರಣಿಗಳಿಂದ ನಿರಂತರ ಬೇಡಿಕೆ)"
+                },
+                {
+                    "crop_en": "Sugarcane",
+                    "crop_kn": "ಕಬ್ಬು {Sugarcane}",
+                    "yield": "50 - 70 ಟನ್ / ಎಕರೆ",
+                    "varieties": "Co-86032, Co-0238, CoM-0265, VSI-434",
+                    "water": "ಪೂರ್ಣ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐ (ಸಕ್ಕರೆ ಕಾರ್ಖಾನೆಗಳಿಂದ ನಿಗದಿತ FRP ದರ)"
+                }
+            ],
+            "laterite": [
+                {
+                    "crop_en": "Areca Nut (New/Intercrop)",
+                    "crop_kn": "ಅಡಿಕೆ {Areca Nut}",
+                    "yield": "12 - 15 ಕ್ವಿಂಟಾಲ್ ಸಂಸ್ಕರಿಸಿದ ಚಾಲಿ / ಎಕರೆ",
+                    "varieties": "Mangala, Mohitnagar, Thirthahalli",
+                    "water": "ಮಲೆನಾಡು-ಕರಾವಳಿಗೆ ನೈಸರ್ಗಿಕ ವಾತಾವರಣ",
+                    "market": "⭐⭐⭐⭐⭐ (ದೀರ್ಘಾವಧಿ ಗರಿಷ್ಠ ಆದಾಯ)"
+                },
+                {
+                    "crop_en": "Ginger / Turmeric",
+                    "crop_kn": "ಶುಂಠಿ / ಅರಿಶಿನ {Ginger & Turmeric}",
+                    "yield": "10 - 14 ಟನ್ ಹಸಿ ಶುಂಠಿ / ಎಕರೆ",
+                    "varieties": "Rio-de-Janeiro, Maran, IISR Varada",
+                    "water": "ಉತ್ತಮ ಬಸಿಗಾಲುವೆ ಸಹಿತ ನೀರು",
+                    "market": "⭐⭐⭐⭐⭐ (ಬಂಪರ್ ನಗದು ಬೆಳೆ)"
+                }
+            ]
+        }
+    },
+    "rabi": {
+        "season_en": "Rabi (Winter: October - January)",
+        "season_kn": "ಹಿಂಗಾರು (ಅಕ್ಟೋಬರ್ - ಜನವರಿ)",
+        "soil_types": {
+            "red_sandy": [
+                {
+                    "crop_en": "Rabi Onion",
+                    "crop_kn": "ಹಿಂಗಾರು ಈರುಳ್ಳಿ {Rabi Onion}",
+                    "yield": "10 - 12 ಟನ್ / ಎಕರೆ",
+                    "varieties": "Bhima Super, Arka Kalyan, N-53",
+                    "water": "ನಿಯಮಿತ ತುಂತುರು ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐⭐ (ದೀರ್ಘ ಶೇಖರಣಾ ಬಾಳಿಕೆ, ಅತ್ಯಧಿಕ ಬೆಲೆ)"
+                },
+                {
+                    "crop_en": "Horse Gram (Hurali)",
+                    "crop_kn": "ಹುರುಳಿ {Horse Gram}",
+                    "yield": "4 - 5 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "PHG-9, BGM-1, CRIDA-18R",
+                    "water": "ಕನಿಷ್ಠ ತೇವಾಂಶ ಸಾಕು {Extreme Drought Hardy}",
+                    "market": "⭐⭐⭐⭐"
+                }
+            ],
+            "black_cotton": [
+                {
+                    "crop_en": "Bengal Gram (Chickpea / Chana)",
+                    "crop_kn": "ಕಡಲೆ {Bengal Gram / Chana}",
+                    "yield": "8 - 12 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "JG-11, JAKI-9218, BGD-103, Super Annigeri-1",
+                    "water": "ಉಳಿದ ತೇವಾಂಶದಲ್ಲೇ ಬೆಳೆಯುತ್ತದೆ {Residual Moisture}",
+                    "market": "⭐⭐⭐⭐⭐ (ಕಡಿಮೆ ಖರ್ಚು, ₹5,440+ ಎಂಎಸ್‌ಪಿ ಬೆಲೆ)"
+                },
+                {
+                    "crop_en": "Rabi Sorghum (Maldandi Jowar)",
+                    "crop_kn": "ಹಿಂಗಾರು ಜೋಳ (ಮಾಲ್ದಂಡಿ ಬಿಳಿ ಜೋಳ) {Rabi Jowar}",
+                    "yield": "10 - 14 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ + 3 ಟನ್ ಮೇವು",
+                    "varieties": "M-35-1 (Maldandi), CSV-29R, BJV-44",
+                    "water": "ಮಳೆ ಆಶ್ರಿತ ಕಪ್ಪು ಮಣ್ಣು",
+                    "market": "⭐⭐⭐⭐⭐ (ರೊಟ್ಟಿ ಜೋಳಕ್ಕೆ ಮಾರುಕಟ್ಟೆಯಲ್ಲಿ ಭಾರಿ ಪ್ರೀಮಿಯಂ ಬೆಲೆ)"
+                },
+                {
+                    "crop_en": "Safflower (Kusubi)",
+                    "crop_kn": "ಕುಸುಬಿ {Safflower}",
+                    "yield": "6 - 8 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "A-1, PBNS-12, NARI-6",
+                    "water": "ಆಳವಾದ ಕಪ್ಪು ಮಣ್ಣು",
+                    "market": "⭐⭐⭐⭐⭐ (ಹೃದಯಕ್ಕೆ ಉತ್ತಮವಾದ ಎಣ್ಣೆಕಾಳು)"
+                }
+            ],
+            "clayey_alluvial": [
+                {
+                    "crop_en": "Wheat (Durum / Sharbati)",
+                    "crop_kn": "ಗೋಧಿ {Wheat}",
+                    "yield": "16 - 20 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "DWR-162, DWR-2006, UAS-304",
+                    "water": "3-4 ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐ (ಉತ್ತರ ಕರ್ನಾಟಕ ನೀರಾವರಿ ಅಚ್ಚುಕಟ್ಟಿಗೆ ಬೆಸ್ಟ್)"
+                },
+                {
+                    "crop_en": "Rabi Maize",
+                    "crop_kn": "ಹಿಂಗಾರು ಮೆಕ್ಕೆಜೋಳ {Rabi Maize}",
+                    "yield": "35 - 42 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ (ಮುಂಗಾರಿಗಿಂತ ಅಧಿಕ ಇಳುವರಿ)",
+                    "varieties": "DKC-9144, P-3396, CP-808",
+                    "water": "ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐⭐"
+                }
+            ],
+            "laterite": [
+                {
+                    "crop_en": "Cowpea / Field Bean (Avare)",
+                    "crop_kn": "ಅವರೆಕಾಳು {Field Bean / Avare}",
+                    "yield": "6 - 8 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "HA-3, HA-4 (ಬೆಳಕಿಗೆ ಸಂವೇದನಾರಹಿತ)",
+                    "water": "ಮಧ್ಯಮ",
+                    "market": "⭐⭐⭐⭐⭐ (ಚಳಿಗಾಲದಲ್ಲಿ ಹಸಿ ಅವರೆಕಾಳಿಗೆ ಗರಿಷ್ಠ ಡಿಮ್ಯಾಂಡ್)"
+                }
+            ]
+        }
+    },
+    "summer": {
+        "season_en": "Summer / Zaid (February - May)",
+        "season_kn": "ಬೇಸಿಗೆ ಹಂಗಾಮು (ಫೆಬ್ರವರಿ - ಮೇ)",
+        "soil_types": {
+            "red_sandy": [
+                {
+                    "crop_en": "Summer Groundnut",
+                    "crop_kn": "ಬೇಸಿಗೆ ಶೇಂಗಾ {Summer Groundnut}",
+                    "yield": "15 - 18 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ (ಬಿಸಿಲಿಗೆ ರೋಗ ಕಡಿಮೆ, ಅಧಿಕ ಕಾಳು)",
+                    "varieties": "KDG-128, TAG-24, DH-86",
+                    "water": "ವಾರಕ್ಕೊಮ್ಮೆ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐⭐"
+                },
+                {
+                    "crop_en": "Bhendi (Okra / Ladies Finger)",
+                    "crop_kn": "ಬೆಂಡೆಕಾಯಿ {Bhendi}",
+                    "yield": "6 - 8 ಟನ್ / ಎಕರೆ (45 ದಿನದಿಂದ ಕಟಾವು)",
+                    "varieties": "Singham, Radhika, Arka Anamika",
+                    "water": "ಹನಿ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐⭐ (ಬೇಸಿಗೆಯಲ್ಲಿ ಪ್ರತಿದಿನ ನಗದು ಆದಾಯ)"
+                }
+            ],
+            "black_cotton": [
+                {
+                    "crop_en": "Summer Sesame (Til)",
+                    "crop_kn": "ಬೇಸಿಗೆ ಎಳ್ಳು {Summer Sesame}",
+                    "yield": "5 - 6 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "DS-1, Swetha",
+                    "water": "2-3 ನೀರಾವರಿ ಸಾಕು",
+                    "market": "⭐⭐⭐⭐⭐ (ಬಹಳ ಕಡಿಮೆ ಖರ್ಚು, ಕ್ವಿಂಟಾಲ್‌ಗೆ ₹14,000+ ಲಾಭ)"
+                },
+                {
+                    "crop_en": "Summer Green Gram",
+                    "crop_kn": "ಬೇಸಿಗೆ ಹೆಸರುಕಾಳು {Summer Moong}",
+                    "yield": "7 - 9 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ (ಕೀಟ ಬಾಧೆ ಅತಿ ಕಡಿಮೆ)",
+                    "varieties": "DGGV-2, IPM-02-03",
+                    "water": "ಲಘು ನೀರು",
+                    "market": "⭐⭐⭐⭐⭐"
+                }
+            ],
+            "clayey_alluvial": [
+                {
+                    "crop_en": "Summer Hybrid Maize",
+                    "crop_kn": "ಬೇಸಿಗೆ ಮೆಕ್ಕೆಜೋಳ {Summer Maize}",
+                    "yield": "32 - 38 ಕ್ವಿಂಟಾಲ್ / ಎಕರೆ",
+                    "varieties": "DKC-9108, Pioneer-3522",
+                    "water": "ಖಾತರಿ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐"
+                },
+                {
+                    "crop_en": "Cucumber / Gherkins",
+                    "crop_kn": "ಸೌತೆಕಾಯಿ & ಸೋರೆಕಾಯಿ {Cucurbits}",
+                    "yield": "12 - 15 ಟನ್ / ಎಕರೆ",
+                    "varieties": "Malini, Gypsy, NS-404",
+                    "water": "ಹನಿ ನೀರಾವರಿ",
+                    "market": "⭐⭐⭐⭐⭐"
+                }
+            ],
+            "laterite": [
+                {
+                    "crop_en": "Watermelon / Muskmelon",
+                    "crop_kn": "ಕಲ್ಲಂಗಡಿ & ಕರಬೂಜ {Watermelon & Muskmelon}",
+                    "yield": "25 - 35 ಟನ್ / ಎಕರೆ",
+                    "varieties": "Kiran, Sagar King, Saraswati",
+                    "water": "ಹನಿ ನೀರು + ಮಲ್ಚಿಂಗ್",
+                    "market": "⭐⭐⭐⭐⭐ (ಬೇಸಿಗೆ ಬಾಯಾರಿಕೆಗೆ ಅತ್ಯಧಿಕ ಮಾರುಕಟ್ಟೆ ಬೇಡಿಕೆ)"
+                }
+            ]
+        }
+    }
+}
+
+# ==============================================================================
+# DISTRICT-WISE SOIL TESTING LABS & AGRICULTURE CENTRES DIRECTORY
+# ==============================================================================
+KARNATAKA_DISTRICT_AGRI_CENTRES = {
+    "Bagalkote": {
+        "kn": "ಬಾಗಲಕೋಟೆ",
+        "jda_office": "Office of Joint Director of Agriculture, Sector-7, Navanagar, Bagalkote",
+        "kvk_lab": "KVK Soil Testing Laboratory, University of Horticultural Sciences (UHS) Campus, Bagalkote",
+        "phone": "08354-235282 / 9448495335",
+        "rsk_centers": "Bagalkote, Badami, Jamkhandi, Mudhol, Bilagi, Ilkal, Guledgudda, Rabkavi-Banhatti"
+    },
+    "Ballari": {
+        "kn": "ಬಳ್ಳಾರಿ",
+        "jda_office": "JDA Agriculture Office, Opp. District Court, Ballari",
+        "kvk_lab": "ICAR-KVK Soil & Water Testing Lab, Hagari Post, Ballari District",
+        "phone": "08392-273165 / 9448495340",
+        "rsk_centers": "Ballari, Kurugodu, Kampli, Siruguppa, Sandur"
+    },
+    "Belagavi": {
+        "kn": "ಬೆಳಗಾವಿ",
+        "jda_office": "Joint Director of Agriculture, Club Road, Belagavi",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, KLE Campus, Mattikopp, Bailhongal Taluk & Tukkanatti KVK",
+        "phone": "0831-2407278 / 9448495330",
+        "rsk_centers": "Belagavi, Gokak, Chikkodi, Athani, Bailhongal, Saundatti, Ramdurg, Hukkeri, Khanapur, Raybag"
+    },
+    "Bengaluru Rural": {
+        "kn": "ಬೆಂಗಳೂರು ಗ್ರಾಮಾಂತರ",
+        "jda_office": "JDA Office, Mini Vidhana Soudha, Devanahalli, Bengaluru Rural",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Hadonahalli, Tubagere Hobli, Doddaballapura Taluk",
+        "phone": "080-27622288 / 9448495311",
+        "rsk_centers": "Devanahalli, Doddaballapura, Hoskote, Nelamangala"
+    },
+    "Bengaluru Urban": {
+        "kn": "ಬೆಂಗಳೂರು ನಗರ",
+        "jda_office": "Commissioner of Agriculture, Sheshadri Road, K.R. Circle, Bengaluru",
+        "kvk_lab": "Soil & Plant Health Clinic, UAS Gandhi Krishi Vigyana Kendra (GKVK), Bellary Road, Bengaluru",
+        "phone": "080-23330153 / 1800 425 3553",
+        "rsk_centers": "Yelahanka, Kengeri, Bengaluru North, Anekal, K.R. Puram"
+    },
+    "Bidar": {
+        "kn": "ಬೀದರ್",
+        "jda_office": "JDA Office, Near DC Office Complex, Bidar",
+        "kvk_lab": "ICAR-KVK Soil Testing Laboratory, Janwada Road, Bidar",
+        "phone": "08482-244155 / 9448495345",
+        "rsk_centers": "Bidar, Bhalki, Humnabad, Basavakalyan, Aurad, Kamalnagar, Chitguppa"
+    },
+    "Chamarajanagara": {
+        "kn": "ಚಾಮರಾಜನಗರ",
+        "jda_office": "JDA Office, District Administrative Complex, Chamarajanagara",
+        "kvk_lab": "ICAR-JSS KVK Soil & Water Testing Lab, Suttur / Hardanahalli, Chamarajanagara",
+        "phone": "08226-222045 / 9448495325",
+        "rsk_centers": "Chamarajanagara, Gundlupete, Kollegala, Yelandur, Hanur"
+    },
+    "Chikkaballapura": {
+        "kn": "ಚಿಕ್ಕಬಳ್ಳಾಪುರ",
+        "jda_office": "JDA Agriculture Office, Sidlaghatta Road, Chikkaballapura",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Chintamani Campus, Chikkaballapura",
+        "phone": "08156-277020 / 9448495315",
+        "rsk_centers": "Chikkaballapura, Chintamani, Sidlaghatta, Gauribidanur, Bagepalli, Gudibande"
+    },
+    "Chikkamagaluru": {
+        "kn": "ಚಿಕ್ಕಮಗಳೂರು",
+        "jda_office": "JDA Office, K.M. Road, Chikkamagaluru",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Mudigere Hill Station & Birur Lab, Chikkamagaluru",
+        "phone": "08262-230825 / 9448495320",
+        "rsk_centers": "Chikkamagaluru, Mudigere, Koppa, Sringeri, Tarikere, Kadur, Narasimharajapura, Ajjampura"
+    },
+    "Chitradurga": {
+        "kn": "ಚಿತ್ರದುರ್ಗ",
+        "jda_office": "JDA Office, Near Stadium, Chitradurga",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Babbur Farm, Hiriyur Taluk, Chitradurga",
+        "phone": "08194-222830 / 9448495318",
+        "rsk_centers": "Chitradurga, Hiriyur, Challakere, Holalkere, Hosadurga, Molakalmuru"
+    },
+    "Dakshina Kannada": {
+        "kn": "ದಕ್ಷಿಣ ಕನ್ನಡ",
+        "jda_office": "JDA Office, Near Hampankatta, Mangaluru",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Mangaluru Fisheries College Road, Kankanady, Mangaluru",
+        "phone": "0824-2430033 / 9448495328",
+        "rsk_centers": "Mangaluru, Bantwal, Puttur, Belthangady, Sullia, Moodbidri, Kadaba"
+    },
+    "Davanagere": {
+        "kn": "ದಾವಣಗೆರೆ",
+        "jda_office": "JDA Office, Devaraj Urs Layout, Davanagere",
+        "kvk_lab": "ICAR-Taralabalu KVK Soil Testing Laboratory, Anubhav Sangam, Davanagere",
+        "phone": "08192-263462 / 9448495316",
+        "rsk_centers": "Davanagere, Harihara, Honnali, Channagiri, Jagalur, Nyamathi"
+    },
+    "Dharwad": {
+        "kn": "ಧಾರವಾಡ",
+        "jda_office": "JDA Office, D.C. Compound, Dharwad",
+        "kvk_lab": "Soil Health Clinic, University of Agricultural Sciences (UASD), Yettinagudda Campus, Dharwad",
+        "phone": "0836-2448512 / 1800 425 1150",
+        "rsk_centers": "Dharwad, Hubballi, Kalghatgi, Navalgund, Alnavar, Kundgol, Annigeri"
+    },
+    "Gadag": {
+        "kn": "ಗದಗ",
+        "jda_office": "JDA Agriculture Office, Mulgund Road, Gadag",
+        "kvk_lab": "ICAR-K.H. Patil KVK Soil Testing Lab, Hulkoti Post, Gadag District",
+        "phone": "08372-289038 / 9448495334",
+        "rsk_centers": "Gadag, Ron, Shirahatti, Mundargi, Nargund, Gajendragad, Lakshmeshwar"
+    },
+    "Hassan": {
+        "kn": "ಹಾಸನ",
+        "jda_office": "JDA Office, B.M. Road, Hassan",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Kandali Post, Hassan",
+        "phone": "08172-268050 / 9448495322",
+        "rsk_centers": "Hassan, Arsikere, Channarayapatna, Holenarasipura, Sakleshpur, Arkalgud, Alur, Belur"
+    },
+    "Haveri": {
+        "kn": "ಹಾವೇರಿ",
+        "jda_office": "JDA Office, District Administrative Complex, Devagiri, Haveri",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Hanumanamatti Post, Ranebennur Taluk, Haveri",
+        "phone": "08373-253524 / 9448495333",
+        "rsk_centers": "Haveri, Ranebennur, Byadgi, Hirekerur, Shiggaon, Savanur, Hangal, Rattihalli"
+    },
+    "Kalaburagi": {
+        "kn": "ಕಲಬುರಗಿ",
+        "jda_office": "JDA Office, Super Market Main Road, Kalaburagi",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Aland Road, Kalaburagi",
+        "phone": "08472-220123 / 9448495344",
+        "rsk_centers": "Kalaburagi, Aland, Afzalpur, Jevargi, Sedam, Chincholi, Chittapur, Kamalapur, Shahabad"
+    },
+    "Kodagu": {
+        "kn": "ಕೊಡಗು",
+        "jda_office": "JDA Office, College Road, Madikeri, Kodagu",
+        "kvk_lab": "ICAR-IISR KVK Soil Testing Lab, Gonikoppal, South Kodagu",
+        "phone": "08274-247274 / 9448495327",
+        "rsk_centers": "Madikeri, Somwarpet, Virajpet, Kushalnagar, Ponnampet"
+    },
+    "Kolar": {
+        "kn": "ಕೋಲಾರ",
+        "jda_office": "JDA Office, Bangarapet Road, Kolar",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Tamaka Industrial Area, Kolar",
+        "phone": "08152-222144 / 9448495314",
+        "rsk_centers": "Kolar, Bangarapet, Malur, Srinivaspur, Mulbagal, KGF"
+    },
+    "Koppal": {
+        "kn": "ಕೊಪ್ಪಳ",
+        "jda_office": "JDA Office, Hospet Road, Koppal",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Gangavathi Rice Research Station Campus, Koppal",
+        "phone": "08539-220025 / 9448495338",
+        "rsk_centers": "Koppal, Gangavathi, Kushtagi, Yelburga, Karatagi, Kanakagiri, Kukanoor"
+    },
+    "Mandya": {
+        "kn": "ಮಂಡ್ಯ",
+        "jda_office": "JDA Office, Subhash Nagar, Mandya",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, V.C. Farm (Visvesvaraya Canal Farm), Mandya",
+        "phone": "08232-220138 / 9448495324",
+        "rsk_centers": "Mandya, Maddur, Malavalli, Pandavapura, Srirangapatna, Nagamangala, K.R. Pete"
+    },
+    "Mysuru": {
+        "kn": "ಮೈಸೂರು",
+        "jda_office": "JDA Office, Public Offices Building, Near Curzon Park, Mysuru",
+        "kvk_lab": "ICAR-JSS KVK Soil & Water Testing Lab, Suttur Post, Nanjangud Taluk, Mysuru",
+        "phone": "0821-2422055 / 9448495323",
+        "rsk_centers": "Mysuru, Nanjangud, Hunsur, T. Narasipura, K.R. Nagar, H.D. Kote, Periyapatna, Saragur"
+    },
+    "Raichur": {
+        "kn": "ರಾಯಚೂರು",
+        "jda_office": "JDA Office, Station Road, Raichur",
+        "kvk_lab": "Soil Health Clinic, University of Agricultural Sciences (UASR), Lingasugur Road, Raichur",
+        "phone": "08532-220153 / 1800 425 2121",
+        "rsk_centers": "Raichur, Manvi, Sindhanur, Devadurga, Lingsugur, Maski, Sirwar"
+    },
+    "Ramanagara": {
+        "kn": "ರಾಮನಗರ",
+        "jda_office": "JDA Office, Mini Vidhana Soudha, Ramanagara",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Chandurayanahalli, Magadi Taluk, Ramanagara",
+        "phone": "080-27271050 / 9448495312",
+        "rsk_centers": "Ramanagara, Channapatna, Magadi, Kanakapura"
+    },
+    "Shivamogga": {
+        "kn": "ಶಿವಮೊಗ್ಗ",
+        "jda_office": "JDA Office, Kuvempu Road, Shivamogga",
+        "kvk_lab": "Soil Testing Lab, KSN University of Agricultural & Horticultural Sciences (UAHS), Navile, Shivamogga",
+        "phone": "08182-267011 / 9448495319",
+        "rsk_centers": "Shivamogga, Bhadravathi, Thirthahalli, Sagara, Shikaripura, Soraba, Hosanagara"
+    },
+    "Tumakuru": {
+        "kn": "ತುಮಕೂರು",
+        "jda_office": "JDA Office, Mini Vidhana Soudha, Tumakuru",
+        "kvk_lab": "ICAR-IIHR KVK Soil Testing Lab, Hirehalli Post, Tumakuru & Konehalli KVK, Tiptur",
+        "phone": "0816-2243214 / 9448495317",
+        "rsk_centers": "Tumakuru, Tiptur, Gubbi, Kunigal, Sira, Pavagada, Madhugiri, Koratagere, Turuvekere, Chikkanayakanahalli"
+    },
+    "Udupi": {
+        "kn": "ಉಡುಪಿ",
+        "jda_office": "JDA Office, Rajathadri District Complex, Manipal, Udupi",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Brahmavara Zonal Agricultural Research Station, Udupi",
+        "phone": "0820-2574340 / 9448495329",
+        "rsk_centers": "Udupi, Kundapura, Karkala, Brahmavara, Byndoor, Kaup, Hebri"
+    },
+    "Uttara Kannada": {
+        "kn": "ಉತ್ತರ ಕನ್ನಡ",
+        "jda_office": "JDA Office, Habbuwada, Karwar, Uttara Kannada",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Sirsi Forestry College Campus & Kumta Research Center",
+        "phone": "08384-226815 / 9448495331",
+        "rsk_centers": "Karwar, Sirsi, Kumta, Ankola, Bhatkal, Honnavar, Haliyal, Yellapur, Dandeli, Joida, Siddapur"
+    },
+    "Vijayapura": {
+        "kn": "ವಿಜಯಪುರ",
+        "jda_office": "JDA Office, Station Road, Vijayapura",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Regional Agricultural Research Station, Hitnalli, Vijayapura",
+        "phone": "08352-230154 / 9448495336",
+        "rsk_centers": "Vijayapura, Indi, Sindagi, Muddebihal, Basavana Bagewadi, Talikoti, Chadchan, Devar Hippargi, Babaleshwar, Kolhar, Tikota"
+    },
+    "Yadgir": {
+        "kn": "ಯಾದಗಿರಿ",
+        "jda_office": "JDA Office, Chittapur Road, Yadgir",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Kawadimatti Post, Surpur Taluk, Yadgir",
+        "phone": "08473-250080 / 9448495346",
+        "rsk_centers": "Yadgir, Shahapur, Surpur, Hunsagi, Gurmitkal, Vadagera"
+    },
+    "Vijayanagara": {
+        "kn": "ವಿಜಯನಗರ",
+        "jda_office": "JDA Office, D.C. Office Complex, Hosapete, Vijayanagara",
+        "kvk_lab": "ICAR-KVK Soil Testing Lab, Hagari / Mariyammanahalli, Vijayanagara",
+        "phone": "08394-224455 / 9448495341",
+        "rsk_centers": "Hosapete, Hagaribommanahalli, Harapanahalli, Hoovina Hadagali, Kudligi, Kotturu"
+    }
+}
+
+# ==============================================================================
+# 100% FREE GOVERNMENT BENEFITS & SUBSIDIES AT DISTRICT AGRI SECTORS
+# ==============================================================================
+FREE_GOVT_AGRI_BENEFITS = [
+    {
+        "title_kn": "1. ಸಂಪೂರ್ಣ ಉಚಿತ ಮಣ್ಣು ಆರೋಗ್ಯ ಕಾರ್ಡ್ {Free Soil Health Card Scheme}",
+        "title_en": "1. 100% Free Soil Health Card & Testing Scheme (Govt. of India)",
+        "cost_kn": "🟢 100% ಸಂಪೂರ್ಣ ಉಚಿತ (ಯಾವುದೇ ಅರ್ಜಿ ಶುಲ್ಕವಿಲ್ಲ)",
+        "cost_en": "🟢 100% FREE of cost (No application or lab fee)",
+        "details_kn": "ಪ್ರತಿ 3 ವರ್ಷಕ್ಕೊಮ್ಮೆ ನಿಮ್ಮ ಜಮೀನಿನ ಮಣ್ಣಿನ 12 ನಿಯತಾಂಕಗಳನ್ನು (N, P, K, pH, ಸಾವಯವ ಇಂಗಾಲ, ಗಂಧಕ, ಸತು, ಕಬ್ಬಿಣ, ತಾಮ್ರ, ಬೋರಾನ್) ಕೃಷಿ ಇಲಾಖೆಯು ಉಚಿತವಾಗಿ ಪರೀಕ್ಷಿಸಿ, ರಸಗೊಬ್ಬರ ಶಿಫಾರಸು ಕಾರ್ಡ್ ನೀಡುತ್ತದೆ.",
+        "details_en": "Government soil testing labs test 12 chemical parameters of your soil free of cost once every 3 years with tailored fertilizer advisory.",
+        "where_to_avail_kn": "ನಿಮ್ಮ ಗ್ರಾಮದ ರೈತ ಸಂಪರ್ಕ ಕೇಂದ್ರ (RSK) ಅಥವಾ ತಾಲೂಕು ಕೃಷಿ ಸಹಾಯಕ ನಿರ್ದೇಶಕರ ಕಚೇರಿ (ADA)."
+    },
+    {
+        "title_kn": "2. ಉಚಿತ / 75% ಸಬ್ಸಿಡಿ ಜೈವಿಕ ನಿಯಂತ್ರಕಗಳು & ಬೀಜೋಪಚಾರ ಔಷಧ {Free Biocontrol Agents}",
+        "title_en": "2. Free / 75% Subsidized Biocontrol Agents & Seed Inoculants",
+        "cost_kn": "🟢 ಉಚಿತ ಅಥವಾ 75% ರಿಯಾಯಿತಿ (ಕೇವಲ ₹10-₹20 ನಾಮಮಾತ್ರ ದರ)",
+        "cost_en": "🟢 Free or 75% subsidy (nominal Rs. 10-20)",
+        "details_kn": "ಬೇರು ಕೊಳೆ ರೋಗ ತಡೆಯುವ ಟ್ರೈಕೋಡರ್ಮ {Trichoderma viride}, ಕಾಯಿಕೊರಕ ನಾಶಪಡಿಸುವ ಟ್ರೈಕೋಗ್ರಾಮ ಕಾರ್ಡ್‌ಗಳು ಮತ್ತು ರಂಜಕ ಕರಗಿಸುವ ಪಿಎಸ್‌ಬಿ ಜೈವಿಕ ಗೊಬ್ಬರಗಳನ್ನು ರೈತ ಸಂಪರ್ಕ ಕೇಂದ್ರಗಳಲ್ಲಿ ಉಚಿತವಾಗಿ ವಿತರಿಸಲಾಗುತ್ತದೆ.",
+        "details_en": "Trichoderma bio-fungicide, Trichogramma egg parasitoid cards, and PSB bio-fertilizers distributed through RSKs.",
+        "where_to_avail_kn": "ಹೋಬಳಿ ಮಟ್ಟದ ರೈತ ಸಂಪರ್ಕ ಕೇಂದ್ರ (RSK)."
+    },
+    {
+        "title_kn": "3. ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರದಲ್ಲಿ ಉಚಿತ ತರಬೇತಿ, ಊಟ & ವಸತಿ {Free KVK Training}",
+        "title_en": "3. Free On-Farm Vocational Training at KVK with Stipend & Food",
+        "cost_kn": "🟢 100% ಉಚಿತ (ಊಟ, ವಸತಿ ಮತ್ತು ತರಬೇತಿ ಪ್ರಮಾಣಪತ್ರ ಉಚಿತ)",
+        "cost_en": "🟢 100% FREE (Free food, accommodation and certificate)",
+        "details_kn": "ಹನಿ ನೀರಾವರಿ, ಹೈನುಗಾರಿಕೆ, ಜೇನುಸಾಕಣೆ, ಮೇಕೆ-ಕುರಿ ಸಾಕಣೆ, ನರ್ಸರಿ ನಿರ್ವಹಣೆ ಮತ್ತು ಸಾವಯವ ಕೃಷಿ ಕುರಿತು 3 ರಿಂದ 5 ದಿನಗಳ ಪ್ರಾಯೋಗಿಕ ತರಬೇತಿಯನ್ನು ಜಿಲ್ಲಾ KVK ವಿಜ್ಞಾನಿಗಳು ಉಚಿತವಾಗಿ ನೀಡುತ್ತಾರೆ.",
+        "details_en": "3 to 5 days practical certified training on drip irrigation, dairy, goat farming, and organic inputs.",
+        "where_to_avail_kn": "ಜಿಲ್ಲಾ ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರ (KVK)."
+    },
+    {
+        "title_kn": "4. ಉಚಿತ ಬೆಳೆ ನಷ್ಟ ಪರಿಹಾರ ತನಿಖೆ & ವಿಮಾ ಸಮೀಕ್ಷೆ {Free Crop Damage Assessment}",
+        "title_en": "4. Free Spot Crop Damage Assessment under PMFBY & Drought Relief",
+        "cost_kn": "🟢 100% ಉಚಿತ",
+        "cost_en": "🟢 100% FREE",
+        "details_kn": "ಅಕಾಲಿಕ ಆಲಿಕಲ್ಲು ಮಳೆ, ಪ್ರವಾಹ ಅಥವಾ ತೀವ್ರ ಬರಗಾಲದಿಂದ ಬೆಳೆ ಹಾನಿಯಾದಾಗ ಕಂದಾಯ ಮತ್ತು ಕೃಷಿ ಅಧಿಕಾರಿಗಳು ಜಮೀನಿಗೆ ಭೇಟಿ ನೀಡಿ ಉಚಿತ ಪಂಚನಾಮೆ ಮಾಡಿ ಪರಿಹಾರ ತಂತ್ರಾಂಶದಲ್ಲಿ (Parihara Portal) ನೇರ ಬ್ಯಾಂಕ್ ಖಾತೆಗೆ ಹಣ ಜಮೆ ಮಾಡುತ್ತಾರೆ.",
+        "details_en": "Free joint field spot survey by revenue and agriculture officers for natural calamity and crop insurance claims.",
+        "where_to_avail_kn": "ಗ್ರಾಮ ಲೆಕ್ಕಾಧಿಕಾರಿ (VA) / ಕೃಷಿ ಅಧಿಕಾರಿ (AO)."
+    },
+    {
+        "title_kn": "5. 90% ಸಬ್ಸಿಡಿ ಹನಿ & ತುಂತುರು ನೀರಾವರಿ ಘಟಕಗಳು {PMKSY Drip & Sprinkler}",
+        "title_en": "5. Up to 90% Subsidy for Drip & Sprinkler Units (PMKSY Scheme)",
+        "cost_kn": "🟢 ಸಣ್ಣ & ಅತಿ ಸಣ್ಣ ರೈತರಿಗೆ 90% ಸಹಾಯಧನ (ರೈತನ ಪಾಲು ಕೇವಲ 10%)",
+        "cost_en": "🟢 90% Subsidy for Small/Marginal Farmers (10% farmer share)",
+        "details_kn": "ಪ್ರಧಾನಮಂತ್ರಿ ಕೃಷಿ ಸಿಂಚಾಯಿ ಯೋಜನೆಯಡಿ ಐಎಸ್‌ಐ ಗುಣಮಟ್ಟದ ಡ್ರಿಪ್ ಪೈಪ್, ಫಿಲ್ಟರ್, ಲ್ಯಾಟರಲ್ ಹಾಗೂ ಸ್ಪ್ರಿಂಕ್ಲರ್ ಸೆಟ್‌ಗಳಿಗೆ ಸರ್ಕಾರದಿಂದ ಗರಿಷ್ಠ ₹45,000 ವರೆಗೆ ಸಬ್ಸಿಡಿ ದೊರೆಯುತ್ತದೆ.",
+        "details_en": "Subsidized ISI certified drip laterals, venturi, filters, and sprinkler pipes with free installation.",
+        "where_to_avail_kn": "ತಾಲೂಕು ಸಹಾಯಕ ತೋಟಗಾರಿಕೆ / ಕೃಷಿ ಅಧಿಕಾರಿ ಕಚೇರಿ."
+    },
+    {
+        "title_kn": "6. ಕೃಷಿ ಯಂತ್ರಧಾರೆ ಬಾಡಿಗೆ ಕೇಂದ್ರಗಳು {Custom Hiring Centres - CHC}",
+        "title_en": "6. Subsidized Farm Machinery at Custom Hiring Centres (CHC)",
+        "cost_kn": "🟢 ಸಾಮಾನ್ಯ ಬಾಡಿಗೆಗಿಂತ 50% ಕಡಿಮೆ ರಿಯಾಯಿತಿ ದರ",
+        "cost_en": "🟢 50% Subsidized Rental Rates compared to market",
+        "details_kn": "ಟ್ರ್ಯಾಕ್ಟರ್, ರೋಟಾವೇಟರ್, ಕಬ್ಬು ಕಟಾವು ಯಂತ್ರ, ಭತ್ತ ಕಟಾವು ಕಂಬೈನ್ ಹಾರ್ವೆಸ್ಟರ್, ಪವರ್ ಟಿಲ್ಲರ್ ಹಾಗೂ ಮಲ್ಚಿಂಗ್ ಯಂತ್ರಗಳನ್ನು ಅತಿ ಕಡಿಮೆ ಗಂಟೆವಾರು ಬಾಡಿಗೆಗೆ ಪಡೆಯಬಹುದು.",
+        "details_en": "Low-cost hourly rental of tractors, rotavators, combine harvesters, and power weeders.",
+        "where_to_avail_kn": "ತಾಲೂಕು ಮಟ್ಟದ ಕೃಷಿ ಯಂತ್ರಧಾರೆ ಕೇಂದ್ರ (CHC) / ಶ್ರೀ ಕ್ಷೇತ್ರ ಧರ್ಮಸ್ಥಳ ಕೃಷಿ ಯಂತ್ರಧಾರೆ."
+    }
+]
