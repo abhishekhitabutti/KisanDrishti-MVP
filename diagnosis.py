@@ -113,7 +113,13 @@ def _extract_json(text):
 def _short_list(value, limit):
     if not isinstance(value, list):
         return []
-    return [str(v)[:160] for v in value[:limit] if str(v).strip()]
+    flat = []
+    for v in value[:limit]:
+        if isinstance(v, list):
+            flat.extend([str(x)[:160] for x in v if str(x).strip()])
+        elif str(v).strip():
+            flat.append(str(v)[:160])
+    return flat
 
 
 def parse_result(text, kb):
@@ -153,7 +159,7 @@ def _post_json(url, payload, headers):
         headers={"content-type": "application/json", **headers},
     )
     try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         if exc.code in (401, 403):
@@ -227,8 +233,8 @@ def analyze_visual_features(raw_image):
     try:
         import numpy as np
         img = Image.open(io.BytesIO(raw_image)).convert("RGB")
-        img.thumbnail((300, 300))
-        arr = np.array(img, dtype=float)
+        img.thumbnail((160, 160))
+        arr = np.array(img, dtype=np.int32)
         r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
         foliage = (r + g + b > 60) & (r + g + b < 710)
         foliage_count = max(1.0, float(np.sum(foliage)))
@@ -246,16 +252,9 @@ def analyze_visual_features(raw_image):
         return {"stress_pct": 24.5}
 
 
-def analyze_visual(raw_images, crop_hint, kb, language="en"):
-    """Intelligent visual symptom diagnosis and disease infestation severity calculation."""
-    if not isinstance(raw_images, list):
-        raw_images = [raw_images]
-
-    primary_bytes = raw_images[0] if raw_images else b""
-    features = analyze_visual_features(primary_bytes)
-    stress_pct = features["stress_pct"]
+def compute_severity(stress_pct, language="en"):
+    """Compute bilingual infestation severity level, badge and actionable note."""
     is_kn = (language == "kn")
-
     if stress_pct < 15.0:
         sev_label = "ಆರಂಭಿಕ ಹಂತ / ಲಘು ತೀವ್ರತೆ {Early / Mild Stage - < 15%}" if is_kn else "Early / Mild Stage (< 15% leaf area affected)"
         sev_tag = "mild"
@@ -283,6 +282,24 @@ def analyze_visual(raw_images, crop_hint, kb, language="en"):
             if is_kn else
             "Severe outbreak stage. Requires urgent intervention to halt devastation and protect remaining yield."
         )
+    return {
+        "label": sev_label,
+        "badge": sev_badge,
+        "tag": sev_tag,
+        "pct": stress_pct,
+        "note": sev_note
+    }
+
+
+def analyze_visual(raw_images, crop_hint, kb, language="en"):
+    """Intelligent visual symptom diagnosis and disease infestation severity calculation."""
+    if not isinstance(raw_images, list):
+        raw_images = [raw_images]
+
+    primary_bytes = raw_images[0] if raw_images else b""
+    features = analyze_visual_features(primary_bytes)
+    stress_pct = features["stress_pct"]
+    sev = compute_severity(stress_pct, language=language)
 
     hint_clean = (crop_hint or "").lower().strip()
     matched_entry = None
@@ -295,21 +312,29 @@ def analyze_visual(raw_images, crop_hint, kb, language="en"):
     if not matched_entry and kb:
         matched_entry = kb[0]
 
+    could_also_be = []
+    not_conf = matched_entry.get("not_to_confuse", [])
+    if isinstance(not_conf, list):
+        could_also_be = [str(x) for x in not_conf if str(x).strip()]
+    elif isinstance(not_conf, str) and not_conf.strip():
+        could_also_be = [not_conf.strip()]
+
+    symptoms_seen = []
+    look_for = matched_entry.get("look_for", [])
+    if isinstance(look_for, list):
+        symptoms_seen = [str(x) for x in look_for[:3] if str(x).strip()]
+    elif isinstance(look_for, str) and look_for.strip():
+        symptoms_seen = [look_for.strip()]
+
     return {
         "crop": matched_entry["crops"][0] if matched_entry.get("crops") else (hint_clean or "unknown"),
         "category": matched_entry.get("type", "disease"),
         "kb_id": matched_entry["id"],
         "name": matched_entry["name"],
         "confidence": "high",
-        "severity": {
-            "label": sev_label,
-            "badge": sev_badge,
-            "tag": sev_tag,
-            "pct": stress_pct,
-            "note": sev_note
-        },
-        "symptoms_seen": matched_entry.get("look_for", [])[:3],
-        "could_also_be": [matched_entry["not_to_confuse"]] if matched_entry.get("not_to_confuse") else [],
+        "severity": sev,
+        "symptoms_seen": symptoms_seen,
+        "could_also_be": could_also_be,
         "photo_quality": "good",
         "photo_tip": ""
     }
@@ -338,7 +363,10 @@ def analyze(raw_image, api_key, kb, provider="gemini", model=None, crop_hint="",
         text = _call_anthropic(b64, media, api_key, kb, model, crop_hint, language, extra_images=extra_images)
     else:
         raise AnalysisError("Photo analysis is not set up.")
-    return parse_result(text, kb)
+    res = parse_result(text, kb)
+    features = analyze_visual_features(primary_raw)
+    res["severity"] = compute_severity(features["stress_pct"], language=language)
+    return res
 
 
 def decide(result, kb):

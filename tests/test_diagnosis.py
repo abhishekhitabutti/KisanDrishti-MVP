@@ -160,3 +160,31 @@ def test_analyze_turns_http_errors_into_friendly_messages(monkeypatch, code, pro
     with pytest.raises(diagnosis.AnalysisError) as exc:
         diagnosis.analyze(buf.getvalue(), "k", KB, provider=provider)
     assert "Traceback" not in str(exc.value) and len(str(exc.value)) > 10
+
+
+def test_analyze_visual_returns_flat_could_also_be_and_severity():
+    buf = io.BytesIO()
+    Image.new("RGB", (100, 100), (40, 180, 50)).save(buf, format="JPEG")
+    res = diagnosis.analyze_visual([buf.getvalue()], "rice", KB)
+    assert isinstance(res["could_also_be"], list)
+    assert all(isinstance(x, str) for x in res["could_also_be"])
+    assert isinstance(res["symptoms_seen"], list)
+    assert all(isinstance(x, str) for x in res["symptoms_seen"])
+    assert "severity" in res
+    assert "pct" in res["severity"]
+
+
+def test_short_list_flattens_nested_lists():
+    nested = [["a", "b"], "c", ["d"]]
+    res = diagnosis._short_list(nested, 5)
+    assert res == ["a", "b", "c", "d"]
+    assert all(isinstance(x, str) for x in res)
+
+
+def test_compute_severity_thresholds():
+    s_mild = diagnosis.compute_severity(10.0, language="en")
+    assert s_mild["tag"] == "mild"
+    s_mod = diagnosis.compute_severity(25.0, language="en")
+    assert s_mod["tag"] == "moderate"
+    s_sev = diagnosis.compute_severity(55.0, language="en")
+    assert s_sev["tag"] == "severe"

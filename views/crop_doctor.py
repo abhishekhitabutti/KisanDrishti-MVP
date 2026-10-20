@@ -66,8 +66,15 @@ PRIVACY = {
 
 
 def bullets(items):
+    if not items:
+        return
     for item in items:
-        st.markdown(f"- {t(item)}")
+        if isinstance(item, list):
+            for sub in item:
+                if str(sub).strip():
+                    st.markdown(f"- {t(str(sub).strip())}")
+        elif item and str(item).strip():
+            st.markdown(f"- {t(str(item).strip())}")
 
 
 def type_label(kind):
@@ -367,11 +374,26 @@ def render_result(state):
                     f"{sev.get('pct', 25.0)}%"
                 )
 
-    if result["symptoms_seen"]:
+    if result.get("symptoms_seen"):
         st.markdown("**" + t("What we can see in your photo") + "**")
-        bullets(result["symptoms_seen"])
-    if result["could_also_be"]:
-        st.markdown("**" + t("It could also be:") + "** " + ", ".join(result["could_also_be"]))
+        flat_symp = []
+        for s in result["symptoms_seen"]:
+            if isinstance(s, list):
+                flat_symp.extend([str(x) for x in s if str(x).strip()])
+            elif s and str(s).strip():
+                flat_symp.append(str(s).strip())
+        if flat_symp:
+            bullets(flat_symp)
+
+    if result.get("could_also_be"):
+        flat_could = []
+        for c in result["could_also_be"]:
+            if isinstance(c, list):
+                flat_could.extend([str(x) for x in c if str(x).strip()])
+            elif c and str(c).strip():
+                flat_could.append(str(c).strip())
+        if flat_could:
+            st.markdown("**" + t("It could also be:") + "** " + ", ".join(flat_could))
 
     if mode == "retake":
         ui.note(t("The photo is not clear enough to say what the problem is.") + " " + (result["photo_tip"] or ""), "warn")
@@ -498,7 +520,11 @@ with tab_photo:
         elif st.session_state["doctor_count"] >= MAX_PER_SESSION:
             st.warning(t("You have reached the limit of photos for this visit. Please come back later or visit your KVK."))
         else:
-            raw_bytes_list = [p.getvalue() for p in photos_to_show]
+            raw_bytes_list = []
+            for p in photos_to_show:
+                if hasattr(p, "seek"):
+                    p.seek(0)
+                raw_bytes_list.append(p.getvalue())
             result = None
             if api_key:
                 try:
@@ -613,7 +639,7 @@ with tab_browse:
                 reference_image(chosen_entry["id"])
                 st.markdown(f"**🏷️ {t(chosen_entry['name'])}**")
                 st.markdown(ui.badge(type_label(chosen_entry["type"]), chosen_entry["type"]), unsafe_allow_html=True)
-                st.caption(f"**{'ಬಾಧಿತ ಬೆಳೆಗಳು:' if is_kn else 'Target Crops:'}** {', '.join(chosen_entry.get('crops', []))}")
+                st.caption(f"**{'ಬಾಧಿತ ಬೆಳೆಗಳು:' if is_kn else 'Target Crops:'}** {', '.join(str(c) for c in chosen_entry.get('crops', []))}")
                 st.markdown("**" + ("ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು {Key Signs}:" if is_kn else "Key Identification Signs:") + "**")
                 for sign in chosen_entry.get("look_for", [])[:2]:
                     st.markdown(f"- `{t(sign)}`")

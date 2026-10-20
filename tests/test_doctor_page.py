@@ -94,3 +94,16 @@ def test_provider_choice_prefers_gemini(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "a")
     at = AppTest.from_file(PAGE, default_timeout=30).run()
     assert "Google's Gemini" in captions(at)
+
+
+def test_nested_could_also_be_and_symptoms_do_not_crash(monkeypatch):
+    nested_res = make_result(
+        could_also_be=[["Brown spot", "Sheath blight"]],
+        symptoms_seen=[["Spindle-shaped spots", "Ashy centre"]],
+        severity={"label": "Early", "badge": "🟢 Mild", "tag": "mild", "pct": 12.0, "note": "Early stage"}
+    )
+    at = run_with(nested_res, monkeypatch)
+    assert not at.exception
+    t = text_of(at)
+    assert "It could also be:" in t
+    assert "Brown spot" in t
