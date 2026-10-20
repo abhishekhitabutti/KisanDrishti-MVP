@@ -141,7 +141,15 @@ def render_entry(entry, district, confirm=False, key_prefix="browse"):
     label = "Herbicide guidance" if entry["type"] == "weed" else "Pesticide guidance"
     with st.expander(t("{label}: what to use and when", label=t(label)), expanded=True):
         st.markdown("**" + t("Options commonly advised") + "**")
-        st.dataframe(pd.DataFrame(chem["options"]).rename(columns={"active": t("Active ingredient"), "kind": t("Type"), "note": t("Note")}),
+        is_kn_local = (i18n.current_lang() == "kn")
+        options_rows = []
+        for opt in chem["options"]:
+            options_rows.append({
+                "active": opt.get("active", ""),
+                "kind": t(opt.get("kind", "")) if is_kn_local else opt.get("kind", ""),
+                "note": t(opt.get("note", "")) if is_kn_local else opt.get("note", "")
+            })
+        st.dataframe(pd.DataFrame(options_rows).rename(columns={"active": t("Active ingredient"), "kind": t("Type"), "note": t("Note")}),
                      hide_index=True)
         st.caption(t("Ask a licensed dealer for a product with this active ingredient. Check that the label lists your crop and this problem.")
                    + " " + t(diagnosis.NO_DOSE_NOTE))
@@ -242,16 +250,20 @@ def render_entry(entry, district, confirm=False, key_prefix="browse"):
                 })
 
         for c_idx, chem in enumerate(chems):
-            c_name = chem.get("trade_name_kn" if is_kn_local else "trade_name", chem.get("trade_name", ""))
+            c_name = chem.get("trade_name_kn") if is_kn_local and chem.get("trade_name_kn") else t(chem.get("trade_name", ""))
             with st.container(border=True):
                 c_col1, c_col2 = st.columns([2.5, 1.2])
                 with c_col1:
                     st.markdown(f"**🏷️ {c_name}**")
-                    st.markdown(f"- 🎯 **{'ಯಾವುದಕ್ಕೆ ಬಳಸಬೇಕು / ಕಾರ್ಯವಿಧಾನ {Used For / Action}:' if is_kn_local else 'Used For / Mode of Action:'}** {chem.get('action', 'Target disease / pest control')}")
+                    action_text = chem.get("action_kn") if is_kn_local and chem.get("action_kn") else t(chem.get("action", "Target disease / pest control"))
+                    st.markdown(f"- 🎯 **{'ಯಾವುದಕ್ಕೆ ಬಳಸಬೇಕು / ಕಾರ್ಯವಿಧಾನ {Used For / Action}:' if is_kn_local else 'Used For / Mode of Action:'}** {action_text}")
                     st.markdown(f"- 🧪 **{'ಕ್ರಿಯಾಶೀಲ ರಾಸಾಯನಿಕ {Active}:' if is_kn_local else 'Active Ingredient:'}** `{chem.get('active', '')}`")
-                    st.markdown(f"- 💧 **{'ಪ್ರತಿ 15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn_local else 'Dose per 15L Pump:'}** `{chem.get('dose_per_pump_15l', '25 ml/g')}`")
-                    st.markdown(f"- 🌾 **{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ (200 ಲೀ ನೀರಿಗೆ):' if is_kn_local else 'Dose per 1 Acre (in 200L Water):'}** `{chem.get('dose_per_acre', '350 - 400 ml/g')}`")
-                    st.caption(f"🏭 {'ಅಧಿಕೃತ ತಯಾರಕರು:' if is_kn_local else 'Certified Manufacturer:'} {chem.get('manufacturer', 'Verified Indian Manufacturer')}")
+                    dose_15l = chem.get("dose_per_pump_15l_kn") if is_kn_local and chem.get("dose_per_pump_15l_kn") else t(chem.get("dose_per_pump_15l", "25 ml/g"))
+                    st.markdown(f"- 💧 **{'ಪ್ರತಿ 15L ಪಂಪ್‌ಗೆ ಡೋಸ್:' if is_kn_local else 'Dose per 15L Pump:'}** `{dose_15l}`")
+                    dose_ac = chem.get("dose_per_acre_kn") if is_kn_local and chem.get("dose_per_acre_kn") else t(chem.get("dose_per_acre", "350 - 400 ml/g"))
+                    st.markdown(f"- 🌾 **{'1 ಎಕರೆಗೆ ಪ್ರಮಾಣ (200 ಲೀ ನೀರಿಗೆ):' if is_kn_local else 'Dose per 1 Acre (in 200L Water):'}** `{dose_ac}`")
+                    mfg = chem.get("manufacturer_kn") if is_kn_local and chem.get("manufacturer_kn") else t(chem.get("manufacturer", "Verified Indian Manufacturer"))
+                    st.caption(f"🏭 {'ಅಧಿಕೃತ ತಯಾರಕರು:' if is_kn_local else 'Certified Manufacturer:'} {mfg}")
                 with c_col2:
                     buy_link = chem.get("buy_url") or f"https://www.bighaat.com/search?q={urllib.parse.quote(chem.get('active', ''))}"
                     st.link_button(
@@ -393,7 +405,7 @@ def render_result(state):
             elif c and str(c).strip():
                 flat_could.append(str(c).strip())
         if flat_could:
-            st.markdown("**" + t("It could also be:") + "** " + ", ".join(flat_could))
+            st.markdown("**" + t("It could also be:") + "** " + ", ".join([t(c) for c in flat_could]))
 
     if mode == "retake":
         ui.note(t("The photo is not clear enough to say what the problem is.") + " " + (result["photo_tip"] or ""), "warn")
