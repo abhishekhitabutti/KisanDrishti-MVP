@@ -21,7 +21,7 @@ INDIAN_AGRI_PLATFORMS = [
         "specialty_en": "World pioneer of Nano Urea & Nano DAP, Sagarika seaweed biostimulant, water-soluble fertilizers, and bio-fertilizers.",
         "specialty_kn": "ವಿಶ್ವದ ಮೊದಲ ನ್ಯಾನೋ ಯೂರಿಯಾ & ನ್ಯಾನೋ ಡಿಎಪಿ {Nano DAP}, ಸಾಗರಿಕ ಕಡಲಕಳೆ ಬಯೋ-ಸ್ಟಿಮ್ಯುಲಂಟ್ ಮತ್ತು 100% ನೀರಿನಲ್ಲಿ ಕರಗುವ ಗೊಬ್ಬರಗಳು.",
         "phone": "1800 103 1967",
-        "order_url": "https://www.iffcobazar.in",
+        "order_url": "https://www.iffco.in",
         "delivery_note_en": "Free doorstep delivery to all rural pin codes across Karnataka with no minimum order.",
         "delivery_note_kn": "ಕರ್ನಾಟಕದ ಎಲ್ಲಾ ಗ್ರಾಮೀಣ ಪಿನ್‌ಕೋಡ್‌ಗಳಿಗೆ ಉಚಿತ ಮನೆಬಾಗಿಲು ಡೆಲಿವರಿ ಲಭ್ಯ.",
         "popular_products": ["Nano Urea (500 ml)", "Nano DAP (500 ml)", "Sagarika Liquid (1 L)", "WSF 19:19:19", "WSF 00:52:34"]
@@ -45,7 +45,7 @@ INDIAN_AGRI_PLATFORMS = [
         "specialty_en": "Direct-to-farmer agri platform offering leading Indian brands (Tata Rallis, Dhanuka, PI Industries, Bayer India, UPL).",
         "specialty_kn": "ರೈತರಿಗೆ ನೇರ ಸರಬರಾಜು ಮಾಡುವ ಕೃಷಿ ವೇದಿಕೆ (ಟಾಟಾ ರ‍್ಯಾಲಿಸ್, ಧನುಕಾ, ಪಿಐ ಇಂಡಸ್ಟ್ರೀಸ್, ಯುಪಿಎಲ್ ಬ್ರ್ಯಾಂಡ್‌ಗಳು).",
         "phone": "1800 120 4040",
-        "order_url": "https://www.agrostar.in",
+        "order_url": "https://play.google.com/store/apps/details?id=com.ulink.agrostar",
         "delivery_note_en": "Direct village courier delivery with missed-call telephone order booking.",
         "delivery_note_kn": "ಮಿಸ್ಡ್ ಕಾಲ್ ಮೂಲಕ ಫೋನ್‌ನಲ್ಲಿಯೇ ನೇರ ಆರ್ಡರ್ ಮತ್ತು ಗ್ರಾಮ ಮಟ್ಟದ ಡೆಲಿವರಿ.",
         "popular_products": ["Tata Rallis Contaf Plus", "Dhanuka EM-1", "PI Industries Keefun", "UPL Saaf"]
@@ -82,7 +82,7 @@ HIGH_YIELD_PROMOTERS = [
         "benefits_en": "Stimulates dense root growth, increases tillers in paddy/sugarcane, activates soil microbes, improves drought resistance, and boosts grain yield by 12-18%.",
         "benefits_kn": "ಭತ್ತ, ಕಬ್ಬು, ಮೆಕ್ಕೆಜೋಳದಲ್ಲಿ ಕವಲು/ಕವಡೆಗಳ ಸಂಖ್ಯೆ ಹೆಚ್ಚಿಸುತ್ತದೆ, ಬೇರುಗಳು ಆಳಕ್ಕೆ ಇಳಿಯಲು ನೆರವಾಗುತ್ತದೆ, ಬರ ನಿರೋಧಕ ಶಕ್ತಿ ನೀಡುತ್ತದೆ ಮತ್ತು ಇಳುವರಿಯನ್ನು 12-18% ಹೆಚ್ಚಿಸುತ್ತದೆ.",
         "manufacturer": "IFFCO",
-        "buy_url": "https://www.iffcobazar.in/en/product/sagarika-liquid",
+        "buy_url": "https://www.bighaat.com/products/sagarika-gold",
         "compatible_with": "All fungicides, insecticides, and water-soluble fertilizers (WSF)."
     },
     {
@@ -99,7 +99,7 @@ HIGH_YIELD_PROMOTERS = [
         "benefits_en": "80%+ nitrogen absorption efficiency directly through leaf stomata. Replaces 1 whole bag of conventional granular urea, prevents soil hardening, and increases crop protein content.",
         "benefits_kn": "ಎಲೆಗಳ ಮೂಲಕ 80% ಕ್ಕಿಂತ ಹೆಚ್ಚು ಸಾರಜನಕ ಹೀರಿಕೊಳ್ಳುತ್ತದೆ. 1 ಬ್ಯಾಗ್ ಸಾಂಪ್ರದಾಯಿಕ ಯೂರಿಯಾ ಉಳಿಸುತ್ತದೆ, ಮಣ್ಣು ಗಟ್ಟಿಯಾಗುವುದನ್ನು ತಪ್ಪಿಸುತ್ತದೆ ಮತ್ತು ಕಾಳಿನ ತೂಕ ಹೆಚ್ಚಿಸುತ್ತದೆ.",
         "manufacturer": "IFFCO",
-        "buy_url": "https://www.iffcobazar.in/en/product/iffco-nano-urea-liquid",
+        "buy_url": "https://www.bighaat.com/products/iffco-nano-urea",
         "compatible_with": "Compatible with most bio-stimulants and non-alkaline agrochemicals."
     },
     {
@@ -116,7 +116,7 @@ HIGH_YIELD_PROMOTERS = [
         "benefits_en": "Enhances root volume and nodulation in pulses (Bengal gram, Tur, Soybean), aids strong stem formation, and eliminates phosphorus fixation in hard-rock soil.",
         "benefits_kn": "ದ್ವಿದಳ ಧಾನ್ಯಗಳಲ್ಲಿ (ತೊಗರಿ, ಕಡಲೆ, ಸೋಯಾಬೀನ್) ಸಾರಜನಕ ಹೀರುವ ಗಂಟುಗಳು ಮತ್ತು ಬೇರುಗಳನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ. ಮಣ್ಣಿನಲ್ಲಿ ರಂಜಕ ವ್ಯರ್ಥವಾಗುವುದನ್ನು ತಡೆಯುತ್ತದೆ.",
         "manufacturer": "IFFCO",
-        "buy_url": "https://www.iffcobazar.in/en/product/iffco-nano-dap-liquid",
+        "buy_url": "https://www.bighaat.com/products/iffco-nano-dap",
         "compatible_with": "Compatible with Sagarika and bio-fungicides."
     },
     {
@@ -133,7 +133,7 @@ HIGH_YIELD_PROMOTERS = [
         "benefits_en": "Provides instant green canopy, balanced nutrition (Nitrogen, Phosphorus, Potash) with zero wastage, curing sudden yellowing in crops.",
         "benefits_kn": "ಬೆಳೆಗೆ ತ್ವರಿತ ಹಸಿರು ಬಣ್ಣ ನೀಡುತ್ತದೆ, ಸಮತೋಲಿತ ಪೋಷಕಾಂಶ ಒದಗಿಸಿ ಎಲೆ ಹಳದಿ ರೋಗ ತಡೆಯುತ್ತದೆ ಮತ್ತು ಸಸಿಗಳನ್ನು ಬಲಪಡಿಸುತ್ತದೆ.",
         "manufacturer": "IFFCO / Coromandel Gromor / Tata Rallis",
-        "buy_url": "https://www.iffcobazar.in/en/product/wsf-19-19-19-fertiliser",
+        "buy_url": "https://www.bighaat.com/products/19-19-19-fertilizer",
         "compatible_with": "Can be mixed with most insecticides and fungicides. Do NOT mix with copper or sulphur."
     },
     {
@@ -369,7 +369,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "400 - 500 ml per acre in 150-200 L water",
                 "timing_en": "Apply at 2-3 leaf stage of weeds (20-25 days after sowing). Do NOT spray on cotton, pulses or vegetables!",
                 "timing_kn": "ಕಳೆಯು 2-3 ಎಲೆಗಳ ಹಂತದಲ್ಲಿರುವಾಗ (ಬಿತ್ತಿದ 20-25 ದಿನ) ಸಿಂಪಡಿಸಿ. ಹತ್ತಿ ಅಥವಾ ಬೇಳೆಕಾಳು ಬೆಳೆಗಳಿಗೆ ಸಿಂಪಡಿಸಬೇಡಿ!",
-                "buy_url": "https://www.bighaat.com/search?q=2,4-D+Amine",
+                "buy_url": "https://www.bighaat.com/collections/all?q=2,4-D",
                 "manufacturer": "Tata Rallis / Dhanuka"
             },
             {
@@ -381,7 +381,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "80 - 100 ml per acre in 150 L water",
                 "timing_en": "Apply 15-20 days after transplanting when weeds have 2-4 leaves. Drain standing water before spray.",
                 "timing_kn": "ನಾಟಿ ಮಾಡಿದ 15-20 ದಿನಗಳಲ್ಲಿ ಸಿಂಪಡಿಸಿ. ಸಿಂಪರಣೆಗೆ ಮುನ್ನ ಗದ್ದೆಯ ನೀರನ್ನು ಬಸಿದು, 48 ಗಂಟೆಗಳ ನಂತರ ನೀರು ಕಟ್ಟಿ.",
-                "buy_url": "https://www.bighaat.com/search?q=Bispyribac+sodium",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Bispyribac",
                 "manufacturer": "PI Industries / Bayer"
             },
             {
@@ -393,7 +393,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "300 - 350 ml per acre in 150-200 L water",
                 "timing_en": "Apply at 15-20 days after sowing when broadleaf & grassy weeds are at 2-3 leaf stage.",
                 "timing_kn": "ಬಿತ್ತನೆ ಮಾಡಿದ 15-20 ದಿನಗಳಲ್ಲಿ ಕಳೆಗಳು ಸಣ್ಣಗಿರುವಾಗಲೇ ಸಿಂಪಡಿಸಿ.",
-                "buy_url": "https://www.bighaat.com/search?q=Imazethapyr",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Imazethapyr",
                 "manufacturer": "BASF India / UPL"
             }
         ],
@@ -426,7 +426,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "350 - 400 ml per acre in 150-200 L water",
                 "timing_en": "Apply 20-30 days after sowing on narrow-leaved grassy weeds. Completely safe for broadleaf crops.",
                 "timing_kn": "ಬಿತ್ತಿದ 20-30 ದಿನಗಳಲ್ಲಿ ಹುಲ್ಲಿನ ಜಾತಿಗೆ ಸೇರಿದ ಕಳೆಗಳ ಮೇಲೆ ಸಿಂಪಡಿಸಿ. ಮುಖ್ಯ ಬೆಳೆಗೆ ಹಾನಿ ಮಾಡುವುದಿಲ್ಲ.",
-                "buy_url": "https://www.bighaat.com/search?q=Quizalofop",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Quizalofop",
                 "manufacturer": "Dhanuka Agritech"
             },
             {
@@ -438,7 +438,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "800 g - 1.0 kg per acre in 200 L water",
                 "timing_en": "Pre-emergence within 2-3 days of sowing or early post-emergence at 15 DAS in moist soil.",
                 "timing_kn": "ಬಿತ್ತನೆ ಮಾಡಿದ 2-3 ದಿನಗಳಲ್ಲಿ ಅಥವಾ ಸಸಿ ಮೂಡಿ 15 ದಿನಗಳಲ್ಲಿ ಮಣ್ಣಿನಲ್ಲಿ ತೇವಾಂಶವಿರುವಾಗ ಸಿಂಪಡಿಸಿ.",
-                "buy_url": "https://www.bighaat.com/search?q=Atrazine+50",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Atrazine",
                 "manufacturer": "Rallis India / Dhanuka"
             },
             {
@@ -450,7 +450,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "200 - 250 ml per acre in 200 L water",
                 "timing_en": "Spray immediately after onion transplanting (before weed emergence) or direct spray between rows.",
                 "timing_kn": "ಈರುಳ್ಳಿ ನಾಟಿ ಮಾಡಿದ ತಕ್ಷಣ ಕಳೆ ಹುಟ್ಟುವ ಮುನ್ನ ಸಿಂಪಡಿಸಿ. ಮಣ್ಣಿನಲ್ಲಿ ತೇವಾಂಶ ಇರಬೇಕು.",
-                "buy_url": "https://www.bighaat.com/search?q=Oxyfluorfen",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Oxyfluorfen",
                 "manufacturer": "Corteva Agriscience / Indofil"
             }
         ],
@@ -483,7 +483,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "1.0 - 1.2 Litres per acre in 200 L water",
                 "timing_en": "Contact fast knockdown. Destroys tough resistant weeds in 48-72 hours. Completely deactivated in soil so crop root is 100% safe.",
                 "timing_kn": "ಸಿಂಪಡಿಸಿದ 48 ಗಂಟೆಗಳಲ್ಲಿ ಕಳೆಯನ್ನು ಒಣಗಿಸಿ ಸುಡುತ್ತದೆ. ಮಣ್ಣಿನಲ್ಲಿ ಯಾವುದೇ ವಿಷ ಉಳಿಯುವುದಿಲ್ಲ, ಬೆಳೆಯ ಬೇರಿಗೆ ಯಾವುದೇ ಧಕ್ಕೆ ಇಲ್ಲ.",
-                "buy_url": "https://www.bighaat.com/search?q=Glufosinate",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Glufosinate",
                 "manufacturer": "BASF India / Bayer"
             },
             {
@@ -495,7 +495,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "1.2 - 1.5 Litres per acre in 200 L water",
                 "timing_en": "Systemic translocated herbicide. Kills weeds from the underground roots and tubers within 10-14 days. Apply when weeds are green and actively growing.",
                 "timing_kn": "ಕಳೆಯ ಎಲೆಗಳ ಮೂಲಕ ಇಳಿದು ಭೂಮಿಯೊಳಗಿನ ಬೇರು ಮತ್ತು ಗೆಡ್ಡೆಗಳನ್ನು ಸಂಪೂರ್ಣ ನಾಶಮಾಡುತ್ತದೆ (10-14 ದಿನ). ಕಳೆಯು ಹಸಿರಾಗಿದ್ದಾಗ ಸಿಂಪಡಿಸಿ.",
-                "buy_url": "https://www.bighaat.com/search?q=Glyphosate",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Glyphosate",
                 "manufacturer": "Bayer India / Excel Crop Care"
             },
             {
@@ -507,7 +507,7 @@ WEED_MANAGEMENT_BY_DENSITY = {
                 "dose_per_acre": "800 ml - 1.0 Litre per acre in 200 L water",
                 "timing_en": "Instant foliage desiccant. Weeds turn yellow within 6 hours. Use only with protective spray hood; never let spray touch green crop stems.",
                 "timing_kn": "ಸಿಂಪಡಿಸಿದ 6 ಗಂಟೆಗಳಲ್ಲಿ ಕಳೆ ಸಂಪೂರ್ಣ ಸುಟ್ಟು ಹೋಗುತ್ತದೆ. ರಕ್ಷಣಾತ್ಮಕ ಹುಡ್ ಬಳಸಿ ಸಿಂಪಡಿಸಿ; ಮುಖ್ಯ ಬೆಳೆಯ ಹಸಿರು ಭಾಗಕ್ಕೆ ತಾಗಬಾರದು.",
-                "buy_url": "https://www.bighaat.com/search?q=Paraquat",
+                "buy_url": "https://www.bighaat.com/collections/all?q=Paraquat",
                 "manufacturer": "Syngenta India / Dhanuka"
             }
         ],

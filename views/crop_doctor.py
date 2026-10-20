@@ -38,6 +38,16 @@ PHOTO_TIPS = [
 ]
 
 
+def get_clean_brand(trade_name: str, active: str = "") -> str:
+    """Extract clean brand or generic search term without chemical percentages or formulations."""
+    raw = (trade_name or "").split("/")[0].split("(")[0].strip()
+    words = [w for w in raw.split() if "%" not in w and w.upper() not in ("EC", "SC", "WP", "WDG", "SG", "SL", "WG", "SP", "FS", "GR")]
+    clean = " ".join(words).strip()
+    if not clean:
+        clean = (active or "").split()[0].split("%")[0].strip()
+    return clean or "agri"
+
+
 def secret(name):
     try:
         value = st.secrets.get(name)
@@ -246,7 +256,7 @@ def render_entry(entry, district, confirm=False, key_prefix="browse"):
                     "dose_per_acre": "350 - 400 ml/g per acre in 200 L water",
                     "action": opt.get("kind", "Pesticide / Fungicide"),
                     "manufacturer": "Certified Indian Agri Brands (IFFCO / BigHaat / Bayer)",
-                    "buy_url": f"https://www.bighaat.com/search?q={urllib.parse.quote(opt.get('active', ''))}"
+                    "buy_url": f"https://www.bighaat.com/collections/all?q={urllib.parse.quote_plus(opt.get('active', ''))}"
                 })
 
         for c_idx, chem in enumerate(chems):
@@ -265,20 +275,24 @@ def render_entry(entry, district, confirm=False, key_prefix="browse"):
                     mfg = chem.get("manufacturer_kn") if is_kn_local and chem.get("manufacturer_kn") else t(chem.get("manufacturer", "Verified Indian Manufacturer"))
                     st.caption(f"🏭 {'ಅಧಿಕೃತ ತಯಾರಕರು:' if is_kn_local else 'Certified Manufacturer:'} {mfg}")
                 with c_col2:
-                    buy_link = chem.get("buy_url") or f"https://www.bighaat.com/search?q={urllib.parse.quote(chem.get('active', ''))}"
+                    clean_brand = get_clean_brand(chem.get("trade_name", ""), chem.get("active", ""))
+                    bighaat_url = chem.get("buy_url") or f"https://www.bighaat.com/collections/all?q={urllib.parse.quote_plus(clean_brand)}"
+                    amazon_url = f"https://www.amazon.in/s?k={urllib.parse.quote_plus(clean_brand + ' agri')}"
+                    indiamart_url = f"https://dir.indiamart.com/search.mp?ss={urllib.parse.quote_plus(clean_brand)}"
+
                     st.link_button(
                         "🛒 BigHaat ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "🛒 Buy on BigHaat",
-                        buy_link,
+                        bighaat_url,
                         use_container_width=True
                     )
                     st.link_button(
-                        "🌾 IFFCO Bazar ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "🌾 Buy on IFFCO Bazar",
-                        f"https://www.iffcobazar.in/en/search?q={urllib.parse.quote(chem.get('active', ''))}",
+                        "🌾 Amazon India ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "🌾 Buy on Amazon India",
+                        amazon_url,
                         use_container_width=True
                     )
                     st.link_button(
-                        "📦 AgroStar ನಲ್ಲಿ ಖರೀದಿಸಿ" if is_kn_local else "📦 Buy on AgroStar",
-                        f"https://www.agrostar.in/search?q={urllib.parse.quote(chem.get('active', ''))}",
+                        "🏬 ಸ್ಥಳೀಯ ಡೀಲರ್‌ಗಳು (IndiaMART)" if is_kn_local else "🏬 Local Dealers (IndiaMART)",
+                        indiamart_url,
                         use_container_width=True
                     )
 

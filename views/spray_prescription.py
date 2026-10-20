@@ -192,13 +192,13 @@ with tab_crop_tonics:
             st.caption(t_plan["yield_stage_kn"] if is_kn else t_plan["yield_stage_en"])
 
     st.markdown("---")
-    st.markdown("**🛒 ಭಾರತದ ಅಧಿಕೃತ ಪೋಷಕಾಂಶಗಳ ನೇರ ಖರೀದಿ ಲಿಂಕ್‌ಗಳು:**")
+    st.markdown("**" + ("🛒 ಭಾರತದ ಅಧಿಕೃತ ಪೋಷಕಾಂಶಗಳ ನೇರ ಖರೀದಿ ಲಿಂಕ್‌ಗಳು:" if is_kn else "🛒 Certified High-Yield Agri Inputs & Direct Purchase Links:") + "**")
     quick_prods = [
-        ("IFFCO Sagarika Liquid (ಕಡಲಕಳೆ ಟಾನಿಕ್)", "https://www.iffcobazar.in/en/product/sagarika-liquid"),
-        ("IFFCO Nano Urea Plus (ನ್ಯಾನೋ ಯೂರಿಯಾ)", "https://www.iffcobazar.in/en/product/iffco-nano-urea-liquid"),
-        ("WSF 19:19:19 (ಕರಗುವ ಗೊಬ್ಬರ)", "https://www.iffcobazar.in/en/product/wsf-19-19-19-fertiliser"),
-        ("WSF 00:52:34 (ಹೂವು ಉತ್ತೇಜಕ)", "https://www.bighaat.com/products/0-52-34-fertilizer"),
-        ("Chelated Boron 20% (ಬೋರಾನ್)", "https://www.bighaat.com/products/multiplex-boron"),
+        ("IFFCO Sagarika (ಕಡಲಕಳೆ ಟಾನಿಕ್)" if is_kn else "IFFCO Sagarika (Seaweed)", "https://www.bighaat.com/products/sagarika-gold"),
+        ("IFFCO Nano Urea Plus (ನ್ಯಾನೋ ಯೂರಿಯಾ)" if is_kn else "IFFCO Nano Urea Plus", "https://www.bighaat.com/products/iffco-nano-urea"),
+        ("WSF 19:19:19 (ಕರಗುವ ಗೊಬ್ಬರ)" if is_kn else "WSF 19:19:19 Starter", "https://www.bighaat.com/products/19-19-19-fertilizer"),
+        ("WSF 00:52:34 (ಹೂವು ಉತ್ತೇಜಕ)" if is_kn else "WSF 00:52:34 Bloom", "https://www.bighaat.com/products/0-52-34-fertilizer"),
+        ("Chelated Boron 20% (ಬೋರಾನ್)" if is_kn else "Chelated Boron 20%", "https://www.bighaat.com/products/multiplex-boron"),
     ]
     qp_cols = st.columns(len(quick_prods))
     for col, (name, link) in zip(qp_cols, quick_prods):
