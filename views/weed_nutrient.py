@@ -62,19 +62,52 @@ with tab_weed:
         "These science-backed non-chemical agronomic practices deplete the soil weed seed bank by over 80% across 2-3 seasons."
     )
 
-    weed_options = {
-        w["id"]: (w["name_kn"] + f" ({w['botanical']})" if is_kn else w["name_en"] + f" ({w['botanical']})")
-        for w in wdata.WEEDS_DATA
+    # Category filter for weeds
+    category_options = {
+        "all": "ಎಲ್ಲಾ 20 ಕಳೆಗಳು {All 20 Weeds}" if is_kn else "All 20 Problematic Weeds",
+        "grass_sedge": "ಹುಲ್ಲು & ಕೊರೆ ಕಳೆಗಳು {Grasses & Sedges}" if is_kn else "Grasses & Sedges",
+        "broadleaf": "ಅಗಲ ಎಲೆ ಕಳೆಗಳು {Broadleaf Weeds}" if is_kn else "Broadleaf Weeds",
+        "parasitic": "ಬೆಂಕಿ / ಪರಾವಲಂಬಿ ಕಳೆಗಳು {Parasitic Weeds}" if is_kn else "Parasitic Root/Stem Weeds",
+        "aquatic_invasive": "ಆಕ್ರಮಣಕಾರಿ ಪೊದೆ & ಜಲಕಳೆಗಳು {Invasive & Aquatic}" if is_kn else "Invasive Shrubs & Aquatic",
     }
     
-    selected_weed_id = st.selectbox(
-        "ಕಳೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ:" if is_kn else "Select problematic weed:",
-        options=list(weed_options.keys()),
-        format_func=lambda wid: weed_options[wid],
-        key="select_weed_choice"
-    )
+    col_cat, col_wsel = st.columns([1, 2])
+    with col_cat:
+        selected_cat = st.selectbox(
+            "ವರ್ಗ ಆಯ್ಕೆ {Category}:" if is_kn else "Weed Category:",
+            options=list(category_options.keys()),
+            format_func=lambda c: category_options[c],
+            key="select_weed_cat"
+        )
     
-    weed_item = next(w for w in wdata.WEEDS_DATA if w["id"] == selected_weed_id)
+    # Filter weeds based on selected category
+    if selected_cat == "all":
+        filtered_weeds = wdata.WEEDS_DATA
+    elif selected_cat == "grass_sedge":
+        filtered_weeds = [w for w in wdata.WEEDS_DATA if w.get("category") in ("grass", "sedge")]
+    elif selected_cat == "broadleaf":
+        filtered_weeds = [w for w in wdata.WEEDS_DATA if w.get("category") == "broadleaf"]
+    elif selected_cat == "parasitic":
+        filtered_weeds = [w for w in wdata.WEEDS_DATA if w.get("category") == "parasitic"]
+    elif selected_cat == "aquatic_invasive":
+        filtered_weeds = [w for w in wdata.WEEDS_DATA if w.get("category") == "aquatic_invasive"]
+    else:
+        filtered_weeds = wdata.WEEDS_DATA
+
+    weed_options = {
+        w["id"]: (w["name_kn"] + f" ({w['botanical']})" if is_kn else w["name_en"] + f" ({w['botanical']})")
+        for w in filtered_weeds
+    }
+    
+    with col_wsel:
+        selected_weed_id = st.selectbox(
+            "ಕಳೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ {Select Weed}:" if is_kn else "Select problematic weed:",
+            options=list(weed_options.keys()),
+            format_func=lambda wid: weed_options[wid],
+            key="select_weed_choice"
+        )
+    
+    weed_item = next(w for w in filtered_weeds if w["id"] == selected_weed_id)
     
     with st.container(border=True):
         col_w1, col_w2 = st.columns([3, 1])
@@ -94,6 +127,21 @@ with tab_weed:
         tactics = weed_item["tactics_kn"] if is_kn else weed_item["tactics_en"]
         for idx, tactic in enumerate(tactics, 1):
             st.markdown(f"**{idx}.** {tactic}")
+
+    with st.expander("📋 " + ("ಎಲ್ಲಾ 20 ಪ್ರಮುಖ ಕಳೆಗಳ ಸಮಗ್ರ ಡೈರೆಕ್ಟರಿ {All 20 Problematic Weeds Quick Reference}" if is_kn else "All 20 Problematic Weeds Quick Reference Directory")):
+        import pandas as pd
+        summary_rows = [
+            {
+                ("ಕಳೆ {Weed}" if is_kn else "Weed"): w["name_kn"] if is_kn else w["name_en"],
+                ("ವೈಜ್ಞಾನಿಕ ಹೆಸರು {Botanical}" if is_kn else "Botanical Name"): w["botanical"],
+                ("ವರ್ಗ {Classification}" if is_kn else "Classification"): w["type"].split("(")[0].strip(),
+                ("ಮುಖ್ಯ ನೈಸರ್ಗಿಕ ಕ್ರಮ {Primary Tactic}" if is_kn else "Key Non-Chemical Tactic"): (
+                    w["tactics_kn"][0].split(":")[0].strip() if is_kn else w["tactics_en"][0].split("(")[0].strip()
+                ),
+            }
+            for w in wdata.WEEDS_DATA
+        ]
+        st.dataframe(pd.DataFrame(summary_rows), use_container_width=True, hide_index=True)
 
     st.markdown("---")
     st.markdown("### " + ("ಕಳೆ ದಮನಕಾರಿ ಮತ್ತು ಹಸಿರೆಲೆ ಗೊಬ್ಬರದ ಬೆಳೆಗಳು" if is_kn else "Allelopathic Smother & Cover Crops"))

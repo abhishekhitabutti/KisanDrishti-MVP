@@ -29,6 +29,18 @@ from i18n import t
 is_kn = (i18n.current_lang() == "kn")
 
 
+def find_nearest_district(lat: float, lon: float) -> str:
+    """Find the closest Karnataka district for given GPS coordinates."""
+    best_dist = float("inf")
+    best_d = "Belagavi"
+    for d_name, (d_lat, d_lon) in DISTRICTS.items():
+        dist = (lat - d_lat) ** 2 + (lon - d_lon) ** 2
+        if dist < best_dist:
+            best_dist = dist
+            best_d = d_name
+    return best_d
+
+
 def generate_leaflet_map_html(center_lat, center_lon, exact_points, primary_station, plot_acres=2.0, is_kn=True):
     """Generate high-precision interactive Leaflet map with Esri Satellite imagery and marker pins."""
     plot_radius_m = round(math.sqrt(max(0.5, plot_acres) * 4046.86) * 0.45, 1)
@@ -144,7 +156,7 @@ def generate_leaflet_map_html(center_lat, center_lon, exact_points, primary_stat
 
 
 # --- HERO SECTION ---
-hero_title = "ಬೋರ್‌ವೆಲ್ ನೀರು ಲಭ್ಯತೆ & ಆಳ ಅಂದಾಜು" if is_kn else "Borewell Water Advisory"
+hero_title = "ಬೋರ್‌ವೆಲ್ ನೀರು ಲಭ್ಯತೆ & ಆಳ ಅಂದಾಜು {Borewell Water Advisory}" if is_kn else "Borewell Water Advisory"
 hero_sub = (
     "ಮೊಬೈಲ್ ಜಿಪಿಎಸ್ {GPS} ಮೂಲಕ ನಿಮ್ಮ ಜಮೀನಿನ ನಿಖರ ಬೋರ್‌ವೆಲ್ ಪಾಯಿಂಟ್‌ಗಳು (🎯 ಪಾಯಿಂಟ್ 1 & 📍 ಪಾಯಿಂಟ್ 2), "
     "ಭಾರತ ಸರ್ಕಾರದ {India-WRIS / CGWB} ಉಪಗ್ರಹ ಅಂತರ್ಜಲ ದತ್ತಾಂಶ, ನೀರಿನ ಜಲಬಲ (ಇಂಚುಗಳಲ್ಲಿ) ಮತ್ತು ಗೂಗಲ್ ಮ್ಯಾಪ್ಸ್ ನೇರ ಮಾರ್ಗದರ್ಶನ."
@@ -179,13 +191,13 @@ except Exception:
 st.subheader("📍 ನಿಮ್ಮ ಜಮೀನಿನ ಸ್ಥಳ & ಜಿಪಿಎಸ್ ನಿರ್ದೇಶಾಂಕಗಳು {Field GPS Location}" if is_kn else "📍 Your Field Geographical Location & GPS")
 
 loc_mode_options = [
-    "ಮೊಬೈಲ್ ಜಿಪಿಎಸ್ / ಅಕ್ಷಾಂಶ-ರೇಖಾಂಶ {GPS Coordinates}" if is_kn else "Mobile GPS Coordinates",
-    "ಜಿಲ್ಲೆ ಮತ್ತು ತಾಲೂಕು {District & Taluk}" if is_kn else "District & Taluk"
+    "ಜಿಲ್ಲೆ ಮತ್ತು ತಾಲೂಕು {District & Taluk}" if is_kn else "District & Taluk",
+    "ಮೊಬೈಲ್ ಜಿಪಿಎಸ್ / ಅಕ್ಷಾಂಶ-ರೇಖಾಂಶ {GPS Coordinates}" if is_kn else "Mobile GPS Coordinates"
 ]
-default_mode_idx = 0 if detected_lat is not None else 0
+default_mode_idx = 1 if (detected_lat is not None and detected_lon is not None) else 0
 
 loc_mode = st.radio(
-    "ಸ್ಥಳ ಆಯ್ಕೆ ವಿಧಾನ:" if is_kn else "Location Input Mode:",
+    "ಸ್ಥಳ ಆಯ್ಕೆ ವಿಧಾನ {Location Input Mode}:" if is_kn else "Location Input Mode:",
     loc_mode_options,
     index=default_mode_idx,
     horizontal=True,
@@ -198,92 +210,8 @@ district = "Belagavi"
 c1, c2 = st.columns(2)
 
 with c1:
-    if "GPS" in loc_mode or "ಅಕ್ಷಾಂಶ" in loc_mode:
-        if detected_lat is not None and detected_lon is not None:
-            st.success(
-                f"📡 **{'ಲೈವ್ ಜಿಪಿಎಸ್ ಮೂಲಕ ನಿಮ್ಮ ಜಮೀನಿನ ಸ್ಥಳ ಪತ್ತೆಯಾಗಿದೆ!' if is_kn else 'Live GPS Location Detected!'}** "
-                f"ಅಕ್ಷಾಂಶ: `{detected_lat:.6f}° N`, ರೇಖಾಂಶ: `{detected_lon:.6f}° E` (ನಿಖರತೆ: ±{detected_acc} ಮೀಟರ್)"
-                if is_kn else
-                f"Latitude: `{detected_lat:.6f}° N`, Longitude: `{detected_lon:.6f}° E` (Accuracy: ±{detected_acc}m)"
-            )
-
-        # Interactive One-Click Live GPS Detection Button
-        gps_btn_html = f"""
-        <div style="background: #E8F5E9; border: 2px solid #2E7D32; border-radius: 10px; padding: 12px; margin-bottom: 12px; text-align: center; font-family: sans-serif;">
-            <span style="font-size: 13px; font-weight: bold; color: #1B5E20; display: block; margin-bottom: 8px;">
-                {'📱 ನಿಮ್ಮ ಮೊಬೈಲ್‌ನ ಜಿಪಿಎಸ್ ಆನ್ ಮಾಡಿ, 1-ಮೀಟರ್ ನಿಖರತೆಯಲ್ಲಿ ಜಮೀನಿನ ಸ್ಥಳ ಪಡೆಯಿರಿ:' if is_kn else '📱 Use your mobile phone GPS hardware for 1-meter field accuracy:'}
-            </span>
-            <button id="gpsBtn" onclick="getLocation()" style="background-color: #2E7D32; color: #ffffff; border: none; padding: 10px 22px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                {'📍 ನನ್ನ ಪ್ರಸ್ತುತ ಲೈವ್ ಜಿಪಿಎಸ್ ಸ್ಥಳ ಗುರುತಿಸಿ {Get Live GPS}' if is_kn else '📍 Fetch My Live GPS Location'}
-            </button>
-            <div id="gpsStatus" style="margin-top: 8px; font-size: 13px; color: #1B5E20; font-weight: 500;"></div>
-        </div>
-        <script>
-        function getLocation() {{
-            var btn = document.getElementById('gpsBtn');
-            var status = document.getElementById('gpsStatus');
-            if (!navigator.geolocation) {{
-                status.innerHTML = "{'❌ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಜಿಪಿಎಸ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.' if is_kn else '❌ Geolocation not supported.'}";
-                return;
-            }}
-            btn.innerHTML = "{'⏳ ಜಿಪಿಎಸ್ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ... {Acquiring GPS...}' if is_kn else '⏳ Acquiring GPS signal...'}";
-            btn.disabled = true;
-            navigator.geolocation.getCurrentPosition(
-                function(position) {{
-                    var lat = position.coords.latitude.toFixed(6);
-                    var lon = position.coords.longitude.toFixed(6);
-                    var acc = position.coords.accuracy ? position.coords.accuracy.toFixed(1) : "3.0";
-                    status.innerHTML = "✅ <b>{'ಜಿಪಿಎಸ್ ಸ್ಥಳ ಪತ್ತೆಯಾಗಿದೆ!' if is_kn else 'GPS Acquired!'}</b> " + lat + "° N, " + lon + "° E (±" + acc + "m)<br>{'ಪುಟ ನವೀಕರಿಸಲಾಗುತ್ತಿದೆ...' if is_kn else 'Updating field view...'}";
-                    try {{
-                        var currentUrl = new URL(window.parent.location.href);
-                        currentUrl.searchParams.set("gps_lat", lat);
-                        currentUrl.searchParams.set("gps_lon", lon);
-                        currentUrl.searchParams.set("gps_acc", acc);
-                        window.parent.location.href = currentUrl.href;
-                    }} catch(e) {{
-                        status.innerHTML += "<br>{'ದಯವಿಟ್ಟು ಕೆಳಗೆ ಈ ಅಕ್ಷಾಂಶ-ರೇಖಾಂಶಗಳನ್ನು ನಮೂದಿಸಿ:' if is_kn else 'Please enter coordinates below:'} <b>" + lat + ", " + lon + "</b>";
-                    }}
-                }},
-                function(error) {{
-                    btn.innerHTML = "{'📍 ನನ್ನ ಪ್ರಸ್ತುತ ಲೈವ್ ಜಿಪಿಎಸ್ ಸ್ಥಳ ಗುರುತಿಸಿ' if is_kn else '📍 Fetch My Live GPS Location'}";
-                    btn.disabled = false;
-                    var msg = "{'ಸ್ಥಳ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.' if is_kn else 'Unable to retrieve location.'}";
-                    if (error.code === error.PERMISSION_DENIED) {{
-                        msg = "{'⚠️ ದಯವಿಟ್ಟು ಬ್ರೌಸರ್‌ನಲ್ಲಿ Location Permission ಅನುಮತಿಸಿ.' if is_kn else '⚠️ Please grant browser Location permission.'}";
-                    }} else if (error.code === error.POSITION_UNAVAILABLE) {{
-                        msg = "{'⚠️ ಜಿಪಿಎಸ್ ಸಿಗ್ನಲ್ ದುರ್ಬಲವಾಗಿದೆ.' if is_kn else '⚠️ GPS signal unavailable.'}";
-                    }} else if (error.code === error.TIMEOUT) {{
-                        msg = "{'⚠️ ಜಿಪಿಎಸ್ ಸಮಯ ಮೀರಿದೆ. ಮರಳಿ ಪ್ರಯತ್ನಿಸಿ.' if is_kn else '⚠️ GPS request timed out.'}";
-                    }}
-                    status.innerHTML = "❌ " + msg;
-                }},
-                {{ enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }}
-            );
-        }}
-        </script>
-        """
-        components.html(gps_btn_html, height=130)
-
-        st.caption(
-            "ಅಥವಾ ನಿಮ್ಮ ಜಮೀನಿನ ಅಕ್ಷಾಂಶ-ರೇಖಾಂಶಗಳನ್ನು ನಮೂದಿಸಿ (ಬೆಳಗಾವಿ ಪೂರ್ವನಿಯೋಜಿತ: 15.8500°N, 74.5000°E):"
-            if is_kn else
-            "Or enter field coordinates manually (Belagavi default: 15.8500°N, 74.5000°E):"
-        )
-        col_g1, col_g2 = st.columns(2)
-        with col_g1:
-            val_lat = detected_lat if detected_lat is not None else 15.8500
-            user_lat_val = st.number_input(
-                "ಅಕ್ಷಾಂಶ {Latitude °N}:", min_value=11.5, max_value=18.5, value=val_lat, step=0.0001, format="%.6f"
-            )
-        with col_g2:
-            val_lon = detected_lon if detected_lon is not None else 74.5000
-            user_lon_val = st.number_input(
-                "ರೇಖಾಂಶ {Longitude °E}:", min_value=74.0, max_value=78.6, value=val_lon, step=0.0001, format="%.6f"
-            )
-        custom_lat, custom_lon = user_lat_val, user_lon_val
-        district = "Belagavi"
-    else:
-        # District & Taluk Dropdown
+    if "ಜಿಲ್ಲೆ" in loc_mode or "District" in loc_mode:
+        # District & Taluk Dropdown Mode
         if is_kn:
             d_keys = sorted(DISTRICTS_KN.keys(), key=lambda x: DISTRICTS_KN[x])
             kn_names = [DISTRICTS_KN[k] for k in d_keys]
@@ -304,6 +232,88 @@ with c1:
             custom_lat, custom_lon = matched_station["lat"], matched_station["lon"]
         else:
             custom_lat, custom_lon = DISTRICTS.get(district, (15.46, 75.01))
+
+        st.caption(
+            f"📍 {DISTRICTS_KN.get(district, district)}: `{custom_lat:.4f}° N, {custom_lon:.4f}° E`"
+        )
+    else:
+        # Mobile GPS Coordinates Mode
+        if detected_lat is not None and detected_lon is not None:
+            st.success(
+                f"📡 **{'ಲೈವ್ ಜಿಪಿಎಸ್ ಮೂಲಕ ನಿಮ್ಮ ಜಮೀನಿನ ಸ್ಥಳ ಪತ್ತೆಯಾಗಿದೆ!' if is_kn else 'Live GPS Location Detected!'}** "
+                f"ಅಕ್ಷಾಂಶ: `{detected_lat:.6f}° N`, ರೇಖಾಂಶ: `{detected_lon:.6f}° E` (ನಿಖರತೆ: ±{detected_acc}m)"
+                if is_kn else
+                f"Latitude: `{detected_lat:.6f}° N`, Longitude: `{detected_lon:.6f}° E` (Accuracy: ±{detected_acc}m)"
+            )
+
+        # Interactive Mobile GPS Detection Component
+        gps_btn_html = f"""
+        <div style="background: #E8F5E9; border: 2px solid #2E7D32; border-radius: 10px; padding: 12px; margin-bottom: 10px; text-align: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <span style="font-size: 13px; font-weight: bold; color: #1B5E20; display: block; margin-bottom: 8px;">
+                {'📱 ನಿಮ್ಮ ಮೊಬೈಲ್‌ನ ಜಿಪಿಎಸ್ ಆನ್ ಮಾಡಿ, ಹೊಲದಲ್ಲಿ ನಿಂತು ಬಟನ್ ಒತ್ತಿ:' if is_kn else '📱 Turn on mobile GPS, stand in your field, and tap:'}
+            </span>
+            <button id="gpsBtn" onclick="getLocation()" style="background-color: #2E7D32; color: #ffffff; border: none; padding: 10px 22px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.25);">
+                {'📍 ನನ್ನ ಪ್ರಸ್ತುತ ಲೈವ್ ಜಿಪಿಎಸ್ ಪಡೆಯಿರಿ {Fetch Live GPS}' if is_kn else '📍 Fetch My Live GPS Location'}
+            </button>
+            <div id="gpsStatus" style="margin-top: 8px; font-size: 13px; color: #1B5E20; font-weight: 500;"></div>
+        </div>
+        <script>
+        function getLocation() {{
+            var btn = document.getElementById('gpsBtn');
+            var status = document.getElementById('gpsStatus');
+            if (!navigator.geolocation) {{
+                status.innerHTML = "{'❌ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಜಿಪಿಎಸ್ ಬೆಂಬಲಿತವಾಗಿಲ್ಲ.' if is_kn else '❌ Geolocation not supported on this device.'}";
+                return;
+            }}
+            btn.innerHTML = "{'⏳ ಜಿಪಿಎಸ್ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ... {Acquiring GPS...}' if is_kn else '⏳ Acquiring GPS signal...'}";
+            btn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
+                function(position) {{
+                    var lat = position.coords.latitude.toFixed(6);
+                    var lon = position.coords.longitude.toFixed(6);
+                    var acc = position.coords.accuracy ? position.coords.accuracy.toFixed(1) : "3.0";
+                    btn.innerHTML = "{'✅ ಜಿಪಿಎಸ್ ಲಭ್ಯವಾಗಿದೆ {GPS Ready}' if is_kn else '✅ GPS Acquired'}";
+                    btn.style.backgroundColor = '#1B5E20';
+                    status.innerHTML = "<div style='background:#C8E6C9; padding:8px; border-radius:6px; margin-top:6px;'>📍 <b>" + lat + "° N, " + lon + "° E</b> (±" + acc + "m)<br><small>{'ದಯವಿಟ್ಟು ಈ ನಿರ್ದೇಶಾಂಕಗಳನ್ನು ಕೆಳಗಿನ ಬಾಕ್ಸ್‌ಗಳಲ್ಲಿ ನಮೂದಿಸಿ:' if is_kn else 'Please enter coordinates in boxes below:'}</small></div>";
+                }},
+                function(error) {{
+                    btn.innerHTML = "{'📍 ಪುನಃ ಪ್ರಯತ್ನಿಸಿ {Retry GPS}' if is_kn else '📍 Retry Live GPS Location'}";
+                    btn.disabled = false;
+                    var msg = "{'ಸ್ಥಳ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ.' if is_kn else 'Unable to retrieve location.'}";
+                    if (error.code === error.PERMISSION_DENIED) {{
+                        msg = "{'⚠️ ದಯವಿಟ್ಟು ಬ್ರೌಸರ್‌ನಲ್ಲಿ Location Permission ನೀಡಿ.' if is_kn else '⚠️ Please allow Location permission in your browser.'}";
+                    }} else if (error.code === error.POSITION_UNAVAILABLE) {{
+                        msg = "{'⚠️ ಜಿಪಿಎಸ್ ಸಿಗ್ನಲ್ ದುರ್ಬಲವಾಗಿದೆ. ತೆರೆದ ಆಕಾಶದ ಕೆಳಗೆ ಪ್ರಯತ್ನಿಸಿ.' if is_kn else '⚠️ GPS signal unavailable. Try standing under open sky.'}";
+                    }} else if (error.code === error.TIMEOUT) {{
+                        msg = "{'⚠️ ಜಿಪಿಎಸ್ ಸಮಯ ಮೀರಿದೆ. ಮರಳಿ ಪ್ರಯತ್ನಿಸಿ.' if is_kn else '⚠️ GPS request timed out.'}";
+                    }}
+                    status.innerHTML = "<span style='color:#C62828;'>❌ " + msg + "</span>";
+                }},
+                {{ enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }}
+            );
+        }}
+        </script>
+        """
+        components.html(gps_btn_html, height=135)
+
+        col_g1, col_g2 = st.columns(2)
+        with col_g1:
+            val_lat = detected_lat if detected_lat is not None else 15.8500
+            user_lat_val = st.number_input(
+                "ಅಕ್ಷಾಂಶ {Latitude °N}:", min_value=11.5, max_value=18.5, value=val_lat, step=0.0001, format="%.6f", key="input_user_lat"
+            )
+        with col_g2:
+            val_lon = detected_lon if detected_lon is not None else 74.5000
+            user_lon_val = st.number_input(
+                "ರೇಖಾಂಶ {Longitude °E}:", min_value=74.0, max_value=78.6, value=val_lon, step=0.0001, format="%.6f", key="input_user_lon"
+            )
+        custom_lat, custom_lon = user_lat_val, user_lon_val
+        # Automatically detect closest district hydrogeology
+        district = find_nearest_district(custom_lat, custom_lon)
+        st.info(
+            f"📍 **{'ಪತ್ತೆಯಾದ ಜಿಲ್ಲಾ ವಲಯ {Nearest District}:' if is_kn else 'Detected Regional Hydrogeology Zone:'}** "
+            f"**{DISTRICTS_KN.get(district, district)} ({district})**"
+        )
 
     # Land size and Topography
     col_ac, col_topo = st.columns(2)
@@ -506,9 +516,25 @@ for pt in exact_points:
         )
 
 # ==============================================================================
-# INTERACTIVE SATELLITE & FIELD GRID MAP
+# INTERACTIVE MAPS (STREAMLIT NATIVE MAP + ESRI SATELLITE HIGH RES)
 # ==============================================================================
 st.markdown("---")
+st.subheader("🗺️ " + ("ಜಮೀನಿನಲ್ಲಿ ಬೋರ್‌ವೆಲ್ ಪಾಯಿಂಟ್‌ಗಳ ನಕ್ಷೆ {Field & Borewell Points Map}" if is_kn else "Field & Borewell Points Map"))
+
+# Native fast map: 100% reliable across all devices and connections
+map_pts = [
+    {"lat": res["user_lat"], "lon": res["user_lon"]},
+    {"lat": exact_points[0]["lat"], "lon": exact_points[0]["lon"]},
+    {"lat": exact_points[1]["lat"], "lon": exact_points[1]["lon"]},
+    {"lat": exact_points[2]["lat"], "lon": exact_points[2]["lon"]},
+]
+st.map(pd.DataFrame(map_pts), latitude="lat", longitude="lon", zoom=16)
+st.caption(
+    "🎯 **ಪಾಯಿಂಟ್ 1 (ಪ್ರಮುಖ ಜಲಬಿಂದು)**, 📍 **ಪಾಯಿಂಟ್ 2 (ಪರ್ಯಾಯ ಜಲಬಿಂದು)**, ⚠️ **ಪಾಯಿಂಟ್ 3 (ಅಪಾಯಕಾರಿ ಬಂಡೆ)** ಮತ್ತು 🏡 **ಜಮೀನಿನ ಕೇಂದ್ರ**"
+    if is_kn else
+    "🎯 **Point 1 (Primary)**, 📍 **Point 2 (Alternate)**, ⚠️ **Point 3 (High Risk)**, and 🏡 **Field Center**"
+)
+
 with st.expander("🛰️ " + ("ಉಪಗ್ರಹ ಫೋಟೋ & ಜಮೀನಿನ ನಿಖರ ಪಾಯಿಂಟ್ ನಕ್ಷೆ {Satellite Field Map}" if is_kn else "Satellite Field Map & Exact Borewell Points"), expanded=True):
     st.markdown(
         f"*{'ಕೆಳಗಿನ ಉಪಗ್ರಹ ನಕ್ಷೆಯಲ್ಲಿ ನಿಮ್ಮ ಜಮೀನಿನ ಗಡಿ, ಪ್ರಮುಖ ಜಲಬಿಂದು (🎯 ಪಾಯಿಂಟ್ 1), ಪರ್ಯಾಯ ಜಲಬಿಂದು (📍 ಪಾಯಿಂಟ್ 2) ಮತ್ತು ಅಧಿಕ ಅಪಾಯದ ವಲಯವನ್ನು (⚠️ ಪಾಯಿಂಟ್ 3) ಪ್ರದರ್ಶಿಸಲಾಗಿದೆ:' if is_kn else 'Interactive satellite view showing your plot perimeter, Point 1 target, Point 2 alternate, and Point 3 avoid zone:'}*"
