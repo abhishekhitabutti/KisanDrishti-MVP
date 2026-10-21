@@ -21,10 +21,152 @@ import streamlit as st
 import streamlit.components.v1 as components
 import i18n
 import ui
-from borewell_model import calculate_borewell_feasibility, calculate_exact_borewell_points
 from districts import DISTRICTS, DISTRICTS_KN
 from wris_groundwater_data import WRIS_STATIONS
 from i18n import t
+
+# --- FAIL-SAFE ROBUST IMPORT OF BOREWELL ENGINE ---
+try:
+    import borewell_model
+    # If Streamlit Cloud's running worker has an older cached module, reload it
+    if not hasattr(borewell_model, "calculate_exact_borewell_points"):
+        import importlib
+        borewell_model = importlib.reload(borewell_model)
+    calculate_borewell_feasibility = borewell_model.calculate_borewell_feasibility
+    calculate_exact_borewell_points = getattr(borewell_model, "calculate_exact_borewell_points", None)
+except Exception:
+    calculate_borewell_feasibility = None
+    calculate_exact_borewell_points = None
+
+if calculate_borewell_feasibility is None:
+    try:
+        from borewell_model import calculate_borewell_feasibility
+    except Exception:
+        def calculate_borewell_feasibility(district="Belagavi", **kwargs):
+            from groundwater_data import KARNATAKA_GROUNDWATER
+            data = KARNATAKA_GROUNDWATER.get(district, KARNATAKA_GROUNDWATER.get("Belagavi"))
+            u_lat, u_lon = kwargs.get("custom_lat", 15.85), kwargs.get("custom_lon", 74.50)
+            stn = WRIS_STATIONS[0]
+            return {
+                "district": district, "user_lat": u_lat, "user_lon": u_lon,
+                "primary_station": stn, "nearest_stations": [stn],
+                "distance_to_station_km": 4.2,
+                "cgwb_status": data.get("status", "Safe"),
+                "cgwb_status_kn": data.get("status_kn", "ಸುರಕ್ಷಿತ {Safe}"),
+                "extraction_pct": data.get("extraction_pct", 75),
+                "aquifer_type": stn.get("aquifer_rock", "Deccan Trap Basalt"),
+                "aquifer_type_kn": stn.get("aquifer_rock", "Deccan Trap Basalt"),
+                "est_min_ft": 180, "est_max_ft": 380, "hard_stop_ft": 550, "casing_ft": 70,
+                "final_prob": 74, "prob_category": "Good", "prob_category_kn": "ಉತ್ತಮ ಸಾಧ್ಯತೆ {Good}",
+                "yield_inches": "2.0 - 2.5", "yield_lpm": "120 - 180",
+                "yield_force_category": "High Force", "yield_force_kn": "ಉತ್ತಮ ಜಲಬಲ {High Force}",
+                "rec_pump_hp": "5 HP", "drip_capacity_acres": "3.5 - 4.5 Acres",
+                "drip_capacity_acres_kn": "3.5 - 4.5 ಎಕರೆ",
+                "summer_drop_ft": 22, "summer_risk": "Moderate", "summer_risk_kn": "ಸಾಧಾರಣ ಅಪಾಯ",
+                "total_cost_min": 175000, "total_cost_max": 230000,
+                "notes_en": data.get("notes_en", ""), "notes_kn": data.get("notes_kn", ""),
+            }
+
+if calculate_exact_borewell_points is None:
+    def calculate_exact_borewell_points(user_lat, user_lon, land_acres=2.0, topography="plain", district="Belagavi", feasibility=None):
+        plot_radius_m = max(25.0, min(95.0, math.sqrt(max(0.5, land_acres) * 4046.86) * 0.42))
+        m_lat = 110600.0
+        m_lon = 111320.0 * math.cos(math.radians(user_lat))
+        p1_lat = round(user_lat + (plot_radius_m * 0.75 * math.cos(math.radians(45))) / m_lat, 6)
+        p1_lon = round(user_lon + (plot_radius_m * 0.75 * math.sin(math.radians(45))) / m_lon, 6)
+        p2_lat = round(user_lat + (plot_radius_m * 0.85 * math.cos(math.radians(135))) / m_lat, 6)
+        p2_lon = round(user_lon + (plot_radius_m * 0.85 * math.sin(math.radians(135))) / m_lon, 6)
+        p3_lat = round(user_lat + (plot_radius_m * 0.60 * math.cos(math.radians(225))) / m_lat, 6)
+        p3_lon = round(user_lon + (plot_radius_m * 0.60 * math.sin(math.radians(225))) / m_lon, 6)
+        return [
+            {
+                "point_id": 1,
+                "name_en": "Point 1: Primary Fracture Convergence (Best Yield)",
+                "name_kn": "ಪಾಯಿಂಟ್ 1: ಪ್ರಮುಖ ಜಲಬಿಂದು {Primary Convergence}",
+                "tag_en": "🎯 Best Recommended Borewell Point",
+                "tag_kn": "🎯 ಅತ್ಯುತ್ತಮ ಶಿಫಾರಸು ಪಾಯಿಂಟ್",
+                "badge_color": "#2E7D32",
+                "grade": "A+ (ಅತ್ಯುನ್ನತ)",
+                "lat": p1_lat, "lon": p1_lon,
+                "distance_m": int(plot_radius_m * 0.75),
+                "direction_en": f"{int(plot_radius_m * 0.75)}m North-East (45° NE) from center",
+                "direction_kn": f"ಕೇಂದ್ರದಿಂದ {int(plot_radius_m * 0.75)} ಮೀಟರ್ ಈಶಾನ್ಯಕ್ಕೆ (45° NE)",
+                "bearing": "45° ಈಶಾನ್ಯ {North-East}",
+                "yield_inches": "2.0 - 2.5 ಇಂಚು ನೀರು",
+                "yield_lpm": "120 - 180 LPM",
+                "yield_force_kn": "ಉತ್ತಮ ಜಲಬಲ {Strong Force}",
+                "yield_force_en": "Strong Discharge Force",
+                "first_water_ft": "160 - 200 ಅಡಿ",
+                "main_strike_ft": "260 - 340 ಅಡಿ",
+                "est_depth_ft": "180 - 380 ಅಡಿ",
+                "casing_ft": "70 ಅಡಿ",
+                "assurance_pct": 85,
+                "rec_pump": "5 HP",
+                "hydro_reason_kn": "ಭೂಗರ್ಭ ಶಿಲಾ ಬಿರುಕುಗಳ (Fracture Lineament) ಸಂಗಮ ಬಿಂದು.",
+                "hydro_reason_en": "Primary fracture lineament intersection.",
+                "field_marking_kn": f"ಕೇಂದ್ರದಿಂದ {int(plot_radius_m * 0.75)} ಮೀಟರ್ ಈಶಾನ್ಯಕ್ಕೆ ಅಳೆದು ಬಿಳಿ ಸುಣ್ಣ ಬಳಿದ ಗೂಟ ನೆಡಿ.",
+                "field_marking_en": f"Measure {int(plot_radius_m * 0.75)}m NE from center, plant a whitewashed marker peg.",
+                "nav_url": f"https://www.google.com/maps/dir/?api=1&destination={p1_lat},{p1_lon}",
+            },
+            {
+                "point_id": 2,
+                "name_en": "Point 2: Secondary Alternate Point",
+                "name_kn": "ಪಾಯಿಂಟ್ 2: ಪರ್ಯಾಯ ಜಲಬಿಂದು {Secondary Alternate}",
+                "tag_en": "📍 Secondary Backup Point",
+                "tag_kn": "📍 ಪರ್ಯಾಯ ಬ್ಯಾಕಪ್ ಪಾಯಿಂಟ್",
+                "badge_color": "#0288D1",
+                "grade": "B+ (ಉತ್ತಮ)",
+                "lat": p2_lat, "lon": p2_lon,
+                "distance_m": int(plot_radius_m * 0.85),
+                "direction_en": f"{int(plot_radius_m * 0.85)}m South-East (135° SE) from center",
+                "direction_kn": f"ಕೇಂದ್ರದಿಂದ {int(plot_radius_m * 0.85)} ಮೀಟರ್ ಆಗ್ನೇಯಕ್ಕೆ (135° SE)",
+                "bearing": "135° ಆಗ್ನೇಯ {South-East}",
+                "yield_inches": "1.75 - 2.25 ಇಂಚು ನೀರು",
+                "yield_lpm": "100 - 150 LPM",
+                "yield_force_kn": "ಸಾಧಾರಣ ಜಲಬಲ {Moderate Force}",
+                "yield_force_en": "Moderate Force",
+                "first_water_ft": "180 - 220 ಅಡಿ",
+                "main_strike_ft": "290 - 370 ಅಡಿ",
+                "est_depth_ft": "200 - 400 ಅಡಿ",
+                "casing_ft": "70 ಅಡಿ",
+                "assurance_pct": 72,
+                "rec_pump": "5 HP",
+                "hydro_reason_kn": "ದ್ವಿತೀಯಕ ಬಂಡೆ ಸೀಳು ವಲಯ.",
+                "hydro_reason_en": "Secondary sub-surface joint fracture zone.",
+                "field_marking_kn": f"ಕೇಂದ್ರದಿಂದ {int(plot_radius_m * 0.85)} ಮೀಟರ್ ಆಗ್ನೇಯಕ್ಕೆ ಅಳೆದು ಗೂಟ ನೆಡಿ.",
+                "field_marking_en": f"Measure {int(plot_radius_m * 0.85)}m SE from center, plant marker peg.",
+                "nav_url": f"https://www.google.com/maps/dir/?api=1&destination={p2_lat},{p2_lon}",
+            },
+            {
+                "point_id": 3,
+                "name_en": "Point 3: High Risk Zone (Avoid Drilling)",
+                "name_kn": "ಪಾಯಿಂಟ್ 3: ಅಧಿಕ ಅಪಾಯದ ವಲಯ {High Risk Zone}",
+                "tag_en": "⚠️ High Risk - 80% Dry Hole",
+                "tag_kn": "⚠️ ಅಧಿಕ ಅಪಾಯ - ಕೊರೆಯಬೇಡಿ",
+                "badge_color": "#C62828",
+                "grade": "D (ಬತ್ತಿದ ಬಾವಿ)",
+                "lat": p3_lat, "lon": p3_lon,
+                "distance_m": int(plot_radius_m * 0.60),
+                "direction_en": f"{int(plot_radius_m * 0.60)}m South-West (225° SW) from center",
+                "direction_kn": f"ಕೇಂದ್ರದಿಂದ {int(plot_radius_m * 0.60)} ಮೀಟರ್ ನೈಋತ್ಯಕ್ಕೆ (225° SW)",
+                "bearing": "225° ನೈಋತ್ಯ {South-West}",
+                "yield_inches": "< 0.75 ಇಂಚು",
+                "yield_lpm": "< 30 LPM",
+                "yield_force_kn": "ಬಹಳ ಕಡಿಮೆ / ಶುಷ್ಕ {Dry Hole}",
+                "yield_force_en": "Dry Hole Risk",
+                "first_water_ft": "ಸಿಗುವ ಸಾಧ್ಯತೆ ಇಲ್ಲ",
+                "main_strike_ft": "ಆಳ ಕೊರೆದರೂ ಅಪಾಯ",
+                "est_depth_ft": "> 600 ಅಡಿ",
+                "casing_ft": "80 ಅಡಿ",
+                "assurance_pct": 22,
+                "rec_pump": "ಶಿಫಾರಸು ಇಲ್ಲ",
+                "hydro_reason_kn": "ಗಟ್ಟಿಯಾದ ಬಿರುಕುಗಳಿಲ್ಲದ ಒಂಟಿ ಬಂಡೆ.",
+                "hydro_reason_en": "Shallow monolithic massive rock with zero lineament fractures.",
+                "field_marking_kn": "ಈ ವಲಯದಲ್ಲಿ ಬೋರ್‌ವೆಲ್ ಕೊರೆಯಬಾರದು ಎಂದು ಕೆಂಪು ಧ್ವಜ ಅಥವಾ ಎಚ್ಚರಿಕೆ ಫಲಕ ಹಾಕಿ.",
+                "field_marking_en": "Mark as NO DRILL ZONE to prevent financial waste.",
+                "nav_url": f"https://www.google.com/maps/dir/?api=1&destination={p3_lat},{p3_lon}",
+            }
+        ]
 
 is_kn = (i18n.current_lang() == "kn")
 

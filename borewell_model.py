@@ -5,6 +5,13 @@ GPS mobile coordinates, Inverse Distance Weighting (IDW), topography, and empiri
 URL: https://indiawris.gov.in/wris/#/groundWater
 """
 import math
+import sys
+from pathlib import Path
+
+ROOT_DIR = str(Path(__file__).resolve().parent)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
 from groundwater_data import KARNATAKA_GROUNDWATER
 from wris_groundwater_data import WRIS_STATIONS
 from districts import DISTRICTS
