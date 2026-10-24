@@ -110,7 +110,7 @@ crops = sorted(profiles)
 is_kn = (i18n.current_lang() == "kn")
 
 # Header
-hero_title = "ಬೆಳೆ ಸಲಹೆಗಾರ {Crop Advisor}" if is_kn else "Crop Advisor"
+hero_title = "ಕೃಷಿನುಡಿ {KrushiNudi} · ಬೆಳೆ ಸಲಹೆಗಾರ {Crop Advisor}" if is_kn else "KrushiNudi · Crop Advisor"
 hero_sub = (
     "ಮಣ್ಣಿನ N-P-K ಪೋಷಕಾಂಶಗಳು, pH ಮತ್ತು ಹವಾಮಾನಕ್ಕೆ ತಕ್ಕಂತೆ ಗರಿಷ್ಠ ಇಳುವರಿಯ ವೈಜ್ಞಾನಿಕ ಬೆಳೆ ಶಿಫಾರಸು"
     if is_kn else
@@ -334,3 +334,4 @@ with st.container(border=True):
 ui.feedback_box()
 st.markdown("---")
 st.caption("© 2026 Abhishek Hitabutti | KrushiNudi Crop Advisor")
+

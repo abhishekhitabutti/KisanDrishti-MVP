@@ -41,7 +41,7 @@ def run_weather(payload=None, fail=False, monkeypatch=None):
 
 
 def test_main_page_gives_top_three_crops():
-    at = AppTest.from_file(str(ROOT / "views" / "home.py"), default_timeout=30).run()
+    at = AppTest.from_file(str(ROOT / "views" / "crop_advisor.py"), default_timeout=30).run()
     assert not at.exception
     at.button[0].click().run()
     assert not at.exception
@@ -78,10 +78,19 @@ def test_schemes_page_checklist():
     assert any("All documents ready" in s.value for s in at.success)
 
 
-PAGES = [ROOT / "views" / "home.py", ROOT / "views" / "weather.py", ROOT / "views" / "schemes.py",
-         ROOT / "views" / "crop_doctor.py", ROOT / "views" / "season_planner.py", ROOT / "views" / "about.py",
-         ROOT / "views" / "guide.py", ROOT / "views" / "borewell.py", ROOT / "views" / "weed_nutrient.py",
-         ROOT / "views" / "spray_prescription.py"]
+PAGES = [
+    ROOT / "views" / "home.py",
+    ROOT / "views" / "weather.py",
+    ROOT / "views" / "schemes.py",
+    ROOT / "views" / "crop_doctor.py",
+    ROOT / "views" / "season_planner.py",
+    ROOT / "views" / "about.py",
+    ROOT / "views" / "guide.py",
+    ROOT / "views" / "borewell.py",
+    ROOT / "views" / "weed_nutrient.py",
+    ROOT / "views" / "spray_prescription.py",
+    ROOT / "views" / "crop_advisor.py"
+]
 
 
 def all_markdown(at):
@@ -103,7 +112,7 @@ def test_feedback_form_link_can_be_set_without_code_changes(monkeypatch):
 
 
 def test_home_page_points_to_more_crops():
-    at = AppTest.from_file(str(PAGES[0]), default_timeout=30).run()
+    at = AppTest.from_file(str(ROOT / "views" / "crop_advisor.py"), default_timeout=30).run()
     assert "gaez.fao.org/pages/ecocrop-search" in all_markdown(at)
 
 
@@ -119,5 +128,3 @@ def test_spray_prescription_page_renders_cleanly():
     assert not at.exception
     text = all_markdown(at)
     assert ("Smart Spray Prescription" in text or "ಔಷಧ & ಪೋಷಕಾಂಶ ಚೀಟಿ" in text or "ಔಷಧ &amp; ಪೋಷಕಾಂಶ ಚೀಟಿ" in text)
-
-

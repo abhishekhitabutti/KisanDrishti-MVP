@@ -5,11 +5,18 @@ from streamlit.testing.v1 import AppTest
 
 ROOT = Path(__file__).resolve().parent.parent
 ROUTER = str(ROOT / "app.py")
-VIEWS = {"views/guide.py": "How to Use KrushiNudi", "views/borewell.py": "Borewell Water Advisory",
-         "views/weed_nutrient.py": "Weed & Nutrient Advisor",
-         "views/crop_doctor.py": "Crop Doctor", "views/spray_prescription.py": "Smart Spray Prescription",
-         "views/season_planner.py": "Season planner", "views/weather.py": "Weather precautions",
-         "views/schemes.py": "Schemes and help", "views/about.py": "About and privacy"}
+VIEWS = {
+    "views/guide.py": "How to Use KrushiNudi",
+    "views/borewell.py": "Borewell Water Advisory",
+    "views/weed_nutrient.py": "Weed & Nutrient Advisor",
+    "views/crop_doctor.py": "Crop Doctor",
+    "views/spray_prescription.py": "Smart Spray Prescription",
+    "views/season_planner.py": "Season planner",
+    "views/weather.py": "Weather precautions",
+    "views/schemes.py": "Schemes and help",
+    "views/about.py": "About and privacy",
+    "views/crop_advisor.py": "Crop Advisor",
+}
 
 
 def element_types(node, found=None):
@@ -33,7 +40,8 @@ def test_home_page_has_landing_cards_and_the_advisor():
     assert not at.exception
     text = " ".join(m.value for m in at.markdown)
     assert "Beta" in text and "crops in the advisor" in text and "Crop Doctor" in text
-    assert len(at.slider) == 7
+    adv_at = AppTest.from_file(str(ROOT / "views" / "crop_advisor.py"), default_timeout=30).run()
+    assert len(adv_at.slider) == 7
 
 
 def test_about_page_is_honest_about_privacy_and_limits():

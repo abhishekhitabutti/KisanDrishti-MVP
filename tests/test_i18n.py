@@ -17,6 +17,7 @@ KANNADA_CHAR = re.compile(r"[\u0c80-\u0cff]")
 PLACEHOLDER = re.compile(r"\{(\w+)\}")
 ROUTER = str(ROOT / "app.py")
 HOME, WEATHER, SCHEMES = str(ROOT / "views" / "home.py"), "views/weather.py", "views/schemes.py"
+ADVISOR = str(ROOT / "views" / "crop_advisor.py")
 DOCTOR, PLANNER = str(ROOT / "views" / "crop_doctor.py"), str(ROOT / "views" / "season_planner.py")
 
 
@@ -76,6 +77,12 @@ def test_home_page_in_kannada(monkeypatch):
     at = run_in_kannada(HOME)
     assert not at.exception
     assert "ಕೃಷಿನುಡಿ" in markdown_text(at)
+
+
+def test_crop_advisor_in_kannada(monkeypatch):
+    at = run_in_kannada(ADVISOR)
+    assert not at.exception
+    assert "ಕೃಷಿನುಡಿ" in markdown_text(at)
     at.button[0].click().run()
     assert not at.exception
     assert any("ಅತ್ಯುತ್ತಮ ಹೊಂದಾಣಿಕೆ" in s.value for s in at.success)
@@ -113,8 +120,9 @@ def test_planner_and_other_pages_in_kannada():
 
 @pytest.mark.parametrize("path,state", [
     (ROUTER, {}),
-    (HOME, {"advice": {"inputs": {"N": 60, "P": 50, "K": 50, "ph": 6.5, "temperature": 25.0, "humidity": 65.0, "rainfall": 100.0},
-                       "top": [("rice", 0.9), ("jute", 0.1), ("maize", 0.0)]}}),
+    (HOME, {}),
+    (ADVISOR, {"advice": {"inputs": {"N": 60, "P": 50, "K": 50, "ph": 6.5, "temperature": 25.0, "humidity": 65.0, "rainfall": 100.0},
+                          "top": [("rice", 0.9), ("jute", 0.1), ("maize", 0.0)]}}),
     (PLANNER, {}),
     (DOCTOR, {"doctor": {"result": {"crop": "rice", "category": "disease", "kb_id": "rice_blast", "name": "Rice blast",
                                     "confidence": "medium", "symptoms_seen": ["spots"], "could_also_be": ["Brown spot"],
