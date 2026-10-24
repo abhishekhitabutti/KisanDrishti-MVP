@@ -47,10 +47,20 @@ def crop(name):
 
 def language_picker(translated=True):
     lang = current_lang()
-    choice = st.radio("Language / ಭಾಷೆ", list(LANGS.values()), index=0 if lang == "en" else 1, horizontal=True, key="lang_radio")
-    st.session_state["lang"] = "kn" if choice == LANGS["kn"] else "en"
-    if st.session_state["lang"] == "kn":
-        st.caption(t(REVIEW_NOTICE))
-        if not translated:
-            st.info(t(UNTRANSLATED))
+    with st.sidebar:
+        st.markdown("---")
+        st.markdown("**🌐 ಭಾಷೆ / Language**")
+        choice = st.radio(
+            "Language / ಭಾಷೆ",
+            list(LANGS.values()),
+            index=0 if lang == "en" else 1,
+            horizontal=True,
+            key="lang_radio",
+            label_visibility="collapsed",
+        )
+        st.session_state["lang"] = "kn" if choice == LANGS["kn"] else "en"
+        if st.session_state["lang"] == "kn":
+            st.caption(t(REVIEW_NOTICE))
+            if not translated:
+                st.info(t(UNTRANSLATED))
     return st.session_state["lang"]

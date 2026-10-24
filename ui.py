@@ -80,6 +80,69 @@ CSS = """
 [data-testid="stSidebar"] {background: #F1F8E9;}
 .kd-warn {background: #FFF8E1; border-left: 5px solid #F9A825; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 .kd-stop {background: #FDECEA; border-left: 5px solid #C62828; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
+
+/* --- Floto Usability Audit Fix 2: Utility Icons Discoverability & Affordance --- */
+header[data-testid="stHeader"] {
+  background: transparent !important;
+  z-index: 99 !important;
+}
+[data-testid="stToolbar"] {
+  right: 1.25rem !important;
+  top: 0.6rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+[data-testid="stToolbar"] button,
+[data-testid="stHeader"] button,
+button[data-testid="baseButton-headerNoPadding"],
+[data-testid="stActionButton"] button,
+[data-testid="stToolbarActionButton"] {
+  background: #ffffff !important;
+  color: #1B5E20 !important;
+  border: 1.5px solid #A5D6A7 !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  min-height: 38px !important;
+  min-width: 38px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+[data-testid="stToolbar"] button:hover,
+[data-testid="stHeader"] button:hover {
+  background: #E8F5E9 !important;
+  border-color: #2E7D32 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2) !important;
+}
+[data-testid="stToolbar"] svg,
+[data-testid="stHeader"] svg {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  fill: #1B5E20 !important;
+}
+
+/* --- Floto Usability Audit Fix 3: Manage App Viewport Spacing & Padding --- */
+#manage-app-button,
+[data-testid="manage-app-button"],
+div[class*="viewerBadge_container"],
+div[class*="viewerBadge"],
+div[class*="manageApp"],
+.viewerBadge_container__r5y7m,
+.viewerBadge_link__qRIco {
+  bottom: 24px !important;
+  right: 24px !important;
+  margin-bottom: 8px !important;
+  margin-right: 8px !important;
+  padding: 8px 16px !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22) !important;
+  background-color: #ffffff !important;
+  border: 1px solid #C8E6C9 !important;
+  z-index: 9999 !important;
+}
 </style>
 """
 

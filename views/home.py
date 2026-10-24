@@ -48,10 +48,21 @@ n_crops = load_crop_count()
 is_kn = (i18n.current_lang() == "kn")
 
 # ==============================================================================
-# 1. KRUSHINUDI SIGNATURE BRAND HERO BANNER (IMAGES 1 & 4)
+# 1. KRUSHINUDI CONSOLIDATED UNIFIED HERO SECTION (FLOTO AUDIT RESOLUTION)
 # ==============================================================================
+banner_sub = (
+    "ಕೃಷಿನುಡಿ {KrushiNudi} · ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ · ಕರ್ನಾಟಕದ ರೈತರ ವಿಶ್ವಾಸಾರ್ಹ ಡಿಜಿಟಲ್ ಕೃಷಿ ಸಂಗಾತಿ"
+    if is_kn else
+    "KrushiNudi · By Farmers, For Farmers · Karnataka's Trusted Digital Agriculture Companion"
+)
+banner_tag = (
+    "✨ ಚತುರ ಒಳನೋಟಗಳು · ಉತ್ತಮ ಕೃಷಿ · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {Smart Farm Advisory}"
+    if is_kn else
+    "✨ Smarter Insights · Better Farming · Smart Farm Advisory"
+)
+
 st.markdown(
-    """
+    f"""
     <div class="kn-brand-banner">
         <div class="kn-brand-title">
             <span>🌾</span> KrushiNudi <span>🍃</span>
@@ -59,21 +70,16 @@ st.markdown(
         <div class="kn-brand-tagline">
             — The Voice of Intelligent Agriculture —
         </div>
-        <div style="font-size: 0.88rem; color: #E8F5E9; margin-top: 6px; font-weight: 500;">
-            ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ · ಕರ್ನಾಟಕದ ರೈತರ ವಿಶ್ವಾಸಾರ್ಹ ಡಿಜಿಟಲ್ ಕೃಷಿ ಸಂಗಾತಿ
+        <div style="font-size: 0.95rem; color: #E8F5E9; margin-top: 8px; font-weight: 500;">
+            {banner_sub}
+        </div>
+        <div style="font-size: 0.85rem; color: #C8E6C9; margin-top: 6px; font-style: italic;">
+            {banner_tag}
         </div>
     </div>
     """,
     unsafe_allow_html=True
 )
-
-# Preserve markdown hero element for test backwards-compatibility
-ui.hero(
-    "ಕೃಷಿನುಡಿ {KrushiNudi}" if is_kn else "KrushiNudi",
-    "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {Smart Farm Advisory · The Voice of Intelligent Agriculture}" if is_kn else "Smart Farm Advisory · The Voice of Intelligent Agriculture",
-    "🌾"
-)
-st.markdown("✨ *ಚತುರ ಒಳನೋಟಗಳು. ಉತ್ತಮ ಕೃಷಿ. {Smarter Insights. Better Farming.}*" if is_kn else "✨ *Smarter Insights. Better Farming.*")
 
 # Beta Badge & Statistics Counter
 st.markdown(ui.badge(t("Beta"), "medium") + " " + escape(t("Guidance comes from published sources and expert review is in progress.")), unsafe_allow_html=True)
