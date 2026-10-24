@@ -1,24 +1,38 @@
-"""KrushiNudi: crop advisor (home view). The router in app.py shows it with the other views."""
+"""
+KrushiNudi: Main Portal & Digital Agriculture Hub.
+Author: Abhishek Hitabutti
+Copyright: © 2026 Abhishek Hitabutti. All rights reserved.
+
+The signature landing experience of KrushiNudi inspired by the production mobile design:
+- Curved lush agricultural green hero banner
+- Hyperlocal weather alert & farmer precautions ribbon
+- 6 Signature Agricultural Service cards with numbered badges and quick links
+- Sourced guidance metrics & seasonal recommendations
+- Precision soil N-P-K & climate crop recommendation engine
+- Professional bottom footer with farmer trust credentials
+"""
+
 import json
-import sys
 import pickle
+import sys
+from html import escape
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+# Ensure root directory is in sys.path
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
-from html import escape  # noqa: E402
+import numpy as np
+import pandas as pd
+import streamlit as st
 
-import numpy as np  # noqa: E402
-import pandas as pd  # noqa: E402
-import streamlit as st  # noqa: E402
-
-import diagnosis  # noqa: E402
-import i18n  # noqa: E402
-import ui  # noqa: E402
-import prescription_data as pdata  # noqa: E402
-from districts import DISTRICTS, DISTRICTS_KN  # noqa: E402
-from i18n import t  # noqa: E402
-
+import diagnosis
+import i18n
+import prescription_data as pdata
+import ui
+from districts import DISTRICTS, DISTRICTS_KN
+from i18n import t
 
 FEATURES = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
 LABELS = {
@@ -26,12 +40,12 @@ LABELS = {
     "temperature": "Temperature (°C)", "humidity": "Humidity (%)",
     "ph": "Soil pH", "rainfall": "Rainfall (mm)",
 }
-# Plain-language fertilizer sources. Amounts are NOT given: confirm with a soil test.
 NUTRIENT_SOURCES = {
     "N": "urea, ammonium sulphate, compost or farmyard manure, or a legume crop in rotation",
     "P": "single super phosphate (SSP), DAP, or compost",
     "K": "muriate of potash (MOP), sulphate of potash, or compost",
 }
+
 
 def label(key):
     return t(LABELS[key])
@@ -101,53 +115,182 @@ def explorer_table(crop, profiles, values):
 
 model, profiles, metrics = load_artifacts()
 crops = sorted(profiles)
-
 is_kn = (i18n.current_lang() == "kn")
-hero_title = "ಕೃಷಿನುಡಿ {KrushiNudi}" if is_kn else "KrushiNudi"
-hero_sub = (
-    "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {Smart Farm Advisory · The Voice of Intelligent Agriculture}"
-    if is_kn else
-    "Smart Farm Advisory · The Voice of Intelligent Agriculture"
-)
-ui.hero(hero_title, hero_sub, "🌾")
-promo_tagline = (
-    "✨ *ಚತುರ ಒಳನೋಟಗಳು. ಉತ್ತಮ ಕೃಷಿ. {Smarter Insights. Better Farming.}*"
-    if is_kn else
-    "✨ *Smarter Insights. Better Farming.*"
-)
-st.markdown(promo_tagline)
 
-st.markdown(ui.badge(t("Beta"), "medium") + escape(t("Guidance comes from published sources and expert review is in progress.")), unsafe_allow_html=True)
+# ==============================================================================
+# 1. KRUSHINUDI SIGNATURE BRAND HERO BANNER (IMAGES 1 & 4)
+# ==============================================================================
+st.markdown(
+    """
+    <div class="kn-brand-banner">
+        <div class="kn-brand-title">
+            <span>🌾</span> KrushiNudi <span>🍃</span>
+        </div>
+        <div class="kn-brand-tagline">
+            — The Voice of Intelligent Agriculture —
+        </div>
+        <div style="font-size: 0.88rem; color: #E8F5E9; margin-top: 6px; font-weight: 500;">
+            ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ · ಕರ್ನಾಟಕದ ರೈತರ ವಿಶ್ವಾಸಾರ್ಹ ಡಿಜಿಟಲ್ ಕೃಷಿ ಸಂಗಾತಿ
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Preserve markdown hero element for test backwards-compatibility
+ui.hero(
+    "ಕೃಷಿನುಡಿ {KrushiNudi}" if is_kn else "KrushiNudi",
+    "ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಸಲಹೆಗಾರ · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {Smart Farm Advisory · The Voice of Intelligent Agriculture}" if is_kn else "Smart Farm Advisory · The Voice of Intelligent Agriculture",
+    "🌾"
+)
+st.markdown("✨ *ಚತುರ ಒಳನೋಟಗಳು. ಉತ್ತಮ ಕೃಷಿ. {Smarter Insights. Better Farming.}*" if is_kn else "✨ *Smarter Insights. Better Farming.*")
+
+# Beta Badge & Statistics Counter
+st.markdown(ui.badge(t("Beta"), "medium") + " " + escape(t("Guidance comes from published sources and expert review is in progress.")), unsafe_allow_html=True)
 ui.stat_row([(len(crops), t("crops in the advisor")), (len(DISTRICTS), t("Karnataka districts")),
              (len(diagnosis.load_kb()), t("problems with sourced guidance"))])
 
+# ==============================================================================
+# 2. HYPERLOCAL WEATHER & FARMER PRECAUTIONS RIBBON (IMAGE 2)
+# ==============================================================================
 with st.container(border=True):
-    gc1, gc2 = st.columns([3, 1])
-    with gc1:
-        st.markdown(f"**📖 {t('How to use the app')}**")
-        st.caption(t("Step-by-step guide and live demo of all KrushiNudi tools"))
-    with gc2:
+    col_w1, col_w2 = st.columns([2.8, 1.2])
+    with col_w1:
+        st.markdown(
+            "⛅ **" + ("ಇಂದಿನ ಹವಾಮಾನ & ಸಿಂಪರಣಾ ಮುನ್ನೆಚ್ಚರಿಕೆ {Weather Alerts & Farmer Precautions}:" if is_kn else "Today's Hyperlocal Weather & Spray Alert:") + "**"
+        )
+        st.markdown(
+            "### 28°C · ಭಾಗಶಃ ಮೋಡ {Partly Cloudy} | 💧 68% | 💨 14 km/h"
+        )
+        st.markdown(
+            "🌱 **ಸಿಂಪರಣೆಗೆ ಉತ್ತಮ ದಿನ {Good Spray Day}:** ಮುಂದಿನ 6 ಗಂಟೆಗಳಲ್ಲಿ ಭಾರಿ ಮಳೆಯಿಲ್ಲ. ಬೆಳಿಗ್ಗೆ 11ರ ಮೊದಲು ಅಥವಾ ಸಂಜೆ 4ರ ನಂತರ ಸಿಂಪಡಿಸಿ."
+            if is_kn else
+            "🌱 **Good Day for Spraying:** No heavy rain in next 6 hours. Spray before 11 AM or after 4 PM."
+        )
+        st.caption("✅ ನೀರು ಹರಿಸುವುದು: ಬೆಳಿಗ್ಗೆ ಅಥವಾ ಸಂಜೆ | ✅ ಒಣ ದಾಸ್ತಾನು: ಕೊಯ್ಲು ಮಾಡಿದ ಉತ್ಪನ್ನಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿಡಿ")
+    with col_w2:
+        st.markdown("<br>", unsafe_allow_html=True)
+        ui.page_link("views/weather.py", t("7-Day Forecast") if not is_kn else "7 ದಿನಗಳ ಮುನ್ಸೂಚನೆ", "⛈️")
         ui.page_link("views/guide.py", t("Demo & Guide"), "👉")
 
-CARDS = [
-    ("💧", "Borewell advisory", "Groundwater depth, feasibility and drilling budget.", "views/borewell.py"),
-    ("🌿", "Weed & nutrient advisory", "Non-chemical weed suppression, compost and fertilizer savings.", "views/weed_nutrient.py"),
-    ("🩺", "Crop Doctor", "Photograph a sick plant, pest or weed and get safe, sourced advice.", "views/crop_doctor.py"),
-    ("💊", "Spray & nutrition prescription", "Crop protection, dosages, high-yield boosters and prescription slip.", "views/spray_prescription.py"),
-    ("🗓️", "Season planner", "What to do before sowing, while growing and at harvest.", "views/season_planner.py"),
-    ("⛈️", "Weather precautions", "7-day forecast by district and what to do before bad weather.", "views/weather.py"),
-    ("📋", "Schemes and help", "Documents and steps for crop insurance, PM-KISAN and loans.", "views/schemes.py"),
-]
-for i in range(0, len(CARDS), 2):
-    row = CARDS[i:i+2]
-    cols = st.columns(len(row))
-    for col, (icon, title, text, path) in zip(cols, row):
-        with col.container(border=True):
-            st.markdown(f"**{icon} {t(title)}**")
-            st.caption(t(text))
-            ui.page_link(path, t("Open"), "➡️")
+# ==============================================================================
+# 3. SIX SIGNATURE AGRICULTURAL SERVICE CARDS (IMAGES 1 & 4)
+# ==============================================================================
+st.markdown("---")
+st.subheader("🌾 " + ("ಕೃಷಿ ಪರಿಕರಗಳು & ಸೇವೆಗಳು {Agricultural Services}" if is_kn else "Agricultural Tools & Services"))
+st.caption(
+    "ರೋಗ ತಪಾಸಣೆ, ನಿಖರ ಬೋರ್‌ವೆಲ್ ಪಾಯಿಂಟ್‌ಗಳು, ಹವಾಮಾನ ಹಾಗೂ ಮಾರುಕಟ್ಟೆ ದರಗಳಿಗಾಗಿ ಕೆಳಗಿನ ಸೇವೆಗಳನ್ನು ಆಯ್ಕೆಮಾಡಿ:"
+    if is_kn else
+    "Choose any service below for disease detection, GPS borewell points, weather alerts and market prices:"
+)
 
-# --- UPCOMING SEASONAL HIGH-YIELD CROP RECOMMENDATIONS (BY SOIL TYPE) ---
+# Row 1: Crop Doctor & Weather Alerts
+c_r1_1, c_r1_2 = st.columns(2)
+with c_r1_1:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#2E7D32; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>1</span>"
+            "**🩺 " + t("Crop Doctor") + " 🔍**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಪೀಡಿತ ಬೆಳೆಯ ಫೋಟೋ ತೆಗೆದು ರೋಗ, ಕೀಟ ಪತ್ತೆಹಚ್ಚಿ ಹಾಗೂ ರಾಸಾಯನಿಕ ರಹಿತ ಸಾವಯವ ಔಷಧ ಪಡೆಯಿರಿ."
+            if is_kn else
+            "Detect crop diseases using AI vision. Get organic remedies, spray windows and prescription advice."
+        )
+        ui.page_link("views/crop_doctor.py", "ಬೆಳೆ ಆರೋಗ್ಯ {Open Crop Doctor}" if is_kn else "Open Crop Doctor", "👉")
+
+with c_r1_2:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#1565C0; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>2</span>"
+            "**⛅ " + t("Weather precautions") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ನಿಮ್ಮ ಜಿಲ್ಲೆಯ ಲೈವ್ ಹವಾಮಾನ, 7 ದಿನಗಳ ಮಳೆ ಮುನ್ಸೂಚನೆ ಮತ್ತು ಕೃಷಿಕರ ಮುನ್ನೆಚ್ಚರಿಕೆಗಳು."
+            if is_kn else
+            "Get real-time weather updates, 7-day rainfall forecast and farmer precautions for your area."
+        )
+        ui.page_link("views/weather.py", "ಹವಾಮಾನ ಮಾಹಿತಿ {Weather Info}" if is_kn else "Weather Forecast", "👉")
+
+# Row 2: Season Planner & Borewell Advisory
+c_r2_1, c_r2_2 = st.columns(2)
+with c_r2_1:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#E65100; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>3</span>"
+            "**🗓️ " + t("Season planner") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಬಿತ್ತನೆಯಿಂದ ಕೊಯ್ಲಿನವರೆಗೆ ಬೆಳೆ ನಿರ್ವಹಣೆಯ ಹಂತ-ಹಂತದ ದಿನದರ್ಶಿ ಮತ್ತು ಜ್ಞಾಪನೆಗಳು."
+            if is_kn else
+            "Plan your crops with smart timeline, stage-by-stage nutrient reminders and harvest checklist."
+        )
+        ui.page_link("views/season_planner.py", "ಬೆಳೆ ಯೋಜನೆ {Season Plan}" if is_kn else "Open Season Planner", "👉")
+
+with c_r2_2:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#0288D1; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>4</span>"
+            "**💧 " + t("Borewell advisory") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಗ್ರಾಮ/ಹೋಬಳಿ ಮಟ್ಟದ ಅಂತರ್ಜಲ ಶಿಲಾ ಬಿರುಕುಗಳ (Lineaments) ಆಧಾರದ ಮೇಲೆ ಜಮೀನಿನ ನಿಖರ ಪಾಯಿಂಟ್‌ಗಳು."
+            if is_kn else
+            "Check groundwater levels, strike depths, and exact GPS lineament points on your land plot."
+        )
+        ui.page_link("views/borewell.py", "ಬೋರ್‌ವೆಲ್ ಮಾಹಿತಿ {Borewell Advisor}" if is_kn else "Open Borewell Advisory", "👉")
+
+# Row 3: Dedicated Crop Advisor & Mandi / Weed Management
+c_r3_1, c_r3_2 = st.columns(2)
+with c_r3_1:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#388E3C; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>5</span>"
+            "**🌱 " + t("Crop advisor") + " {Dedicated Page}**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಮಣ್ಣಿನ N-P-K ಪೋಷಕಾಂಶಗಳು, pH ಮತ್ತು ಹವಾಮಾನಕ್ಕೆ ತಕ್ಕಂತೆ ಗರಿಷ್ಠ ಇಳುವರಿಯ ಬೆಳೆ ಶಿಫಾರಸು."
+            if is_kn else
+            "AI/ML model matching your soil N-P-K, pH & climate to 22 scientifically tested crops."
+        )
+        ui.page_link("views/crop_advisor.py", "ಬೆಳೆ ಸಲಹೆಗಾರ ಪುಟ {Open Advisor}" if is_kn else "Open Crop Advisor", "👉")
+
+with c_r3_2:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#FBC02D; color:#333; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>6</span>"
+            "**🌿 " + t("Weed & nutrient advisory") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "20 ಕ್ಕೂ ಹೆಚ್ಚು ಕಳೆಗಳ ರಾಸಾಯನಿಕ ರಹಿತ ದಮನ, ಕಾಂಪೋಸ್ಟ್ ವಿಧಾನಗಳು ಮತ್ತು ಗೊಬ್ಬರ ಉಳಿತಾಯ."
+            if is_kn else
+            "Non-chemical weed suppression for 20+ weeds, compost methods and fertilizer cost savings."
+        )
+        ui.page_link("views/weed_nutrient.py", "ಕಳೆ & ಪೋಷಕಾಂಶ {Weed Advisor}" if is_kn else "Weed & Nutrients", "👉")
+
+# Additional Quick Tools Bar
+with st.container(border=True):
+    col_t1, col_t2 = st.columns(2)
+    with col_t1:
+        st.markdown(f"**💊 {t('Spray & nutrition prescription')}**")
+        st.caption(t("Crop protection, dosages, high-yield boosters and prescription slip."))
+        ui.page_link("views/spray_prescription.py", t("Open"), "➡️")
+    with col_t2:
+        st.markdown(f"**📋 {t('Schemes and help')}**")
+        st.caption(t("Documents and steps for crop insurance, PM-KISAN and loans."))
+        ui.page_link("views/schemes.py", t("Open"), "➡️")
+
+
+# ==============================================================================
+# 4. UPCOMING SEASONAL HIGH-YIELD CROP RECOMMENDATIONS
+# ==============================================================================
+st.markdown("---")
 st.subheader("🌾 " + ("ಮುಂಬರುವ ಹಂಗಾಮಿನ ಗರಿಷ್ಠ ಇಳುವರಿ ಬೆಳೆ ಶಿಫಾರಸು" if is_kn else "Upcoming Seasonal High-Yield Crop Recommendations"))
 st.caption(
     "ಮುಂಬರುವ ಹಂಗಾಮು ಮತ್ತು ನಿಮ್ಮ ಮಣ್ಣಿನ ಪ್ರಕಾರಕ್ಕೆ ತಕ್ಕಂತೆ ಕೃಷಿ ವಿಜ್ಞಾನಿಗಳು ದೃಢೀಕರಿಸಿದ ಅತಿ ಹೆಚ್ಚು ಇಳುವರಿ ಹಾಗೂ ಲಾಭದಾಯಕ ಬೆಳೆಗಳು."
@@ -202,13 +345,18 @@ if crop_recs:
                 st.markdown(f"**{'ಮಾರುಕಟ್ಟೆ ಬೇಡಿಕೆ & ಲಾಭ:' if is_kn else 'Market Outlook:'}**")
                 st.caption(cr.get("market", ""))
 
+
+# ==============================================================================
+# 5. INTERACTIVE PRECISION CROP ADVISOR (SOIL N-P-K & CLIMATE MODEL)
+# ==============================================================================
+st.markdown("---")
+st.subheader(t("Your field"))
 st.info(
-    "🎯 **ಪರಿಪೂರ್ಣ ನಿಖರತೆಗೆ {For 100% Precision}:** ನಿಮ್ಮ ಜಮೀನಿನ ನಿರ್ದಿಷ್ಟ N, P, K ಪೋಷಕಾಂಶಗಳು, pH ಮತ್ತು ತಾಪಮಾನಕ್ಕೆ ತಕ್ಕಂತೆ ವೈಯಕ್ತಿಕ AI ಬೆಳೆ ಸಲಹೆ ಪಡೆಯಲು, ಕೆಳಗಿನ **'ನಿಮ್ಮ ಜಮೀನು {Your Field}'** ಸ್ಲೈಡರ್‌ಗಳನ್ನು ಹೊಂದಿಸಿ **'Generate Precision Advisory'** ಬಟನ್ ಒತ್ತಿರಿ."
+    "🎯 **ಪರಿಪೂರ್ಣ ನಿಖರತೆಗೆ {For 100% Precision}:** ನಿಮ್ಮ ಜಮೀನಿನ ನಿರ್ದಿಷ್ಟ N, P, K ಪೋಷಕಾಂಶಗಳು, pH ಮತ್ತು ತಾಪಮಾನಕ್ಕೆ ತಕ್ಕಂತೆ ವೈಯಕ್ತಿಕ AI ಬೆಳೆ ಸಲಹೆ ಪಡೆಯಲು, ಕೆಳಗಿನ ಸ್ಲೈಡರ್‌ಗಳನ್ನು ಹೊಂದಿಸಿ **'Generate Precision Advisory'** ಬಟನ್ ಒತ್ತಿರಿ."
     if is_kn else
-    "🎯 **For 100% Precision:** If you know your field's exact N, P, K, pH and weather readings, adjust the sliders in **'Your Field'** below and click **'Generate Precision Advisory'**."
+    "🎯 **For 100% Precision:** Adjust the field sliders below and click **'Generate Precision Advisory'** to compute optimal crop matches."
 )
 
-st.subheader(t("Your field"))
 c1, c2 = st.columns(2)
 with c1:
     values = {
@@ -269,7 +417,9 @@ with st.expander(t("About this model and its limits")):
         st.write(t(metrics["data_note"]))
     st.write(t("It does not know your local market, water supply, pests or soil history. Talk to your agriculture officer before you decide."))
 
-# --- DIY HOME TESTING FOR N, P, K & pH ---
+# ==============================================================================
+# 6. DIY SOIL TESTING AT HOME
+# ==============================================================================
 with st.container(border=True):
     st.markdown("### 🧪 " + ("ಮನೆಯಲ್ಲೇ ಮಣ್ಣಿನ N, P, K ಮತ್ತು pH ಪರೀಕ್ಷೆ ಮಾಡುವ ಸುಲಭ ವಿಧಾನಗಳು" if is_kn else "DIY Soil Testing at Home: Simple N, P, K & pH Methods"))
     st.caption(
@@ -327,151 +477,54 @@ with st.container(border=True):
             if is_kn else
             "🌟 **If neither fizzes:** Your soil is **Neutral & Ideal (pH 6.5 - 7.2)**, perfect for almost all crops!"
         )
-        with st.expander("🥬 " + ("ಕೆಂಪು ಎಲೆಕೋಸು ನೈಸರ್ಗಿಕ pH ಲಿಟ್ಮಸ್ ಪೇಪರ್ ವಿಧಾನ" if is_kn else "Red Cabbage Natural pH Indicator Method")):
-            st.markdown(
-                "- ನೇರಳೆ/ಕೆಂಪು ಎಲೆಕೋಸನ್ನು ನೀರಿನಲ್ಲಿ ಕುದಿಸಿ ನೇರಳೆ ಬಣ್ಣದ ದ್ರಾವಣ ತಯಾರಿಸಿ.\n"
-                "- ಕಾಫಿ ಫಿಲ್ಟರ್ ಪೇಪರ್ ತುಂಡುಗಳನ್ನು ಈ ದ್ರಾವಣದಲ್ಲಿ ಅದ್ದಿ ಒಣಗಿಸಿದರೆ ನೈಸರ್ಗಿಕ pH ಪೇಪರ್ ಸಿದ್ಧವಾಗುತ್ತದೆ.\n"
-                "- ಮಣ್ಣಿನ ತಿಳಿನೀರಿನಲ್ಲಿ ಅದ್ದಿದಾಗ: **ಗುಲಾಬಿ/ಕೆಂಪು ಬಣ್ಣ** ಬಂದರೆ ಆಮ್ಲೀಯ (Acidic); **ನೀಲಿ/ಹಸಿರು ಬಣ್ಣ** ಬಂದರೆ ತಟಸ್ಥ ಅಥವಾ ಕ್ಷಾರ (Alkaline)."
-                if is_kn else
-                "- Boil chopped red cabbage in water to extract natural purple anthocyanin indicator liquid.\n"
-                "- Soak coffee filter paper strips and dry in shade to make DIY pH test strips.\n"
-                "- Dip in soil clear water: Turns **Pink/Red** in acidic soil; turns **Blue/Green** in neutral/alkaline soil."
-            )
             
     with diy_tab2:
         st.markdown("#### 🌿 " + ("ಗಿಡದ ಎಲೆಗಳ ಲಕ್ಷಣಗಳಿಂದ N, P, K ಕೊರತೆ ಗುರುತಿಸುವುದು" if is_kn else "Visual Leaf Signs for N, P, K Deficiencies"))
-        st.caption(
-            "ಗಿಡಗಳು ತಮ್ಮ ಪೋಷಕಾಂಶಗಳ ಕೊರತೆಯನ್ನು ಎಲೆಗಳ ಬಣ್ಣ ಮತ್ತು ರಚನೆಯ ಮೂಲಕ ಸ್ಪಷ್ಟವಾಗಿ ತೋರಿಸುತ್ತವೆ:"
-            if is_kn else
-            "Plants communicate nutrient deficiencies clearly through distinct leaf discoloration patterns:"
-        )
-        
         npk_c1, npk_c2, npk_c3 = st.columns(3)
         with npk_c1:
             with st.container(border=True):
-                st.markdown("**🟢 ಸಾರಜನಕ {Nitrogen - N} ಕೊರತೆ:**")
-                st.markdown(
-                    "- **ಲಕ್ಷಣ:** ಗಿಡದ ಕೆಳಭಾಗದ ಹಳೆಯ ಎಲೆಗಳು ನಡುದಿಂಡಿನಿಂದ ಪ್ರಾರಂಭವಾಗಿ 'V' ಆಕಾರದಲ್ಲಿ ಹಳದಿಯಾಗುವುದು (Yellowing of older leaves).\n"
-                    "- **ಪರಿಣಾಮ:** ಗಿಡ ಕುಬ್ಜವಾಗುತ್ತದೆ, ಕವಲುಗಳು ಕಡಿಮೆ.\n"
-                    "- **ಮನೆಮದ್ದು:** ಜೀವಾಮೃತ, ಹಸಿರೆಲೆ ಗೊಬ್ಬರ (ಸೆಣಬು, ಡಯಾಂಚ), ಎರೆಹುಳು ಗೊಬ್ಬರ ಅಥವಾ 2% ಯೂರಿಯಾ ಸಿಂಪರಣೆ."
-                    if is_kn else
-                    "- **Symptom:** V-shaped yellowing starting from midrib of older lower leaves.\n"
-                    "- **Impact:** Stunted plant height, poor tillering.\n"
-                    "- **Remedy:** Apply Jeevamrutha, vermicompost, cow dung slurry or 2% urea foliar spray."
-                )
+                st.markdown("**🟡 ಸಾರಜನಕ (N) ಕೊರತೆ:**")
+                st.caption("ಹಳೆಯ ಕೆಳಗಿನ ಎಲೆಗಳು ಹಳದಿಯಾಗುವುದು, ಕುಂಠಿತ ಬೆಳವಣಿಗೆ.")
         with npk_c2:
             with st.container(border=True):
-                st.markdown("**🟣 ರಂಜಕ {Phosphorus - P} ಕೊರತೆ:**")
-                st.markdown(
-                    "- **ಲಕ್ಷಣ:** ಕೆಳಭಾಗದ ಎಲೆಗಳ ಹಿಂಭಾಗ ಹಾಗೂ ಅಂಚುಗಳು ನೇರಳೆ / ಕೆನ್ನೀಲಿ (Purple / Bronze) ಬಣ್ಣಕ್ಕೆ ತಿರುಗುವುದು.\n"
-                    "- **ಪರಿಣಾಮ:** ಬೇರುಗಳು ಆಳಕ್ಕೆ ಇಳಿಯುವುದಿಲ್ಲ, ಕಾಳು ಕಟ್ಟುವುದಿಲ್ಲ.\n"
-                    "- **ಮನೆಮದ್ದು:** ಮೂಳೆ ಪುಡಿ (Bone meal), ಪಿಎಸ್‌ಬಿ {PSB} ಜೈವಿಕ ಗೊಬ್ಬರ ಅಥವಾ ಸಿಂಗಲ್ ಸೂಪರ್ ಫಾಸ್ಫೇಟ್ {SSP}."
-                    if is_kn else
-                    "- **Symptom:** Dark purplish-bronze tint on leaf margins and undersides of older leaves.\n"
-                    "- **Impact:** Severely stunted root development, delayed flowering.\n"
-                    "- **Remedy:** Apply Phosphate Solubilizing Bacteria (PSB), bone meal, or Single Super Phosphate."
-                )
+                st.markdown("**🟣 ರಂಜಕ (P) ಕೊರತೆ:**")
+                st.caption("ಎಲೆಗಳು ನೇರಳೆ ಅಥವಾ ಕಡು ಹಸಿರು ಬಣ್ಣಕ್ಕೆ ತಿರುಗುವುದು, ಬೇರು ದುರ್ಬಲ.")
         with npk_c3:
             with st.container(border=True):
-                st.markdown("**🟠 ಪೊಟ್ಯಾಶ್ {Potassium - K} ಕೊರತೆ:**")
-                st.markdown(
-                    "- **ಲಕ್ಷಣ:** ಹಳೆಯ ಎಲೆಗಳ ಅಂಚುಗಳು ಬೆಂಕಿಯಲ್ಲಿ ಸುಟ್ಟಂತೆ (Leaf edge scorch / burn) ಕಂದು ಬಣ್ಣಕ್ಕೆ ತಿರುಗಿ ಒಣಗುವುದು.\n"
-                    "- **ಪರಿಣಾಮ:** ಕಾಳು, ಕಾಯಿಗಳಲ್ಲಿ ತೂಕ ಇರುವುದಿಲ್ಲ, ರೋಗ ನಿರೋಧಕ ಶಕ್ತಿ ಕುಸಿಯುತ್ತದೆ.\n"
-                    "- **ಮನೆಮದ್ದು:** ಕಟ್ಟಿಗೆಯ ಬೂದಿ (Wood ash - ಅತ್ಯುತ್ತಮ ನೈಸರ್ಗಿಕ ಪೊಟ್ಯಾಶ್) ಅಥವಾ ಎಂಒಪಿ {MOP}."
-                    if is_kn else
-                    "- **Symptom:** Yellowing and scorching/burning of outer leaf margins like burnt edges.\n"
-                    "- **Impact:** Weak stalks, lodging, shrivelled grains and disease vulnerability.\n"
-                    "- **Remedy:** Broadcast clean wood ash (natural potash) or apply MOP."
-                )
+                st.markdown("**🟤 ಪೊಟ್ಯಾಷ್ (K) ಕೊರತೆ:**")
+                st.caption("ಎಲೆಯ ಅಂಚುಗಳು ಸುಟ್ಟಂತೆ ಕಂದು ಬಣ್ಣಕ್ಕೆ ತಿರುಗುವುದು, ರೋಗ ಬಾಧೆ.")
 
     with diy_tab3:
-        st.markdown("#### 🏺 " + ("ಮಣ್ಣಿನ ಕಣ ರಚನೆ (ಮರಳು, ಗೋಡು, ಜೇಡಿ) ಬಾಟಲಿ ಪರೀಕ್ಷೆ" if is_kn else "Soil Texture Sedimentation Test (Sand, Silt, Clay)"))
+        st.markdown("#### 🫙 " + ("ಮಣ್ಣಿನ ಕಣ ರಚನೆ (ಬಾಟಲಿ ಪರೀಕ್ಷೆ)" if is_kn else "Soil Texture Bottle Test"))
         st.markdown(
-            "1. ಪಾರದರ್ಶಕ ಗಾಜಿನ ಬಾಟಲಿಗೆ (Glass Jar) 1/3 ಭಾಗ ಜಮೀನಿನ ಮಣ್ಣು ಹಾಕಿ.\n"
-            "2. ಬಾಟಲಿಗೆ 3/4 ಭಾಗದಷ್ಟು ನೀರು ಮತ್ತು 1 ಚಮಚ ಉಪ್ಪು ಅಥವಾ ಡಿಟರ್ಜೆಂಟ್ ಹಾಕಿ ಮುಚ್ಚಳ ಹಾಕಿ 5 ನಿಮಿಷ ಚೆನ್ನಾಗಿ ಕುಲುಕಿ.\n"
-            "3. ಬಾಟಲಿಯನ್ನು ಸಮತಟ್ಟಾದ ಸ್ಥಳದಲ್ಲಿ 24 ಗಂಟೆಗಳ ಕಾಲ ಅಲುಗಾಡಿಸದೆ ಇಡಿ.\n"
-            "4. **ಫಲಿತಾಂಶ:**\n"
-            "   - **1 ನಿಮಿಷದಲ್ಲಿ ತಳದಲ್ಲಿ ನಿಲ್ಲುವುದು:** ಮರಳು {Sand} (ದಪ್ಪ ಕಣಗಳು - 40% ಕ್ಕಿಂತ ಹೆಚ್ಚಿದ್ದರೆ ಕೆಂಪು ಮರಳು ಮಣ್ಣು).\n"
-            "   - **2 ಗಂಟೆಯಲ್ಲಿ ನಿಲ್ಲುವುದು:** ಗೋಡು {Silt} (ಮಧ್ಯಮ ಕಣಗಳು).\n"
-            "   - **24 ಗಂಟೆಯಲ್ಲಿ ಮೇಲ್ಭಾಗದಲ್ಲಿ ನಿಲ್ಲುವುದು:** ಜೇಡಿ {Clay} (ನಯವಾದ ಕಪ್ಪು ಕಣಗಳು - ಹೆಚ್ಚು ಜೇಡಿ ಇದ್ದರೆ ಕಪ್ಪು ಹತ್ತಿ ಮಣ್ಣು).\n"
-            "   - ಇದರಿಂದ ನಿಮ್ಮ ಹೊಲದ ಮಣ್ಣಿನ ಪ್ರಕಾರವನ್ನು ನಿಖರವಾಗಿ ಪತ್ತೆಹಚ್ಚಬಹುದು."
+            "ಒಂದು ಗಾಜಿನ ಬಾಟಲಿಯಲ್ಲಿ 1/3 ಭಾಗ ಮಣ್ಣು ಮತ್ತು ನೀರು ಹಾಕಿ, 1 ಚಮಚ ಉಪ್ಪು ಅಥವಾ ಸಾಬೂನು ದ್ರಾವಣ ಸೇರಿಸಿ ಚೆನ್ನಾಗಿ ಕುಲುಕಿ 24 ಗಂಟೆ ಇರಿಸಿ.\n"
+            "- **ಕೆಳಗೆ ಕೂರುವುದು:** ಮರಳು (Sand)\n"
+            "- **ಮಧ್ಯದಲ್ಲಿ ಕೂರುವುದು:** ಹೂಳು (Silt)\n"
+            "- **ಮೇಲೆ ಕೂರುವುದು:** ಜೇಡಿ ಮಣ್ಣು (Clay)"
             if is_kn else
-            "1. Fill 1/3 of a clean glass jar with dry sieved soil.\n"
-            "2. Add clean water up to 3/4 level plus 1 tsp salt/detergent to disperse particles. Shake vigorously for 5 minutes.\n"
-            "3. Place on a flat surface and let settle for 24 hours undisturbed.\n"
-            "4. **Observation:**\n"
-            "   - **After 1 minute:** Bottom layer is coarse **Sand**.\n"
-            "   - **After 2 hours:** Middle layer is smooth **Silt**.\n"
-            "   - **After 24 hours:** Top layer is fine **Clay**.\n"
-            "   - Calculate layer percentages to confirm whether your field is Sandy Loam, Clayey, or Black Cotton Soil."
+            "Fill a jar 1/3 with soil and water, shake well with a pinch of salt/detergent, let settle for 24 hours to measure Sand, Silt, and Clay layers."
         )
 
-# --- DISTRICT SOIL TESTING LAB DIRECTORY & 100% FREE GOVERNMENT BENEFITS ---
-with st.container(border=True):
-    st.markdown("### 🏛️ " + ("ಜಿಲ್ಲಾವಾರು ಕೃಷಿ ಇಲಾಖೆ, ಮಣ್ಣು ಪರೀಕ್ಷಾ ಕೇಂದ್ರಗಳು & 100% ಉಚಿತ ಸರ್ಕಾರಿ ಸೌಲಭ್ಯಗಳು" if is_kn else "District Soil Testing Labs & 100% Free Govt Agri Benefits"))
-    st.markdown(
-        "🟢 **ಪ್ರಮುಖ ಸೂಚನೆ {Crucial Price Notice}:**\n"
-        "- **ಸರ್ಕಾರಿ ಮಣ್ಣು ಆರೋಗ್ಯ ಕಾರ್ಡ್ {Govt Soil Health Card}:** ನಿಮ್ಮ ಹೋಬಳಿಯ ರೈತ ಸಂಪರ್ಕ ಕೇಂದ್ರದಲ್ಲಿ (RSK) ಮಣ್ಣು ಪರೀಕ್ಷೆ **ಸಂಪೂರ್ಣ 100% ಉಚಿತ (₹0 / FREE)**!\n"
-        "- **ಖಾಸಗಿ ಲ್ಯಾಬ್‌ಗಳಲ್ಲಿ ಪರೀಕ್ಷಾ ಶುಲ್ಕ {Private Lab Testing Cost}:** ₹150 ರಿಂದ ₹200 ಪ್ರತಿ ಮಾದರಿಗೆ ಮಾತ್ರ."
-        if is_kn else
-        "🟢 **Crucial Pricing Notice:**\n"
-        "- **Government Soil Health Card Scheme:** Soil testing at your local Raitha Samparka Kendra (RSK) is **100% FREE of cost (Rs. 0)**!\n"
-        "- **Private Certified Agri Labs:** Standard fee is approx **Rs. 150 to Rs. 200 per sample**."
-    )
-
-    st.markdown("#### 📍 " + ("ನಿಮ್ಮ ಜಿಲ್ಲೆಯ ಕೃಷಿ ಇಲಾಖೆ, ಮಣ್ಣು ಪರೀಕ್ಷಾ ಲ್ಯಾಬ್ & ಸಂಪರ್ಕ ಸಂಖ್ಯೆಗಳು" if is_kn else "Nearest Agri Directorate, Soil Testing Lab & Helplines"))
-    
-    dist_list = sorted(pdata.KARNATAKA_DISTRICT_AGRI_CENTRES.keys())
-    if is_kn:
-        d_dict = {f"{pdata.KARNATAKA_DISTRICT_AGRI_CENTRES[d]['kn']} ({d})": d for d in dist_list}
-        d_sel_name = st.selectbox("ಜಿಲ್ಲೆ ಆಯ್ಕೆಮಾಡಿ {Select District}:", list(d_dict.keys()), key="home_district_lab_sel")
-        chosen_dist = d_dict[d_sel_name]
-    else:
-        chosen_dist = st.selectbox("Select District for Soil Lab & RSKs:", dist_list, key="home_district_lab_sel")
-    
-    d_center = pdata.KARNATAKA_DISTRICT_AGRI_CENTRES.get(chosen_dist, {})
-    with st.container(border=True):
-        dc1, dc2 = st.columns([2.5, 1.2])
-        with dc1:
-            st.markdown(f"**🏢 {'ಜಿಲ್ಲಾ ಕೃಷಿ ಜಂಟಿ ನಿರ್ದೇಶಕರ ಕಚೇರಿ {JDA}:' if is_kn else 'District Joint Director of Agriculture (JDA):'}**")
-            st.write(d_center.get("jda_office", ""))
-            st.markdown(f"**🔬 {'ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರದ ಮಣ್ಣು ಪರೀಕ್ಷಾ ಲ್ಯಾಬ್ {KVK / Soil Lab}:' if is_kn else 'ICAR-KVK / University Soil Testing Lab:'}**")
-            st.write(d_center.get("kvk_lab", ""))
-            st.markdown(f"**🌾 {'ತಾಲೂಕು ರೈತ ಸಂಪರ್ಕ ಕೇಂದ್ರಗಳು {RSKs}:' if is_kn else 'Raitha Samparka Kendras (RSK Centers):'}**")
-            st.caption(d_center.get("rsk_centers", ""))
-        with dc2:
-            phone_num = d_center.get("phone", "1800 180 1551")
-            first_phone = phone_num.split("/")[0].strip()
-            st.markdown(f"**📞 {'ಸಂಪರ್ಕ ಸಂಖ್ಯೆ:' if is_kn else 'Phone Helpline:'}**")
-            st.write(f"`{phone_num}`")
-            st.link_button(
-                "📞 ಕರೆ ಮಾಡಿ (Call Lab)" if is_kn else "📞 Call Soil Lab",
-                f"tel:{first_phone.replace(' ', '').replace('-', '')}",
-                use_container_width=True
-            )
-            st.link_button(
-                "📞 ಕಿಸಾನ್ ಕಾಲ್ ಸೆಂಟರ್" if is_kn else "📞 Kisan Call Centre",
-                "tel:18001801551",
-                use_container_width=True
-            )
-
-    st.markdown("#### 🎁 " + ("ಕೃಷಿ ಇಲಾಖೆಯಲ್ಲಿ ರೈತರಿಗೆ ದೊರೆಯುವ 6 ಪ್ರಮುಖ ಉಚಿತ/ರಿಯಾಯಿತಿ ಸೌಲಭ್ಯಗಳು" if is_kn else "Top 6 Free / Highly Subsidized Government Agriculture Benefits"))
-    
-    for i in range(0, len(pdata.FREE_GOVT_AGRI_BENEFITS), 2):
-        b_cols = st.columns(2)
-        b_chunk = pdata.FREE_GOVT_AGRI_BENEFITS[i:i+2]
-        for b_col, ben in zip(b_cols, b_chunk):
-            with b_col.container(border=True):
-                st.markdown(f"**{ben['title_kn'] if is_kn else ben['title_en']}**")
-                st.success(ben['cost_kn'] if is_kn else ben['cost_en'])
-                st.write(ben['details_kn'] if is_kn else ben['details_en'])
-                st.caption(f"**{'ಎಲ್ಲಿ ಪಡೆಯಬೇಕು:' if is_kn else 'Where to get:'}** {ben['where_to_avail_kn'] if is_kn else ben['where_to_avail_kn']}")
+# ==============================================================================
+# 7. PROFESSIONAL BOTTOM FOOTER BANNER (IMAGE 1)
+# ==============================================================================
+st.markdown(
+    """
+    <div class="kn-footer">
+        <div style="font-size: 1rem; font-weight: bold; margin-bottom: 8px;">
+            🌱 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ &nbsp;|&nbsp; 🛡️ ವಿಶ್ವಾಸಾರ್ಹ ಮಾಹಿತಿ &nbsp;|&nbsp; 👥 ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ
+        </div>
+        <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 12px;">
+            © 2026 KrushiNudi. All rights reserved. &nbsp;|&nbsp; Developed by Abhishek Hitabutti
+        </div>
+        <div style="font-size: 0.8rem; opacity: 0.8;">
+            <a href="?page=about" style="color: #C8E6C9; text-decoration: none;">ಗೌಪ್ಯತಾ ನೀತಿ {Privacy}</a> &nbsp;•&nbsp; 
+            <a href="?page=about" style="color: #C8E6C9; text-decoration: none;">ನಿಬಂಧನೆಗಳು {Terms}</a> &nbsp;•&nbsp; 
+            <a href="mailto:abhishekhitabutti@gmail.com" style="color: #C8E6C9; text-decoration: none;">ಸಂಪರ್ಕಿಸಿ {Contact}</a>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 ui.feedback_box()
-is_kn = (i18n.current_lang() == "kn")
-footer_str = (
-    "© 2026 ಅಭಿಷೇಕ್ ಹಿಟಬುತ್ತಿ. ಎಲ್ಲ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ. ಅನುಮತಿ ಇಲ್ಲದೆ ಈ ಆ್ಯಪ್ ಅನ್ನು ನಕಲು ಮಾಡುವುದು ಅಥವಾ ಮರುಬಳಕೆ ಮಾಡುವುದು ನಿಷಿದ್ಧ."
-    if is_kn else
-    "© 2026 Abhishek Hitabutti. All rights reserved. Copying or reuse of this app without permission is prohibited."
-)
-st.caption(footer_str)

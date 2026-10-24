@@ -19,11 +19,11 @@ ui.inject_css()
 
 # Security Gate: Completely DEACTIVATED.
 # Anyone can use KrushiNudi directly without any login or registration.
-# To re-activate later after building the project, uncomment the line below:
 # auth.require_auth()
 
 pages = [
-    st.Page("views/home.py", title=t("Crop advisor"), icon="🌾", default=True),
+    st.Page("views/home.py", title=t("KrushiNudi"), icon="🌾", default=True),
+    st.Page("views/crop_advisor.py", title=t("Crop advisor"), icon="🌱", url_path="advisor"),
     st.Page("views/borewell.py", title=t("Borewell advisory"), icon="💧", url_path="borewell"),
     st.Page("views/weed_nutrient.py", title=t("Weed & nutrient advisory"), icon="🌿", url_path="weed_nutrient"),
     st.Page("views/crop_doctor.py", title=t("Crop Doctor"), icon="🩺", url_path="doctor"),

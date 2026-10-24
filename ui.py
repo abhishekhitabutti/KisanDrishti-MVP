@@ -5,11 +5,64 @@ import streamlit as st
 
 CSS = """
 <style>
-.block-container {padding-top: 1.2rem; max-width: 780px;}
-.kd-hero {background: linear-gradient(135deg, #1B5E20 0%, #43A047 100%); color: #fff;
-  padding: 1.3rem 1.2rem; border-radius: 16px; margin-bottom: 1rem;}
-.kd-hero h1 {color: #fff; margin: 0; font-size: 1.7rem; line-height: 1.2;}
-.kd-hero p {margin: .35rem 0 0; opacity: .95; font-size: .98rem;}
+.block-container {padding-top: 1.2rem; max-width: 820px;}
+.kd-hero {background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%); color: #fff;
+  padding: 1.5rem 1.4rem; border-radius: 18px; margin-bottom: 1.2rem; box-shadow: 0 4px 12px rgba(27,94,32,0.18);}
+.kd-hero h1 {color: #fff !important; margin: 0; font-size: 1.85rem; line-height: 1.2; font-weight: 800;}
+.kd-hero p {margin: .4rem 0 0; opacity: .95; font-size: .98rem;}
+.kn-brand-banner {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 55%, #388E3C 100%);
+  border-radius: 20px;
+  padding: 24px 20px 22px 20px;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(27, 94, 32, 0.22);
+  margin-bottom: 18px;
+}
+.kn-brand-title {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #ffffff !important;
+}
+.kn-brand-tagline {
+  color: #E8F5E9;
+  font-size: 0.96rem;
+  font-weight: 500;
+  margin-top: 4px;
+  letter-spacing: 0.4px;
+}
+.kn-weather-ribbon {
+  background: #ffffff;
+  border: 1px solid #C8E6C9;
+  border-left: 6px solid #2E7D32;
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.kn-card-badge {
+  background: #2E7D32;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 10px;
+  float: right;
+}
+.kn-footer {
+  background: #1B5E20;
+  color: #E8F5E9;
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  margin-top: 26px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 .kd-card {background: #fff; border: 1px solid #DCE8DC; border-radius: 14px; padding: .9rem 1rem;
   margin: .6rem 0; box-shadow: 0 1px 3px rgba(0,0,0,.06);}
 .kd-card h4 {margin: 0 0 .35rem 0; color: #1B5E20;}
