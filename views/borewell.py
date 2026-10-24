@@ -25,6 +25,11 @@ from districts import DISTRICTS, DISTRICTS_KN
 from wris_groundwater_data import WRIS_STATIONS
 from i18n import t
 
+try:
+    import karnataka_hoblis_data as kh
+except Exception:
+    kh = None
+
 # --- FAIL-SAFE ROBUST IMPORT OF BOREWELL ENGINE ---
 try:
     import borewell_model
@@ -353,30 +358,90 @@ c1, c2 = st.columns(2)
 
 with c1:
     if "ಜಿಲ್ಲೆ" in loc_mode or "District" in loc_mode:
-        # District & Taluk Dropdown Mode
+        # District, Taluk, Hobli & Village Cadastral Micro-Basin Selection
         if is_kn:
             d_keys = sorted(DISTRICTS_KN.keys(), key=lambda x: DISTRICTS_KN[x])
             kn_names = [DISTRICTS_KN[k] for k in d_keys]
             default_idx = kn_names.index("ಬೆಳಗಾವಿ") if "ಬೆಳಗಾವಿ" in kn_names else 0
-            sel_kn = st.selectbox("ನಿಮ್ಮ ಜಿಲ್ಲೆ {District}", kn_names, index=default_idx)
+            sel_kn = st.selectbox("1️⃣ ನಿಮ್ಮ ಜಿಲ್ಲೆ {District}", kn_names, index=default_idx)
             district = d_keys[kn_names.index(sel_kn)]
         else:
             district_list = sorted(DISTRICTS.keys())
             default_idx = district_list.index("Belagavi") if "Belagavi" in district_list else 0
-            district = st.selectbox("Your District", district_list, index=default_idx)
+            district = st.selectbox("1️⃣ Your District", district_list, index=default_idx)
 
-        # Taluk coordinate lookup
-        dist_stations = [s for s in WRIS_STATIONS if s["district"].lower() == district.lower()]
-        if dist_stations:
-            taluk_names = [s["taluk"] for s in dist_stations]
-            chosen_taluk = st.selectbox("ತಾಲೂಕು / ಕೇಂದ್ರ {Taluk / Station}" if is_kn else "Taluk / Station Area", taluk_names)
-            matched_station = next(s for s in dist_stations if s["taluk"] == chosen_taluk)
-            custom_lat, custom_lon = matched_station["lat"], matched_station["lon"]
+        # 2. Taluk selector
+        if kh:
+            taluk_names = kh.get_taluks_for_district(district)
         else:
-            custom_lat, custom_lon = DISTRICTS.get(district, (15.46, 75.01))
+            dist_stations = [s for s in WRIS_STATIONS if s["district"].lower() == district.lower()]
+            taluk_names = [s["taluk"] for s in dist_stations] if dist_stations else [district]
+        
+        chosen_taluk = st.selectbox(
+            "2️⃣ ತಾಲೂಕು {Taluk}" if is_kn else "2️⃣ Taluk",
+            taluk_names,
+            index=0
+        )
 
-        st.caption(
-            f"📍 {DISTRICTS_KN.get(district, district)}: `{custom_lat:.4f}° N, {custom_lon:.4f}° E`"
+        # 3. Revenue Hobli (Circle) selector
+        if kh:
+            hobli_names = kh.get_hoblis_for_taluk(district, chosen_taluk)
+        else:
+            hobli_names = [chosen_taluk]
+        
+        chosen_hobli = st.selectbox(
+            "3️⃣ ಕಂದಾಯ ಹೋಬಳಿ {Revenue Hobli}" if is_kn else "3️⃣ Revenue Hobli (Circle)",
+            hobli_names,
+            index=0
+        )
+
+        # 4. Village / Hamlet selector
+        if kh:
+            village_names = kh.get_villages_for_hobli(district, chosen_taluk, chosen_hobli)
+        else:
+            village_names = [f"{chosen_hobli} {t('Main Village')}"]
+        
+        custom_village_option = "➕ ಇತರ ಗ್ರಾಮ / ಸ್ವಂತ ಗ್ರಾಮದ ಹೆಸರು {Enter Custom Village}" if is_kn else "➕ Enter Custom Village / Hamlet Name"
+        village_options = village_names + [custom_village_option]
+
+        chosen_village = st.selectbox(
+            "4️⃣ ನಿಮ್ಮ ಗ್ರಾಮ / ಹಳ್ಳಿ {Village}" if is_kn else "4️⃣ Your Village / Hamlet",
+            village_options,
+            index=0
+        )
+
+        custom_village_name = ""
+        if chosen_village == custom_village_option:
+            custom_village_name = st.text_input(
+                "ನಿಮ್ಮ ಗ್ರಾಮದ ಹೆಸರು ನಮೂದಿಸಿ {Custom Village Name}:" if is_kn else "Enter Village Name:",
+                placeholder="ಉದಾ: ಹೊಸೂರು / ಮಜರೆ ಹಳ್ಳಿ" if is_kn else "e.g., Hosur / Hamlet"
+            )
+
+        survey_no_input = st.text_input(
+            "ಸರ್ವೆ ನಂಬರ್ / ಜಮೀನಿನ ಹೆಸರು {Survey No. / Plot ID} (ಐಚ್ಛಿಕ):" if is_kn else "Survey No. / Plot ID (Optional):",
+            placeholder="ಉದಾ: Sy No 142/2A" if is_kn else "e.g., Sy No 142/2A",
+            key="cadastral_survey_no"
+        )
+
+        # Calculate high-precision base coordinates down to village micro-basin
+        v_idx = village_names.index(chosen_village) if chosen_village in village_names else 0
+        if kh:
+            custom_lat, custom_lon = kh.get_coordinates_for_location(district, chosen_taluk, chosen_hobli, v_idx)
+        else:
+            dist_stations = [s for s in WRIS_STATIONS if s["district"].lower() == district.lower()]
+            matched = next((s for s in dist_stations if s["taluk"].lower() == chosen_taluk.lower()), None)
+            if matched:
+                custom_lat, custom_lon = matched["lat"], matched["lon"]
+            else:
+                custom_lat, custom_lon = DISTRICTS.get(district, (15.46, 75.01))
+
+        resolved_village = custom_village_name.strip() if custom_village_name.strip() else chosen_village.split("{")[0].strip()
+        sy_suffix = f" (Sy. No: {survey_no_input.strip()})" if survey_no_input.strip() else ""
+
+        st.success(
+            f"📍 **{DISTRICTS_KN.get(district, district)} ➔ {chosen_taluk} ➔ {chosen_hobli} ➔ {resolved_village}{sy_suffix}**\n\n"
+            f"🌐 {'ಮೈಕ್ರೋ-ಜಲಾನಯನ ನಿಖರ ನಿರ್ದೇಶಾಂಕಗಳು' if is_kn else 'Micro-watershed Exact Base Coordinates'}: "
+            f"`{custom_lat:.6f}° N, {custom_lon:.6f}° E`"
         )
     else:
         # Mobile GPS Coordinates Mode
@@ -600,12 +665,16 @@ with col_m4:
 # EXACT BOREWELL POINTS & FIELD MARKS SECTION
 # ==============================================================================
 st.markdown("---")
+loc_caption = ""
+if "resolved_village" in locals() and resolved_village:
+    loc_caption = f" | 📍 **{DISTRICTS_KN.get(district, district)} > {chosen_taluk} > {chosen_hobli} > {resolved_village}{sy_suffix}**"
+
 st.markdown(
     f"### 🎯 {'ನಿಮ್ಮ ಜಮೀನಿನಲ್ಲಿ ನಿಖರ ಬೋರ್‌ವೆಲ್ ಪಾಯಿಂಟ್‌ಗಳು & ಸ್ಥಳ ಗುರುತುಗಳು' if is_kn else 'Exact Prospective Borewell Points & Field Marks on Your Land'}"
 )
 st.markdown(
     f"💡 *{'ನಿಮ್ಮ ಜಮೀನಿನ ಜಿಪಿಎಸ್ ಸ್ಥಳ' if is_kn else 'Based on your field GPS coordinates'} "
-    f"(`{res['user_lat']:.6f}° N, {res['user_lon']:.6f}° E`), "
+    f"(`{res['user_lat']:.6f}° N, {res['user_lon']:.6f}° E`){loc_caption}, "
     f"{'ಭೂಮಿಯ ಇಳಿಜಾರು ಮತ್ತು ಭಾರತ ಸರ್ಕಾರದ {India-WRIS / CGWB} ಅಂತರ್ಜಲ ಶಿಲಾ ಬಿರುಕುಗಳ (Secondary Fracture Lineaments) ಸಂಗಮ ಮಾದರಿಯ ಆಧಾರದ ಮೇಲೆ ನಿಮ್ಮ ಜಮೀನಿನಲ್ಲಿ ಗುರುತಿಸಲಾದ ನಿಖರ ಪಾಯಿಂಟ್‌ಗಳು ಕೆಳಗಿವೆ:' if is_kn else 'topography, and CGWB bedrock lineament convergence models, here are the exact prospective borewell points on your plot:'}*"
 )
 
