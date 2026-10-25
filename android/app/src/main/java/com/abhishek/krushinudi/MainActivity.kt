@@ -10,10 +10,12 @@ import androidx.navigation.compose.rememberNavController
 import com.abhishek.krushinudi.ui.screen.BorewellScreen
 import com.abhishek.krushinudi.ui.screen.CropDoctorScreen
 import com.abhishek.krushinudi.ui.screen.HomeScreen
+import com.abhishek.krushinudi.ui.screen.MandiScreen
 import com.abhishek.krushinudi.ui.screen.WeatherScreen
 import com.abhishek.krushinudi.ui.theme.KrushiNudiTheme
 import com.abhishek.krushinudi.viewmodel.BorewellViewModel
 import com.abhishek.krushinudi.viewmodel.CropDoctorViewModel
+import com.abhishek.krushinudi.viewmodel.MandiViewModel
 import com.abhishek.krushinudi.viewmodel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +53,13 @@ class MainActivity : ComponentActivity() {
                             viewModel = vm,
                             onBack = { navController.popBackStack() },
                             onNavigate = { route -> navController.navigate(route) }
+                        )
+                    }
+                    composable("mandi") {
+                        val vm: MandiViewModel = hiltViewModel()
+                        MandiScreen(
+                            viewModel = vm,
+                            onBack = { navController.popBackStack() }
                         )
                     }
                 }
