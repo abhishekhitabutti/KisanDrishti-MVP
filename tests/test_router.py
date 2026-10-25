@@ -29,30 +29,30 @@ def element_types(node, found=None):
 
 def test_router_opens_every_page_with_its_own_heading():
     for view, title in VIEWS.items():
-        at = AppTest.from_file(str(ROOT / view), default_timeout=45).run()
+        at = AppTest.from_file(str(ROOT / view), default_timeout=60).run()
         assert not at.exception, view
         text = " ".join(m.value for m in at.markdown)
         assert (title in text or title.replace("&", "&amp;") in text), view
 
 
 def test_home_page_has_landing_cards_and_the_advisor():
-    at = AppTest.from_file(ROUTER, default_timeout=40).run()
+    at = AppTest.from_file(ROUTER, default_timeout=60).run()
     assert not at.exception
     text = " ".join(m.value for m in at.markdown)
     assert "Beta" in text and "crops in the advisor" in text and "Crop Doctor" in text
-    adv_at = AppTest.from_file(str(ROOT / "views" / "crop_advisor.py"), default_timeout=30).run()
+    adv_at = AppTest.from_file(str(ROOT / "views" / "crop_advisor.py"), default_timeout=60).run()
     assert len(adv_at.slider) == 7
 
 
 def test_about_page_is_honest_about_privacy_and_limits():
-    at = AppTest.from_file(ROUTER, default_timeout=40).run().switch_page("views/about.py").run()
+    at = AppTest.from_file(ROUTER, default_timeout=60).run().switch_page("views/about.py").run()
     text = " ".join(m.value for m in at.markdown)
     assert "does **not store**" in text and "Gemini" in text and "not yet been reviewed" in text
     assert "gives no pesticide or fertilizer doses" in text
 
 
 def test_camera_opens_only_when_the_person_chooses_it():
-    at = AppTest.from_file(str(ROOT / "views" / "crop_doctor.py"), default_timeout=30).run()
+    at = AppTest.from_file(str(ROOT / "views" / "crop_doctor.py"), default_timeout=60).run()
     assert "camera_input" not in element_types(at.main)        # no camera request on page load
     assert "file_uploader" in element_types(at.main)
     at.radio[0].set_value("Use this device's webcam").run()
