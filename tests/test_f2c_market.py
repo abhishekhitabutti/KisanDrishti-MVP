@@ -59,3 +59,4 @@ def test_direct_market_page_renders_cleanly():
     assert not at.exception
     text = " ".join(m.value for m in at.markdown)
     assert "Direct Farm-to-Consumer" in text or "ರೈತರಿಂದ ನೇರ ಖರೀದಿ" in text
+

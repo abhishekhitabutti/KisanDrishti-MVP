@@ -206,6 +206,11 @@ header[data-testid="stHeader"] > div:not([data-testid="stSidebarCollapsedControl
   z-index: 99999 !important;
 }
 
+#GithubIcon,
+header a[href*="github.com"],
+header a[href*="github"],
+header button,
+header [data-testid="stToolbarActions"],
 [data-testid="stToolbar"],
 [data-testid="stToolbarActions"],
 [data-testid="stHeaderActions"],
@@ -216,11 +221,16 @@ header[data-testid="stHeader"] > div:not([data-testid="stSidebarCollapsedControl
 .stDeployButton,
 button[data-testid="stToolbarActionButton"],
 button[data-testid="baseButton-headerNoPadding"],
+button[title="Fork this app"],
+button[title="Star this app"],
+button[title="Share this app"],
+button[title="View source code"],
 div[class*="stAppToolbar"],
 div[class*="Toolbar"],
 div[class*="toolbar"],
 div[class*="headerActions"],
 div[data-testid="stToolbarActions"],
+div[data-testid="stToolbarFloatingFrame"],
 #MainMenu,
 footer,
 [data-testid="stFooter"],

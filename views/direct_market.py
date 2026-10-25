@@ -359,3 +359,4 @@ footer_str = (
     "© 2026 KrushiNudi · Abhishek Hitabutti. Direct Farm-to-Consumer Revolution. All rights reserved."
 )
 st.caption(footer_str)
+

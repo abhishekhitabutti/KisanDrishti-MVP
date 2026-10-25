@@ -151,7 +151,7 @@ with c_r1_2:
         )
         ui.page_link("views/weather.py", "ಹವಾಮಾನ ಮಾಹಿತಿ {Weather Info}" if is_kn else "Weather Forecast", "👉")
 
-# Row 2: Season Planner & Borewell Advisory
+# Row 2: Season Planner & Direct Buy (Farmer to Consumer - Directly Below Weather Precautions)
 c_r2_1, c_r2_2 = st.columns(2)
 with c_r2_1:
     with st.container(border=True):
@@ -170,7 +170,23 @@ with c_r2_1:
 with c_r2_2:
     with st.container(border=True):
         st.markdown(
-            "<span style='background:#0288D1; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>4</span>"
+            "<span style='background:#2E7D32; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>4</span>"
+            "**🛒 " + ("ರೈತರಿಂದ ನೇರ ಖರೀದಿ {Direct Buy}" if is_kn else "Direct Buy (Farmer to Consumer)") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ನೇರವಾಗಿ ಕರ್ನಾಟಕದ ರೈತರಿಂದ ತಾಜಾ ಸಿರಿಧಾನ್ಯ, ತರಕಾರಿ, ಬೆಲ್ಲ ಮತ್ತು ಕಾಡುಜೇನು ಖರೀದಿ."
+            if is_kn else
+            "Direct farm-to-consumer market. Zero middlemen commission. Authentic millets, jaggery, honey and fresh harvest."
+        )
+        ui.page_link("views/direct_market.py", "ಕೃಷಿ ಮಾರುಕಟ್ಟೆ {Open Direct Market}" if is_kn else "Open Direct Market", "👉")
+
+# Row 3: Borewell Advisory & Crop Advisor
+c_r3_1, c_r3_2 = st.columns(2)
+with c_r3_1:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#0288D1; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>5</span>"
             "**💧 " + t("Borewell advisory") + "**",
             unsafe_allow_html=True
         )
@@ -181,12 +197,10 @@ with c_r2_2:
         )
         ui.page_link("views/borewell.py", "ಬೋರ್‌ವೆಲ್ ಮಾಹಿತಿ {Borewell Advisor}" if is_kn else "Open Borewell Advisory", "👉")
 
-# Row 3: Dedicated Crop Advisor & Mandi / Weed Management
-c_r3_1, c_r3_2 = st.columns(2)
-with c_r3_1:
+with c_r3_2:
     with st.container(border=True):
         st.markdown(
-            "<span style='background:#388E3C; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>5</span>"
+            "<span style='background:#388E3C; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>6</span>"
             "**🌱 " + t("Crop advisor") + "**",
             unsafe_allow_html=True
         )
@@ -197,10 +211,12 @@ with c_r3_1:
         )
         ui.page_link("views/crop_advisor.py", "ಬೆಳೆ ಸಲಹೆಗಾರ {Open Crop Advisor}" if is_kn else "Open Crop Advisor", "👉")
 
-with c_r3_2:
+# Row 4: Weed & Nutrient Advisory & Spray Prescription
+c_r4_1, c_r4_2 = st.columns(2)
+with c_r4_1:
     with st.container(border=True):
         st.markdown(
-            "<span style='background:#FBC02D; color:#333; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>6</span>"
+            "<span style='background:#FBC02D; color:#333; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>7</span>"
             "**🌿 " + t("Weed & nutrient advisory") + "**",
             unsafe_allow_html=True
         )
@@ -211,12 +227,10 @@ with c_r3_2:
         )
         ui.page_link("views/weed_nutrient.py", "ಕಳೆ & ಪೋಷಕಾಂಶ {Weed Advisor}" if is_kn else "Weed & Nutrients", "👉")
 
-# Row 4: Spray Prescription & Schemes and Help (Each in its own separate elegant card box)
-c_r4_1, c_r4_2 = st.columns(2)
-with c_r4_1:
+with c_r4_2:
     with st.container(border=True):
         st.markdown(
-            "<span style='background:#7B1FA2; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>7</span>"
+            "<span style='background:#7B1FA2; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>8</span>"
             "**💊 " + t("Spray & nutrition prescription") + "**",
             unsafe_allow_html=True
         )
@@ -227,10 +241,12 @@ with c_r4_1:
         )
         ui.page_link("views/spray_prescription.py", "ಔಷಧ ಚೀಟಿ {Open Prescription}" if is_kn else "Open Prescription", "👉")
 
-with c_r4_2:
+# Row 5: Schemes and Help & User Guide
+c_r5_1, c_r5_2 = st.columns(2)
+with c_r5_1:
     with st.container(border=True):
         st.markdown(
-            "<span style='background:#00838F; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>8</span>"
+            "<span style='background:#00838F; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>9</span>"
             "**📋 " + t("Schemes and help") + "**",
             unsafe_allow_html=True
         )
@@ -240,22 +256,6 @@ with c_r4_2:
             "Documents, eligibility and direct steps for crop insurance, PM-KISAN and agri loans."
         )
         ui.page_link("views/schemes.py", "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು {View Schemes}" if is_kn else "View Schemes", "👉")
-
-# Row 5: Direct Buy (Farmer to Consumer) & User Guide
-c_r5_1, c_r5_2 = st.columns(2)
-with c_r5_1:
-    with st.container(border=True):
-        st.markdown(
-            "<span style='background:#E65100; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>9</span>"
-            "**🛒 " + ("ರೈತರಿಂದ ನೇರ ಖರೀದಿ {Direct Buy}" if is_kn else "Direct Buy (Farmer to Consumer)") + "**",
-            unsafe_allow_html=True
-        )
-        st.caption(
-            "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ನೇರವಾಗಿ ಕರ್ನಾಟಕದ ರೈತರಿಂದ ತಾಜಾ ಸಿರಿಧಾನ್ಯ, ತರಕಾರಿ, ಬೆಲ್ಲ ಮತ್ತು ಕಾಡುಜೇನು ಖರೀದಿ."
-            if is_kn else
-            "Direct farm-to-consumer market. Zero middlemen commission. Authentic millets, jaggery, honey and fresh harvest."
-        )
-        ui.page_link("views/direct_market.py", "ಕೃಷಿ ಮಾರುಕಟ್ಟೆ {Open Direct Market}" if is_kn else "Open Direct Market", "👉")
 
 with c_r5_2:
     with st.container(border=True):
