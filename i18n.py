@@ -48,6 +48,19 @@ def crop(name):
 def language_picker(translated=True):
     lang = current_lang()
     with st.sidebar:
+        st.markdown(
+            """
+            <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); padding: 14px 14px 12px 14px; border-radius: 14px; text-align: center; color: white; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(27, 94, 32, 0.2);">
+                <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>🌾</span> KrushiNudi <span>🍃</span>
+                </div>
+                <div style="font-size: 0.76rem; color: #E8F5E9; margin-top: 2px; font-weight: 500;">
+                    The Voice of Intelligent Agriculture
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         st.markdown("**🌐 ಭಾಷೆ / Language**")
         choice = st.radio(
             "Language / ಭಾಷೆ",

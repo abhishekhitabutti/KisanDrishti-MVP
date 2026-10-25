@@ -5,79 +5,182 @@ import streamlit as st
 
 CSS = """
 <style>
-.block-container {padding-top: 1.2rem; max-width: 820px;}
-.kd-hero {background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%); color: #fff;
-  padding: 1.5rem 1.4rem; border-radius: 18px; margin-bottom: 1.2rem; box-shadow: 0 4px 12px rgba(27,94,32,0.18);}
-.kd-hero h1 {color: #fff !important; margin: 0; font-size: 1.85rem; line-height: 1.2; font-weight: 800;}
-.kd-hero p {margin: .4rem 0 0; opacity: .95; font-size: .98rem;}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap');
+
+html, body, [class*="css"] {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Kannada', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+.block-container {
+  padding-top: 1.2rem !important;
+  padding-bottom: 2.5rem !important;
+  max-width: 980px !important;
+}
+
+.kd-hero {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 55%, #388E3C 100%);
+  color: #ffffff;
+  padding: 1.6rem 1.6rem;
+  border-radius: 18px;
+  margin-bottom: 1.4rem;
+  box-shadow: 0 4px 16px rgba(27, 94, 32, 0.18);
+}
+.kd-hero h1 {
+  color: #ffffff !important;
+  margin: 0;
+  font-size: 1.95rem;
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.kd-hero p {
+  margin: 0.45rem 0 0;
+  opacity: 0.95;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
 .kn-brand-banner {
   background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 55%, #388E3C 100%);
   border-radius: 20px;
-  padding: 24px 20px 22px 20px;
+  padding: 26px 22px 24px 22px;
   text-align: center;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(27, 94, 32, 0.22);
+  box-shadow: 0 6px 20px rgba(27, 94, 32, 0.22);
   margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
 }
 .kn-brand-title {
-  font-size: 2.3rem;
+  font-size: 2.45rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 .kn-brand-tagline {
   color: #E8F5E9;
-  font-size: 0.96rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   margin-top: 4px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
 }
+
 .kn-weather-ribbon {
   background: #ffffff;
   border: 1px solid #C8E6C9;
   border-left: 6px solid #2E7D32;
-  border-radius: 14px;
-  padding: 14px 18px;
+  border-radius: 16px;
+  padding: 16px 20px;
   margin-bottom: 18px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+
 .kn-card-badge {
   background: #2E7D32;
   color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
   float: right;
 }
+
 .kn-footer {
   background: #1B5E20;
   color: #E8F5E9;
-  border-radius: 16px;
-  padding: 20px 16px;
+  border-radius: 18px;
+  padding: 24px 18px;
   text-align: center;
-  margin-top: 26px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-top: 28px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
 }
-.kd-card {background: #fff; border: 1px solid #DCE8DC; border-radius: 14px; padding: .9rem 1rem;
-  margin: .6rem 0; box-shadow: 0 1px 3px rgba(0,0,0,.06);}
-.kd-card h4 {margin: 0 0 .35rem 0; color: #1B5E20;}
-.kd-badge {display: inline-block; padding: .15rem .65rem; border-radius: 999px; font-size: .78rem;
-  font-weight: 700; color: #fff; margin: 0 .35rem .25rem 0;}
+
+.kd-card {
+  background: #ffffff;
+  border: 1px solid #DCE8DC;
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  margin: 0.7rem 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+.kd-card h4 {
+  margin: 0 0 0.4rem 0;
+  color: #1B5E20;
+  font-weight: 700;
+}
+
+.kd-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0.35rem 0.25rem 0;
+}
+
 .kd-steps {display: flex; gap: .5rem; margin: .6rem 0 1rem 0;}
 .kd-step {flex: 1; background: #F1F8E9; border-radius: 12px; padding: .6rem .5rem; text-align: center;
   font-size: .85rem; border: 1px solid #DCE8DC;}
 .kd-step b {display: block; font-size: 1.3rem;}
-.kd-stats {display: flex; gap: .5rem; margin: .4rem 0 1rem 0;}
-.kd-stat {flex: 1; background: #fff; border: 1px solid #DCE8DC; border-radius: 12px; padding: .6rem .4rem; text-align: center;}
-.kd-stat b {display: block; font-size: 1.5rem; color: #1B5E20; line-height: 1.1;}
-.kd-stat span {font-size: .8rem; color: #4A5A4A;}
+
+.kd-stats {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0.6rem 0 1.2rem 0;
+}
+.kd-stat {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #DCE8DC;
+  border-radius: 14px;
+  padding: 0.75rem 0.6rem;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+.kd-stat b {
+  display: block;
+  font-size: 1.6rem;
+  color: #1B5E20;
+  line-height: 1.15;
+}
+.kd-stat span {
+  font-size: 0.82rem;
+  color: #4A5A4A;
+  font-weight: 500;
+}
+
+.kn-safety-strip {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0 16px 0;
+  flex-wrap: wrap;
+}
+.kn-safety-card {
+  flex: 1;
+  min-width: 105px;
+  background: #F9FAF9;
+  border: 1px solid #DCE8DC;
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2E4B2E;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+.kn-safety-card div {
+  font-size: 1.35rem;
+  margin-bottom: 4px;
+}
+
 .kd-card-icon {font-size: 1.6rem; line-height: 1;}
-[data-testid="stSidebar"] {background: #F1F8E9;}
+[data-testid="stSidebar"] {background: #F4F8F4 !important; border-right: 1px solid #E0EAE0 !important;}
 .kd-warn {background: #FFF8E1; border-left: 5px solid #F9A825; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 .kd-stop {background: #FDECEA; border-left: 5px solid #C62828; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 

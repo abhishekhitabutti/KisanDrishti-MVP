@@ -257,6 +257,105 @@ if daily is not None:
         f"Forecast for {district} (model data from Open-Meteo, not an official warning). Updated {updated}. It refreshes automatically about every 30 minutes."
     )
     st.caption(caption_text)
+
+    # --- Live Weather Overview Card (Matching Production Mobile UI) ---
+    tmax0 = int(round(daily.iloc[0]["tmax"]))
+    tmin0 = int(round(daily.iloc[0]["tmin"]))
+    rain0 = float(daily.iloc[0]["rain"])
+    gust0 = int(round(daily.iloc[0]["gust"]))
+    hum0 = int(daily.iloc[0]["humidity"])
+    condition = (
+        ("ಭಾರೀ ಮಳೆ {Heavy Rain}" if rain0 >= 20 else "ಸಾಧಾರಣ ಮಳೆ {Light Rain}") if rain0 >= 1.0 else
+        ("ಮೋಡ ಕವಿದ ವಾತಾವರಣ {Cloudy}" if hum0 >= 70 else "ಭಾಗಶಃ ಮೋಡ {Partly Cloudy}")
+    ) if is_kn else (
+        ("Heavy Rain" if rain0 >= 20 else "Light Rain") if rain0 >= 1.0 else
+        ("Cloudy" if hum0 >= 70 else "Partly Cloudy")
+    )
+    weather_icon = "🌧️" if rain0 >= 1.0 else ("⛅" if hum0 >= 60 else "☀️")
+
+    st.markdown(
+        f"""
+        <div style="background: linear-gradient(135deg, #E8F5E9 0%, #FFFFFF 100%); border: 1px solid #C8E6C9; border-radius: 18px; padding: 20px; margin: 12px 0 16px 0; box-shadow: 0 4px 14px rgba(46, 125, 50, 0.08);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <div style="color: #2E7D32; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px;">
+                        📍 {district_display}, Karnataka
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <span style="font-size: 3rem;">{weather_icon}</span>
+                        <div>
+                            <span style="font-size: 2.5rem; font-weight: 800; color: #1B2A1B; line-height: 1;">{tmax0}°C</span>
+                            <div style="font-size: 1rem; font-weight: 600; color: #388E3C; margin-top: 2px;">{condition}</div>
+                            <div style="font-size: 0.8rem; color: #666;">{'ಕನಿಷ್ಠ:' if is_kn else 'Min:'} {tmin0}°C</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #FFFFFF; border: 1px solid #E0EAE0; border-radius: 14px; padding: 12px 18px; min-width: 160px;">
+                    <div style="margin-bottom: 8px; font-size: 0.9rem;">
+                        💧 <b>{'ಆರ್ದ್ರತೆ:' if is_kn else 'Humidity:'}</b> {hum0}%
+                    </div>
+                    <div style="font-size: 0.9rem;">
+                        💨 <b>{'ಗಾಳಿಯ ವೇಗ:' if is_kn else 'Wind Gust:'}</b> {gust0} km/h
+                    </div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # --- Farmer Precautions Card (Take Action) ---
+    st.markdown(
+        f"""
+        <div style="background: #FFFDF7; border: 1px solid #FFE082; border-left: 6px solid #F9A825; border-radius: 14px; padding: 16px 18px; margin-bottom: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-weight: 800; color: #8D6E63; font-size: 1.05rem;">
+                    🌾 {"ಕೃಷಿಕರ ಮುನ್ನೆಚ್ಚರಿಕೆಗಳು {Farmer Precautions}" if is_kn else "Farmer Precautions"}
+                </span>
+                <span style="background: #FFF3E0; color: #E65100; font-size: 0.75rem; font-weight: bold; padding: 3px 8px; border-radius: 8px;">
+                    ⚠️ {"ಕ್ರಮ ಕೈಗೊಳ್ಳಿ {Action Required}" if is_kn else "Action Required"}
+                </span>
+            </div>
+            <div style="font-size: 0.88rem; color: #37474F; line-height: 1.6;">
+                <div>✅ <b>{"ನೀರಾವರಿ {Irrigation}:" if is_kn else "Irrigation:"}</b> {"ಬೆಳಿಗ್ಗೆ ಅಥವಾ ಸಂಜೆ ನೀರು ಹರಿಸಿ, ನೀರಿನ ಆವಿಯಾಗುವಿಕೆ ತಡೆಯಿರಿ." if is_kn else "Irrigate crops in early morning or evening to reduce evaporative water loss."}</div>
+                <div>✅ <b>{"ಸಿಂಪರಣೆ {Spraying}:" if is_kn else "Spraying:"}</b> {"ಮಳೆ ಮುನ್ಸೂಚನೆ ಇದ್ದರೆ ಕೀಟನಾಶಕ ಸಿಂಪಡಣೆಯನ್ನು ಮುಂದೂಡಿ." if is_kn else "Postpone spraying pesticides if rain or gusty winds are expected."}</div>
+                <div>✅ <b>{"ಚರಂಡಿ {Drainage}:" if is_kn else "Drainage:"}</b> {"ಜಮೀನಿನಲ್ಲಿ ನೀರು ನಿಲ್ಲದಂತೆ ಸೂಕ್ತ ಬಸಿಗಾಲುವೆಗಳನ್ನು ಸಿದ್ಧವಾಗಿಡಿ." if is_kn else "Ensure field drainage to prevent waterlogging around root zones."}</div>
+                <div>✅ <b>{"ದಾಸ್ತಾನು {Storage}:" if is_kn else "Crop Safety:"}</b> {"ಕೊಯ್ಲು ಮಾಡಿದ ಉತ್ಪನ್ನಗಳನ್ನು ಒಣ ಹಾಗೂ ಎತ್ತರದ ಜಾಗದಲ್ಲಿ ಟಾರ್ಪಲ್‌ನಿಂದ ರಕ್ಷಿಸಿ." if is_kn else "Store harvested produce off the ground and protected from moisture."}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # --- 7-Day Visual Forecast Cards ---
+    st.markdown("### 📅 " + ("7 ದಿನಗಳ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ" if is_kn else "7-Day Weather Forecast"))
+    cols_7 = st.columns(min(len(daily), 7))
+    for idx in range(min(len(daily), 7)):
+        r = daily.iloc[idx]
+        d_dt = pd.to_datetime(r["date"])
+        d_day = ("ಇಂದು {Today}" if idx == 0 else d_dt.strftime("%a")) if is_kn else ("Today" if idx == 0 else d_dt.strftime("%a"))
+        d_date = d_dt.strftime("%d %b")
+        d_tmax = int(round(r["tmax"]))
+        d_tmin = int(round(r["tmin"]))
+        d_rain = float(r["rain"])
+        d_icon = "🌧️" if d_rain >= 2.5 else ("⛅" if r["humidity"] >= 65 else "☀️")
+        with cols_7[idx]:
+            st.markdown(
+                f"""
+                <div style="background: {'#FFF8E1' if d_rain >= 2.5 else '#F1F8E9'}; border: 1px solid {'#FFE082' if d_rain >= 2.5 else '#C8E6C9'}; border-radius: 12px; padding: 10px 4px; text-align: center; margin-bottom: 12px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: #1B5E20;">{d_day}</div>
+                    <div style="font-size: 0.72rem; color: #666; margin-bottom: 4px;">{d_date}</div>
+                    <div style="font-size: 1.6rem; margin: 2px 0;">{d_icon}</div>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: #1B2A1B;">{d_tmax}°</div>
+                    <div style="font-size: 0.75rem; color: #666;">{d_tmin}°</div>
+                    <div style="font-size: 0.72rem; color: {'#C62828' if d_rain >= 2.5 else '#2E7D32'}; font-weight: 700; margin-top: 4px;">
+                        💧 {d_rain:.1f} mm
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
     found = hazards_for(daily, is_kn)
 
     st.subheader("ಮುಂದಿನ 3 ದಿನಗಳ ಮುನ್ಸೂಚನೆ" if is_kn else "Next 3 days")

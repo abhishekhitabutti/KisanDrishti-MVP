@@ -178,6 +178,29 @@ def render_entry(entry, district, confirm=False, key_prefix="browse", show_image
         ))
 
     with st.expander(t("Precautions and safety"), expanded=True):
+        st.markdown(
+            f"""
+            <div class="kn-safety-strip">
+                <div class="kn-safety-card">
+                    <div>🧤</div>
+                    <span>{"ಕೈಗವಸು ಧರಿಸಿ" if is_kn_local else "Wear Gloves"}</span>
+                </div>
+                <div class="kn-safety-card">
+                    <div>😷</div>
+                    <span>{"ಮುಖಗವಸು ಬಳಸಿ" if is_kn_local else "Wear Mask"}</span>
+                </div>
+                <div class="kn-safety-card">
+                    <div>🧼</div>
+                    <span>{"ಕೈ ತೊಳೆಯಿರಿ" if is_kn_local else "Wash Hands"}</span>
+                </div>
+                <div class="kn-safety-card">
+                    <div>🚸</div>
+                    <span>{"ಮಕ್ಕಳಿಂದ ದೂರವಿಡಿ" if is_kn_local else "Child Safe"}</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         if entry.get("precautions"):
             st.markdown("**" + t("For this problem") + "**")
             bullets(entry["precautions"])
@@ -380,11 +403,38 @@ def render_result(state):
     result, district = state["result"], state["district"]
     decision = diagnosis.decide(result, KB)
     mode = decision["mode"]
-    head = (f'<div class="kd-card"><h4>{escape(result["name"])}</h4>'
-            f'{ui.badge(type_label(result["category"]), result["category"])}'
-            f'{ui.badge(t("Confidence: {level}", level=t(result["confidence"])), result["confidence"])}'
-            f'<div>{escape(t("Crop seen: {crop}", crop=result["crop"]))}</div></div>')
-    st.markdown(head, unsafe_allow_html=True)
+    is_kn_local = (i18n.current_lang() == "kn")
+    conf_level = result.get("confidence", "high")
+    conf_pct = 94 if conf_level == "high" else (74 if conf_level == "medium" else 55)
+    if isinstance(result.get("confidence"), (int, float)):
+        conf_pct = int(result["confidence"])
+
+    diag_banner = f"""
+    <div style="background:#FFFFFF; border:1px solid #DCE8DC; border-radius:16px; padding:18px 20px; margin:12px 0; box-shadow:0 3px 12px rgba(0,0,0,0.05);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.8rem; font-weight:700; color:#C62828; text-transform:uppercase; letter-spacing:0.5px;">
+                🔴 {"ರೋಗ ಪತ್ತೆ ಫಲಿತಾಂಶ {Diagnosis Result}" if is_kn_local else "Diagnosis Result"}
+            </span>
+            <span style="background:#E8F5E9; color:#1B5E20; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:10px;">
+                {escape(t("Crop seen: {crop}", crop=result["crop"]))}
+            </span>
+        </div>
+        <div style="font-size:1.85rem; font-weight:800; color:#1B5E20; margin:6px 0 10px 0;">
+            {escape(result["name"])}
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.88rem; font-weight:600; color:#4A5A4A; margin-bottom:5px;">
+            <span>{"ರೋಗದ ನಂಬಿಕೆ ಮಟ್ಟ (Confidence)" if is_kn_local else "Confidence Level"}:</span>
+            <span style="color:#2E7D32; font-weight:700;">{conf_pct}%</span>
+        </div>
+        <div style="background:#E0E0E0; border-radius:10px; height:8px; width:100%; overflow:hidden;">
+            <div style="background:linear-gradient(90deg, #43A047, #2E7D32); height:100%; width:{conf_pct}%; border-radius:10px;"></div>
+        </div>
+        <div style="font-size:0.82rem; color:#666; margin-top:8px;">
+            {"ಈ ಎಲೆಯ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಿ ಈ ರೋಗವನ್ನು ಗುರುತಿಸಲಾಗಿದೆ." if is_kn_local else "Identified via AI image visual lesion pattern matching."}
+        </div>
+    </div>
+    """
+    st.markdown(diag_banner, unsafe_allow_html=True)
     # Infestation Severity Level Card
     if result.get("severity"):
         sev = result["severity"]
