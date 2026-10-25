@@ -211,17 +211,35 @@ with c_r3_2:
         )
         ui.page_link("views/weed_nutrient.py", "ಕಳೆ & ಪೋಷಕಾಂಶ {Weed Advisor}" if is_kn else "Weed & Nutrients", "👉")
 
-# Additional Quick Tools Bar
-with st.container(border=True):
-    col_t1, col_t2 = st.columns(2)
-    with col_t1:
-        st.markdown(f"**💊 {t('Spray & nutrition prescription')}**")
-        st.caption(t("Crop protection, dosages, high-yield boosters and prescription slip."))
-        ui.page_link("views/spray_prescription.py", t("Open"), "➡️")
-    with col_t2:
-        st.markdown(f"**📋 {t('Schemes and help')}**")
-        st.caption(t("Documents and steps for crop insurance, PM-KISAN and loans."))
-        ui.page_link("views/schemes.py", t("Open"), "➡️")
+# Row 4: Spray Prescription & Schemes and Help (Each in its own separate elegant card box)
+c_r4_1, c_r4_2 = st.columns(2)
+with c_r4_1:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#7B1FA2; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>7</span>"
+            "**💊 " + t("Spray & nutrition prescription") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ನಿಮ್ಮ ಜಮೀನಿನ ಅಳತೆಗೆ ತಕ್ಕಂತೆ ಔಷಧದ ನಿಖರ ಡೋಸ್, ಬೂಸ್ಟರ್ ಟಾನಿಕ್ ಹಾಗೂ ನೇರ ಖರೀದಿ ಚೀಟಿ."
+            if is_kn else
+            "Crop protection, dosages, high-yield boosters and printable prescription slip."
+        )
+        ui.page_link("views/spray_prescription.py", "ಔಷಧ ಚೀಟಿ {Open Prescription}" if is_kn else "Open Prescription", "👉")
+
+with c_r4_2:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#00838F; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>8</span>"
+            "**📋 " + t("Schemes and help") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಬೆಳೆ ವಿಮೆ, ಪಿಎಂ-ಕಿಸಾನ್, ಕೃಷಿ ಸಾಲ ಹಾಗೂ ಸರ್ಕಾರಿ ಸೌಲಭ್ಯಗಳ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ."
+            if is_kn else
+            "Documents, eligibility and direct steps for crop insurance, PM-KISAN and agri loans."
+        )
+        ui.page_link("views/schemes.py", "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು {View Schemes}" if is_kn else "View Schemes", "👉")
 
 # ==============================================================================
 # 4. PROFESSIONAL BOTTOM FOOTER BANNER (IMAGE 1)
