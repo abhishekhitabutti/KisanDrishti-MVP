@@ -225,19 +225,28 @@ with st.container(border=True):
 # ==============================================================================
 # 4. PROFESSIONAL BOTTOM FOOTER BANNER (IMAGE 1)
 # ==============================================================================
+footer_motto = "🌱 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ &nbsp;|&nbsp; 🛡️ ವಿಶ್ವಾಸಾರ್ಹ ಮಾಹಿತಿ &nbsp;|&nbsp; 👥 ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ" if is_kn else "🌱 Smart Farming &nbsp;|&nbsp; 🛡️ Sourced Intelligence &nbsp;|&nbsp; 👥 For Farmers, By Farmers"
+footer_links = (
+    '<a href="?page=about" style="color: #C8E6C9; text-decoration: none;">ಗೌಪ್ಯತಾ ನೀತಿ {Privacy}</a> &nbsp;•&nbsp; '
+    '<a href="?page=about" style="color: #C8E6C9; text-decoration: none;">ನಿಬಂಧನೆಗಳು {Terms}</a> &nbsp;•&nbsp; '
+    '<a href="mailto:abhishekhitabutti@gmail.com" style="color: #C8E6C9; text-decoration: none;">ಸಂಪರ್ಕಿಸಿ {Contact}</a>'
+    if is_kn else
+    '<a href="?page=about" style="color: #C8E6C9; text-decoration: none;">Privacy Policy</a> &nbsp;•&nbsp; '
+    '<a href="?page=about" style="color: #C8E6C9; text-decoration: none;">Terms of Service</a> &nbsp;•&nbsp; '
+    '<a href="mailto:abhishekhitabutti@gmail.com" style="color: #C8E6C9; text-decoration: none;">Contact Developer</a>'
+)
+
 st.markdown(
-    """
+    f"""
     <div class="kn-footer">
         <div style="font-size: 1rem; font-weight: bold; margin-bottom: 8px;">
-            🌱 ಸ್ಮಾರ್ಟ್ ಕೃಷಿ &nbsp;|&nbsp; 🛡️ ವಿಶ್ವಾಸಾರ್ಹ ಮಾಹಿತಿ &nbsp;|&nbsp; 👥 ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ
+            {footer_motto}
         </div>
         <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 12px;">
             © 2026 KrushiNudi. All rights reserved. &nbsp;|&nbsp; Developed by Abhishek Hitabutti
         </div>
         <div style="font-size: 0.8rem; opacity: 0.8;">
-            <a href="?page=about" style="color: #C8E6C9; text-decoration: none;">ಗೌಪ್ಯತಾ ನೀತಿ {Privacy}</a> &nbsp;•&nbsp; 
-            <a href="?page=about" style="color: #C8E6C9; text-decoration: none;">ನಿಬಂಧನೆಗಳು {Terms}</a> &nbsp;•&nbsp; 
-            <a href="mailto:abhishekhitabutti@gmail.com" style="color: #C8E6C9; text-decoration: none;">ಸಂಪರ್ಕಿಸಿ {Contact}</a>
+            {footer_links}
         </div>
     </div>
     """,

@@ -21,6 +21,9 @@ ui.inject_css()
 # Anyone can use KrushiNudi directly without any login or registration.
 # auth.require_auth()
 
+# Language picker positioned at the top of the sidebar for instant accessibility
+i18n.language_picker()
+
 pages = [
     st.Page("views/home.py", title=t("KrushiNudi"), icon="🌾", default=True),
     st.Page("views/crop_advisor.py", title=t("Crop advisor"), icon="🌱", url_path="advisor"),
@@ -35,5 +38,4 @@ pages = [
     st.Page("views/about.py", title=t("About and privacy"), icon="ℹ️", url_path="about"),
 ]
 page = st.navigation(pages)
-i18n.language_picker(translated=page.url_path not in i18n.UNTRANSLATED_PAGES)
 page.run()

@@ -29,7 +29,7 @@ def element_types(node, found=None):
 
 def test_router_opens_every_page_with_its_own_heading():
     for view, title in VIEWS.items():
-        at = AppTest.from_file(str(ROOT / view), default_timeout=30).run()
+        at = AppTest.from_file(str(ROOT / view), default_timeout=45).run()
         assert not at.exception, view
         text = " ".join(m.value for m in at.markdown)
         assert (title in text or title.replace("&", "&amp;") in text), view

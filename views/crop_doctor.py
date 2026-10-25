@@ -104,10 +104,10 @@ def expert_help_box(reasons=None):
 
 
 def reference_image(entry_id):
-    for ext in ("jpg", "jpeg", "png"):
+    for ext in ("png", "jpg", "jpeg", "webp"):
         path = IMAGES / f"{entry_id}.{ext}"
         if path.exists():
-            st.image(str(path), caption=t("Reference photo"))
+            st.image(str(path), caption=t("Reference photo"), use_container_width=True)
             return
 
 
@@ -133,10 +133,11 @@ def spray_window_box(district):
     st.caption(t("Forecast for {district}. Simple rules: wait if rain is 2.5 mm or more or gusts reach 30 km/h.", district=district))
 
 
-def render_entry(entry, district, confirm=False, key_prefix="browse"):
+def render_entry(entry, district, confirm=False, key_prefix="browse", show_image=True):
     if confirm:
         ui.note(t("This is a likely match, not a certain one. Confirm with your KVK or agriculture officer before you spray anything."), "warn")
-    reference_image(entry["id"])
+    if show_image:
+        reference_image(entry["id"])
     st.markdown("#### " + t("What it looks like"))
     bullets(entry["look_for"])
     if entry.get("not_to_confuse"):
@@ -671,7 +672,7 @@ with tab_browse:
                     st.markdown(f"- `{t(sign)}`")
 
         with col_right:
-            render_entry(chosen_entry, browse_district, key_prefix="guide")
+            render_entry(chosen_entry, browse_district, key_prefix="guide", show_image=False)
     else:
         st.info(t("The guidance library could not be loaded."))
 
