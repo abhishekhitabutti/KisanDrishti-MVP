@@ -61,3 +61,4 @@ class MandiViewModelTest {
         assertEquals("cotton", viewModel.searchQuery.value)
     }
 }
+

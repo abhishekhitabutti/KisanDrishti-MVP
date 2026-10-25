@@ -4,3 +4,9 @@ __pycache__/
 .streamlit/secrets.toml
 *.db
 kisan_users.db
+*.dist-info/
+*.pyd
+*.zip
+android/.gradle/
+.gradle/
+build/

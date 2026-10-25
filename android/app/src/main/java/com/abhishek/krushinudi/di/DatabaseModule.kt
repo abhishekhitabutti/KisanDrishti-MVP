@@ -32,3 +32,4 @@ object DatabaseModule {
     @Provides
     fun provideBorewellDao(db: AppDatabase): BorewellDao = db.borewellDao()
 }
+

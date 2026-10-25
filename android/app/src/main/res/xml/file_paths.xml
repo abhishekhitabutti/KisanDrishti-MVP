@@ -3,3 +3,4 @@
     <external-files-path name="crop_photos" path="Pictures/" />
     <cache-path name="crop_cache" path="/" />
 </paths>
+

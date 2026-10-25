@@ -580,3 +580,4 @@ fun DayForecastCard(day: DayForecastDto) {
         }
     }
 }
+

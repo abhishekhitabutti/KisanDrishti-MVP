@@ -48,7 +48,6 @@ def crop(name):
 def language_picker(translated=True):
     lang = current_lang()
     with st.sidebar:
-        st.markdown("---")
         st.markdown("**🌐 ಭಾಷೆ / Language**")
         choice = st.radio(
             "Language / ಭಾಷೆ",
@@ -63,4 +62,5 @@ def language_picker(translated=True):
             st.caption(t(REVIEW_NOTICE))
             if not translated:
                 st.info(t(UNTRANSLATED))
+        st.markdown("---")
     return st.session_state["lang"]

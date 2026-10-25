@@ -20,3 +20,4 @@ interface CropAnalysisDao {
     @Query("DELETE FROM crop_analyses WHERE id = :id")
     suspend fun deleteAnalysis(id: Long)
 }
+

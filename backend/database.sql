@@ -102,3 +102,4 @@ CREATE INDEX IF NOT EXISTS idx_crop_analyses_farmer ON crop_analyses(farmer_id);
 CREATE INDEX IF NOT EXISTS idx_borewell_advisories_farmer ON borewell_advisories(farmer_id);
 CREATE INDEX IF NOT EXISTS idx_borewell_points_advisory ON borewell_points(advisory_id);
 CREATE INDEX IF NOT EXISTS idx_mandi_prices_district_crop ON mandi_prices(district, crop_name);
+

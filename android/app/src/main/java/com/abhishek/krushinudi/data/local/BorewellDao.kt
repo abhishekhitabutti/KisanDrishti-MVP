@@ -17,3 +17,4 @@ interface BorewellDao {
     @Query("DELETE FROM borewell_records WHERE id = :id")
     suspend fun deleteBorewell(id: Long)
 }
+

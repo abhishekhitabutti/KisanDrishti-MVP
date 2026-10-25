@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "KrushiNudi"
 include(":app")
+

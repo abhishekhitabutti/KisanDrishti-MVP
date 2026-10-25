@@ -18,3 +18,4 @@ data class CropAnalysisEntity(
     val chemicalOptionsJson: String,
     val timestamp: Long = System.currentTimeMillis()
 )
+

@@ -44,6 +44,7 @@ def load_crop_count():
         return 22
 
 
+ui.inject_css()
 n_crops = load_crop_count()
 is_kn = (i18n.current_lang() == "kn")
 

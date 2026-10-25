@@ -77,3 +77,4 @@ class CropDoctorViewModelTest {
         assertEquals("cotton", success.report.crop)
     }
 }
+

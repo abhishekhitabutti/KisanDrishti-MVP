@@ -23,3 +23,4 @@ val SurfaceDark = Color(0xFF121411)
 val CardDark = Color(0xFF1E211D)
 val TextPrimaryDark = Color(0xFFE2E3DE)
 val TextSecondaryDark = Color(0xFFC4C8BA)
+

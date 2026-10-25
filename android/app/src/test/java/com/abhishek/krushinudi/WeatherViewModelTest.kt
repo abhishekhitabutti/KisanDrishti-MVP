@@ -86,3 +86,4 @@ class WeatherViewModelTest {
         assertEquals("Belagavi, Karnataka", viewModel.selectedDistrict.value)
     }
 }
+

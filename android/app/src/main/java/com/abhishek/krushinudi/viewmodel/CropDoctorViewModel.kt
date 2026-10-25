@@ -57,3 +57,4 @@ class CropDoctorViewModel @Inject constructor(
         _selectedImage.value = null
     }
 }
+

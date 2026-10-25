@@ -81,67 +81,113 @@ CSS = """
 .kd-warn {background: #FFF8E1; border-left: 5px solid #F9A825; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 .kd-stop {background: #FDECEA; border-left: 5px solid #C62828; padding: .7rem .9rem; border-radius: 8px; margin: .6rem 0;}
 
-/* --- Floto Usability Audit Fix 2: Utility Icons Discoverability & Affordance --- */
+/* --- Completely Hide Developer Toolbar, Cloud Badges & Watermarks for Visitors --- */
 header[data-testid="stHeader"] {
   background: transparent !important;
-  z-index: 99 !important;
-}
-[data-testid="stToolbar"] {
-  right: 1.25rem !important;
-  top: 0.6rem !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-}
-[data-testid="stToolbar"] button,
-[data-testid="stHeader"] button,
-button[data-testid="baseButton-headerNoPadding"],
-[data-testid="stActionButton"] button,
-[data-testid="stToolbarActionButton"] {
-  background: #ffffff !important;
-  color: #1B5E20 !important;
-  border: 1.5px solid #A5D6A7 !important;
-  border-radius: 20px !important;
-  padding: 6px 14px !important;
-  min-height: 38px !important;
-  min-width: 38px !important;
-  font-size: 0.95rem !important;
-  font-weight: 600 !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
-  transition: all 0.2s ease-in-out !important;
-}
-[data-testid="stToolbar"] button:hover,
-[data-testid="stHeader"] button:hover {
-  background: #E8F5E9 !important;
-  border-color: #2E7D32 !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2) !important;
-}
-[data-testid="stToolbar"] svg,
-[data-testid="stHeader"] svg {
-  width: 1.25rem !important;
-  height: 1.25rem !important;
-  fill: #1B5E20 !important;
+  color: transparent !important;
 }
 
-/* --- Floto Usability Audit Fix 3: Manage App Viewport Spacing & Padding --- */
+header[data-testid="stHeader"] > div:not([data-testid="stSidebarCollapsedControl"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+[data-testid="stSidebarCollapsedControl"] {
+  display: block !important;
+  visibility: visible !important;
+  z-index: 99999 !important;
+}
+
+[data-testid="stToolbar"],
+[data-testid="stToolbarActions"],
+[data-testid="stHeaderActions"],
+[data-testid="stHeaderActionElements"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"],
+.stAppDeployButton,
+.stDeployButton,
+button[data-testid="stToolbarActionButton"],
+button[data-testid="baseButton-headerNoPadding"],
+div[class*="stAppToolbar"],
+div[class*="Toolbar"],
+div[class*="toolbar"],
+div[class*="headerActions"],
+div[data-testid="stToolbarActions"],
+#MainMenu,
+footer,
+[data-testid="stFooter"],
 #manage-app-button,
 [data-testid="manage-app-button"],
 div[class*="viewerBadge_container"],
 div[class*="viewerBadge"],
 div[class*="manageApp"],
+div[class*="floatingBadge"],
+div[class*="StreamlitBranding"],
+a[class*="viewerBadge"],
 .viewerBadge_container__r5y7m,
 .viewerBadge_link__qRIco {
-  bottom: 24px !important;
-  right: 24px !important;
-  margin-bottom: 8px !important;
-  margin-right: 8px !important;
-  padding: 8px 16px !important;
-  border-radius: 24px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22) !important;
-  background-color: #ffffff !important;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+}
+
+/* --- Enterprise Agricultural Theme Polish --- */
+.block-container {
+  padding-top: 1.2rem !important;
+  padding-bottom: 2.5rem !important;
+  max-width: 960px !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"] > div {
+  border-radius: 14px !important;
+  border-color: #DCE8DC !important;
+  background-color: #FFFFFF !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"] > div:hover {
+  border-color: #A5D6A7 !important;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.08) !important;
+}
+.stButton > button {
+  border-radius: 10px !important;
+  font-weight: 600 !important;
   border: 1px solid #C8E6C9 !important;
-  z-index: 9999 !important;
+  transition: all 0.2s ease !important;
+}
+.stButton > button:hover {
+  border-color: #2E7D32 !important;
+  background-color: #E8F5E9 !important;
+  color: #1B5E20 !important;
+}
+[data-testid="stPageLink-NavLink"] {
+  border-radius: 10px !important;
+  padding: 6px 12px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+[data-testid="stPageLink-NavLink"]:hover {
+  background-color: #E8F5E9 !important;
+  color: #1B5E20 !important;
+}
+button[data-baseweb="tab"] {
+  font-weight: 600 !important;
+  font-size: 0.92rem !important;
+}
+button[data-baseweb="tab"][aria-selected="true"] {
+  color: #1B5E20 !important;
+  border-bottom-color: #2E7D32 !important;
 }
 </style>
 """
@@ -158,6 +204,7 @@ def inject_css():
 
 
 def hero(title, subtitle="", icon=""):
+    inject_css()
     st.markdown(
         f'<div class="kd-hero"><h1>{escape(icon)} {escape(title)}</h1><p>{escape(subtitle)}</p></div>',
         unsafe_allow_html=True,

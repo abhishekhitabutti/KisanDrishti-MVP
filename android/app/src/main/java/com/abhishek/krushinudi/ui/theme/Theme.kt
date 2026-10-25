@@ -54,3 +54,4 @@ fun KrushiNudiTheme(
         content = content
     )
 }
+

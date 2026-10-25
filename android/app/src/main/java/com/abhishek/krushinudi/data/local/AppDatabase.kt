@@ -12,3 +12,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun cropAnalysisDao(): CropAnalysisDao
     abstract fun borewellDao(): BorewellDao
 }
+

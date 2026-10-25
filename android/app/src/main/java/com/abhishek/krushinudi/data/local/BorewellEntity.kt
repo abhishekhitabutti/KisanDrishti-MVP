@@ -22,3 +22,4 @@ data class BorewellEntity(
     val pointsJson: String,        // JSON serialized candidate points
     val timestamp: Long = System.currentTimeMillis()
 )
+
