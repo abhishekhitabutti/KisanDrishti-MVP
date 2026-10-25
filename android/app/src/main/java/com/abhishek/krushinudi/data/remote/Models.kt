@@ -84,3 +84,40 @@ data class MandiPriceDto(
     @SerializedName("max_price") val maxPrice: Double,
     @SerializedName("trend") val trend: String
 )
+
+data class PrecautionDto(
+    @SerializedName("id") val id: String,
+    @SerializedName("instruction_en") val instructionEn: String,
+    @SerializedName("instruction_kn") val instructionKn: String,
+    @SerializedName("action_label_en") val actionLabelEn: String,
+    @SerializedName("action_label_kn") val actionLabelKn: String,
+    @SerializedName("priority") val priority: String
+)
+
+data class DayForecastDto(
+    @SerializedName("day_label") val dayLabel: String,
+    @SerializedName("date_str") val dateStr: String,
+    @SerializedName("condition") val condition: String,
+    @SerializedName("condition_icon") val conditionIcon: String,
+    @SerializedName("temp_max_c") val tempMaxC: Int,
+    @SerializedName("temp_min_c") val tempMinC: Int,
+    @SerializedName("rainfall_mm") val rainfallMm: Double,
+    @SerializedName("is_rainy") val isRainy: Boolean
+)
+
+data class WeatherForecastResponseDto(
+    @SerializedName("district") val district: String,
+    @SerializedName("state") val state: String,
+    @SerializedName("current_temp_c") val currentTempC: Double,
+    @SerializedName("feels_like_c") val feelsLikeC: Double,
+    @SerializedName("condition_en") val conditionEn: String,
+    @SerializedName("condition_kn") val conditionKn: String,
+    @SerializedName("humidity_pct") val humidityPct: Int,
+    @SerializedName("wind_speed_kmh") val windSpeedKmh: Double,
+    @SerializedName("wind_direction") val windDirection: String,
+    @SerializedName("precautions") val precautions: List<PrecautionDto>,
+    @SerializedName("forecast_7day") val forecast7Day: List<DayForecastDto>,
+    @SerializedName("advisory_tip_kn") val advisoryTipKn: String,
+    @SerializedName("advisory_tip_en") val advisoryTipEn: String
+)
+

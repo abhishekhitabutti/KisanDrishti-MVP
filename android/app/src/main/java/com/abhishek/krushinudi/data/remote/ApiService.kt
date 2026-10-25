@@ -45,9 +45,15 @@ interface ApiService {
         @Part("language") language: RequestBody
     ): Response<CropAnalysisResponseDto>
 
+    @GET("api/v1/weather/forecast")
+    suspend fun getWeatherForecast(
+        @Query("district") district: String
+    ): Response<WeatherForecastResponseDto>
+
     @GET("api/v1/mandi/prices")
     suspend fun getMandiPrices(
         @Query("district") district: String,
         @Query("crop") crop: String? = null
     ): Response<List<MandiPriceDto>>
 }
+

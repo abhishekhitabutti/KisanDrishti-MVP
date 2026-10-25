@@ -352,23 +352,65 @@ async def analyze_crop(
 
 # --- WEATHER & SPRAY WINDOWS ---
 @app.get("/api/v1/weather/forecast")
-def get_weather_forecast(district: str = Query("Belagavi"), lat: Optional[float] = None, lon: Optional[float] = None):
+def get_weather_forecast(district: str = Query("Bengaluru"), lat: Optional[float] = None, lon: Optional[float] = None):
     """
-    Returns 3-day hyperlocal weather with spray decision index.
+    Returns hyperlocal weather, 7-day daily forecast, and farmer precautions.
     """
     return {
         "district": district,
-        "temperature_c": 28.5,
-        "humidity_pct": 65,
-        "wind_speed_kmh": 14.0,
-        "rain_forecast_mm": 0.0,
-        "spray_suitability": {
-            "is_safe_to_spray": True,
-            "status_kn": "ಸಿಂಪರಣೆಗೆ ಉತ್ತಮ ದಿನ {Good Spray Day}",
-            "status_en": "Good Day for Spraying",
-            "summary_kn": "ಮುಂದಿನ 6 ಗಂಟೆಗಳಲ್ಲಿ ಮಳೆಯಿಲ್ಲ ಮತ್ತು ಗಾಳಿಯ ವೇಗ 15 ಕಿಮೀ/ಗಂ ಒಳಗೆ ಇರುತ್ತದೆ.",
-            "recommended_window": "ಬೆಳಿಗ್ಗೆ 7:00 ರಿಂದ 10:30 ಅಥವಾ ಸಂಜೆ 4:00 ರಿಂದ 6:30"
-        }
+        "state": "Karnataka",
+        "current_temp_c": 28.0,
+        "feels_like_c": 30.0,
+        "condition_en": "Partly Cloudy",
+        "condition_kn": "ಭಾಗಶಃ ಮೋಡ",
+        "humidity_pct": 68,
+        "wind_speed_kmh": 16.0,
+        "wind_direction": "WSW",
+        "precautions": [
+            {
+                "id": "p1",
+                "instruction_en": "Irrigate crops in the morning or evening to reduce water loss.",
+                "instruction_kn": "ಬೆಳಿಗ್ಗೆ ಅಥವಾ ಸಂಜೆ ನೀರು ಹರಿಸಿ ನೀರಿನ ನಷ್ಟ ಕಡಿಮೆ ಮಾಡಿ.",
+                "action_label_en": "Irrigate Now",
+                "action_label_kn": "ನೀರು ಹರಿಸಿ",
+                "priority": "High"
+            },
+            {
+                "id": "p2",
+                "instruction_en": "Postpone spraying of pesticides due to expected rainfall.",
+                "instruction_kn": "ಮಳೆಯ ಸಂಭವವಿರುವುದರಿಂದ ಕೀಟನಾಶಕ ಸಿಂಪರಣೆ ಮುಂದೂಡಿ.",
+                "action_label_en": "View Advisory",
+                "action_label_kn": "ಸಲಹೆ ನೋಡಿ",
+                "priority": "Warning"
+            },
+            {
+                "id": "p3",
+                "instruction_en": "Provide adequate drainage in fields to prevent waterlogging.",
+                "instruction_kn": "ಹೊಲದಲ್ಲಿ ನೀರು ನಿಲ್ಲದಂತೆ ಸೂಕ್ತ ಕಾಲುವೆ ಚರಂಡಿ ವ್ಯವಸ್ಥೆ ಮಾಡಿ.",
+                "action_label_en": "Check Tips",
+                "action_label_kn": "ಕ್ರಮಗಳು",
+                "priority": "Normal"
+            },
+            {
+                "id": "p4",
+                "instruction_en": "Secure harvested produce and keep in dry storage.",
+                "instruction_kn": "ಕೊಯ್ಲು ಮಾಡಿದ ಉತ್ಪನ್ನಗಳನ್ನು ಒಣ ದಾಸ್ತಾನಿನಲ್ಲಿ ಸುರಕ್ಷಿತವಾಗಿಡಿ.",
+                "action_label_en": "Learn More",
+                "action_label_kn": "ವಿವರ ನೋಡಿ",
+                "priority": "Normal"
+            }
+        ],
+        "forecast_7day": [
+            {"day_label": "Today", "date_str": "24 May", "condition": "Partly Cloudy", "condition_icon": "partly_cloudy", "temp_max_c": 29, "temp_min_c": 20, "rainfall_mm": 0.0, "is_rainy": False},
+            {"day_label": "Sun", "date_str": "25 May", "condition": "Scattered Rain", "condition_icon": "rain", "temp_max_c": 28, "temp_min_c": 19, "rainfall_mm": 4.2, "is_rainy": True},
+            {"day_label": "Mon", "date_str": "26 May", "condition": "Sunny", "condition_icon": "sunny", "temp_max_c": 30, "temp_min_c": 21, "rainfall_mm": 0.1, "is_rainy": False},
+            {"day_label": "Tue", "date_str": "27 May", "condition": "Rain Showers", "condition_icon": "rain", "temp_max_c": 27, "temp_min_c": 20, "rainfall_mm": 6.5, "is_rainy": True},
+            {"day_label": "Wed", "date_str": "28 May", "condition": "Thunderstorm", "condition_icon": "thunder", "temp_max_c": 29, "temp_min_c": 21, "rainfall_mm": 2.3, "is_rainy": True},
+            {"day_label": "Thu", "date_str": "29 May", "condition": "Heavy Rain", "condition_icon": "heavy_rain", "temp_max_c": 26, "temp_min_c": 19, "rainfall_mm": 7.8, "is_rainy": True},
+            {"day_label": "Fri", "date_str": "30 May", "condition": "Sunny", "condition_icon": "sunny", "temp_max_c": 28, "temp_min_c": 20, "rainfall_mm": 0.0, "is_rainy": False}
+        ],
+        "advisory_tip_kn": "ಹವಾಮಾನ ತಿಳಿದು, ಸಮರ್ಥ ಕೃಷಿ ಮಾಡಿ. ಸೂಚನೆಗಳನ್ನು ಅನುಸರಿಸಿ, ಉತ್ತಮ ಫಲಿತಾಂಶ ಪಡೆಯಿರಿ.",
+        "advisory_tip_en": "Know the weather, farm efficiently. Follow precautions for top harvest yields."
     }
 
 
@@ -392,3 +434,4 @@ def get_mandi_prices(district: str = Query("Belagavi"), crop: Optional[str] = No
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
+
