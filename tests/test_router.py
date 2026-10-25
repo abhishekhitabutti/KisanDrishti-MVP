@@ -16,6 +16,7 @@ VIEWS = {
     "views/schemes.py": "Schemes and help",
     "views/about.py": "About and privacy",
     "views/crop_advisor.py": "Crop Advisor",
+    "views/direct_market.py": "Direct Farm-to-Consumer",
 }
 
 

@@ -26,6 +26,7 @@ i18n.language_picker()
 
 pages = [
     st.Page("views/home.py", title=t("KrushiNudi"), icon="🌾", default=True),
+    st.Page("views/direct_market.py", title=t("Direct Buy (Farmer to Consumer)"), icon="🛒", url_path="market"),
     st.Page("views/crop_advisor.py", title=t("Crop advisor"), icon="🌱", url_path="advisor"),
     st.Page("views/borewell.py", title=t("Borewell advisory"), icon="💧", url_path="borewell"),
     st.Page("views/weed_nutrient.py", title=t("Weed & nutrient advisory"), icon="🌿", url_path="weed_nutrient"),

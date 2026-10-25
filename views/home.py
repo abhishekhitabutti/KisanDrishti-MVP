@@ -241,6 +241,36 @@ with c_r4_2:
         )
         ui.page_link("views/schemes.py", "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು {View Schemes}" if is_kn else "View Schemes", "👉")
 
+# Row 5: Direct Buy (Farmer to Consumer) & User Guide
+c_r5_1, c_r5_2 = st.columns(2)
+with c_r5_1:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#E65100; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>9</span>"
+            "**🛒 " + ("ರೈತರಿಂದ ನೇರ ಖರೀದಿ {Direct Buy}" if is_kn else "Direct Buy (Farmer to Consumer)") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ನೇರವಾಗಿ ಕರ್ನಾಟಕದ ರೈತರಿಂದ ತಾಜಾ ಸಿರಿಧಾನ್ಯ, ತರಕಾರಿ, ಬೆಲ್ಲ ಮತ್ತು ಕಾಡುಜೇನು ಖರೀದಿ."
+            if is_kn else
+            "Direct farm-to-consumer market. Zero middlemen commission. Authentic millets, jaggery, honey and fresh harvest."
+        )
+        ui.page_link("views/direct_market.py", "ಕೃಷಿ ಮಾರುಕಟ್ಟೆ {Open Direct Market}" if is_kn else "Open Direct Market", "👉")
+
+with c_r5_2:
+    with st.container(border=True):
+        st.markdown(
+            "<span style='background:#455A64; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>10</span>"
+            "**📖 " + t("How to use") + "**",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            "ಕೃಷಿನುಡಿ ಆ್ಯಪ್‌ನ ಪ್ರತಿಯೊಂದು ಸೇವೆಯನ್ನು ಸರಳವಾಗಿ ಬಳಸುವ ಹಂತ-ಹಂತದ ಪ್ರಾತ್ಯಕ್ಷಿಕೆ ಮತ್ತು ಕೈಪಿಡಿ."
+            if is_kn else
+            "Step-by-step interactive farmer guide and video demonstrations for all KrushiNudi tools."
+        )
+        ui.page_link("views/guide.py", "ಬಳಕೆ ಕೈಪಿಡಿ {User Guide}" if is_kn else "User Guide", "👉")
+
 # ==============================================================================
 # 4. PROFESSIONAL BOTTOM FOOTER BANNER (IMAGE 1)
 # ==============================================================================
