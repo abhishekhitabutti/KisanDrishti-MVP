@@ -63,7 +63,6 @@ banner_tag = (
 )
 
 logo_path = HERE / "images" / "krushinudi_logo.jpg"
-intro_video_path = HERE / "images" / "krushinudi_intro.mp4"
 
 col_hero_logo, col_hero_text = st.columns([1, 2.7])
 with col_hero_logo:
@@ -89,21 +88,6 @@ with col_hero_text:
         """,
         unsafe_allow_html=True
     )
-
-# Official KrushiNudi Video Tour Showcase
-if intro_video_path.exists():
-    with st.expander(
-        "🎬 ಕೃಷಿನುಡಿ ಅಧಿಕೃತ ಪರಿಚಯ ವಿಡಿಯೋ ವೀಕ್ಷಿಸಿ {Watch KrushiNudi Intro Tour}"
-        if is_kn else
-        "🎬 Watch KrushiNudi Intro Tour (AI Farming Guidance)",
-        expanded=False
-    ):
-        st.video(str(intro_video_path))
-        st.caption(
-            "✨ ಎಐ ಬೆಳೆ ವೈದ್ಯ, ಬೋರ್‌ವೆಲ್ ಪಾಯಿಂಟ್, ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ಹಾಗೂ ಗರಿಷ್ಠ ಬೆಲೆ ಮಾರುಕಟ್ಟೆ ಕೇಂದ್ರಗಳ ಸಂಪೂರ್ಣ ಪರಿಚಯ."
-            if is_kn else
-            "✨ Complete walkthrough of AI-powered crop diagnosis, groundwater survey, spray planner and APMC mandi market rates."
-        )
 
 # Beta Badge & Statistics Counter
 st.markdown(ui.badge(t("Beta"), "medium") + " " + escape(t("Guidance comes from published sources and expert review is in progress.")), unsafe_allow_html=True)

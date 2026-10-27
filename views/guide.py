@@ -22,24 +22,6 @@ hero_sub = (
 )
 ui.hero(hero_title, hero_sub, "📖")
 
-# --- OFFICIAL INTRO VIDEO TOUR ---
-intro_video_path = Path(__file__).resolve().parent.parent / "images" / "krushinudi_intro.mp4"
-if intro_video_path.exists():
-    with st.container(border=True):
-        st.markdown(
-            "### 🎬 " + (
-                "ಕೃಷಿನುಡಿ ಅಧಿಕೃತ ಪರಿಚಯ ಮತ್ತು ಬಳಕೆ ವಿಡಿಯೋ {Official Video Tour}"
-                if is_kn else
-                "Official KrushiNudi App Video Tour"
-            )
-        )
-        st.video(str(intro_video_path))
-        st.caption(
-            "✨ ಎಐ ಆಧಾರಿತ ಬೆಳೆ ಸಲಹೆ, ರೋಗ ಪತ್ತೆ, ಬೋರ್‌ವೆಲ್ ಮಾರ್ಗದರ್ಶಿ, ಸಿಂಪರಣಾ ಚೀಟಿ ಹಾಗೂ ಮಾರುಕಟ್ಟೆ ದರಗಳ ಸಂಪೂರ್ಣ ಪರಿಚಯ."
-            if is_kn else
-            "✨ Complete visual walkthrough of AI crop advice, disease diagnosis, borewell points, spray prescription and mandi market rates."
-        )
-
 # --- QUICK START OVERVIEW ---
 st.markdown("### " + ("ತ್ವರಿತ ಆರಂಭ: 3 ಸರಳ ಹಂತಗಳು" if is_kn else "Quick Start: 3 Simple Steps"))
 step_cols = st.columns(3)
