@@ -48,19 +48,41 @@ def crop(name):
 def language_picker(translated=True):
     lang = current_lang()
     with st.sidebar:
-        st.markdown(
-            """
-            <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); padding: 14px 14px 12px 14px; border-radius: 14px; text-align: center; color: white; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(27, 94, 32, 0.2);">
-                <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <span>🌾</span> KrushiNudi <span>🍃</span>
+        logo_path = HERE / "images" / "krushinudi_logo.jpg"
+        if logo_path.exists():
+            st.image(str(logo_path), use_container_width=True)
+            if lang == "kn":
+                st.markdown(
+                    "<div style='text-align: center; margin-top: -6px; margin-bottom: 12px;'>"
+                    "<div style='font-size: 1.25rem; font-weight: 800; color: #1B5E20;'>ಕೃಷಿನುಡಿ</div>"
+                    "<div style='font-size: 0.76rem; font-weight: 600; color: #2E7D32;'>— ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ —</div>"
+                    "<div style='font-size: 0.7rem; color: #555; margin-top: 2px;'>🌱 ಬೆಳೆ ಸಲಹೆ · 💧 ಬೋರ್‌ವೆಲ್ · ⛅ ಹವಾಮಾನ · 🐛 ರೋಗ ಪತ್ತೆ · 📈 ಮಾರುಕಟ್ಟೆ</div>"
+                    "</div>",
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    "<div style='text-align: center; margin-top: -6px; margin-bottom: 12px;'>"
+                    "<div style='font-size: 1.25rem; font-weight: 800; color: #1B5E20;'>KrushiNudi</div>"
+                    "<div style='font-size: 0.76rem; font-weight: 600; color: #2E7D32;'>— AI Powered Farming Guidance —</div>"
+                    "<div style='font-size: 0.7rem; color: #555; margin-top: 2px;'>🌱 Crop Advice · 💧 Borewell · ⛅ Weather · 🐛 Pest Doctor · 📈 Market</div>"
+                    "</div>",
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                """
+                <div style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%); padding: 14px 14px 12px 14px; border-radius: 14px; text-align: center; color: white; margin-bottom: 12px; box-shadow: 0 3px 10px rgba(27, 94, 32, 0.2);">
+                    <div style="font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span>🌾</span> KrushiNudi <span>🍃</span>
+                    </div>
+                    <div style="font-size: 0.76rem; color: #E8F5E9; margin-top: 2px; font-weight: 500;">
+                        The Voice of Intelligent Agriculture
+                    </div>
                 </div>
-                <div style="font-size: 0.76rem; color: #E8F5E9; margin-top: 2px; font-weight: 500;">
-                    The Voice of Intelligent Agriculture
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+                """,
+                unsafe_allow_html=True,
+            )
         st.markdown("**🌐 ಭಾಷೆ / Language**")
         choice = st.radio(
             "Language / ಭಾಷೆ",

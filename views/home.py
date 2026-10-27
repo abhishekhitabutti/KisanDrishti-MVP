@@ -62,25 +62,48 @@ banner_tag = (
     "✨ Smarter Insights · Better Farming · Smart Farm Advisory"
 )
 
-st.markdown(
-    f"""
-    <div class="kn-brand-banner">
-        <div class="kn-brand-title">
-            <span>🌾</span> KrushiNudi <span>🍃</span>
+logo_path = HERE / "images" / "krushinudi_logo.jpg"
+intro_video_path = HERE / "images" / "krushinudi_intro.mp4"
+
+col_hero_logo, col_hero_text = st.columns([1, 2.7])
+with col_hero_logo:
+    if logo_path.exists():
+        st.image(str(logo_path), use_container_width=True)
+with col_hero_text:
+    st.markdown(
+        f"""
+        <div class="kn-brand-banner" style="padding: 20px 18px; margin-bottom: 0px;">
+            <div class="kn-brand-title" style="font-size: 2.1rem;">
+                <span>🌾</span> KrushiNudi <span>🍃</span>
+            </div>
+            <div class="kn-brand-tagline">
+                — {"ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಆಧಾರಿತ ಕೃಷಿ ಮಾರ್ಗದರ್ಶನ" if is_kn else "AI Powered Farming Guidance"} —
+            </div>
+            <div style="font-size: 0.92rem; color: #E8F5E9; margin-top: 6px; font-weight: 500;">
+                {banner_sub}
+            </div>
+            <div style="font-size: 0.82rem; color: #C8E6C9; margin-top: 4px; font-style: italic;">
+                {banner_tag}
+            </div>
         </div>
-        <div class="kn-brand-tagline">
-            — The Voice of Intelligent Agriculture —
-        </div>
-        <div style="font-size: 0.95rem; color: #E8F5E9; margin-top: 8px; font-weight: 500;">
-            {banner_sub}
-        </div>
-        <div style="font-size: 0.85rem; color: #C8E6C9; margin-top: 6px; font-style: italic;">
-            {banner_tag}
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        """,
+        unsafe_allow_html=True
+    )
+
+# Official KrushiNudi Video Tour Showcase
+if intro_video_path.exists():
+    with st.expander(
+        "🎬 ಕೃಷಿನುಡಿ ಅಧಿಕೃತ ಪರಿಚಯ ವಿಡಿಯೋ ವೀಕ್ಷಿಸಿ {Watch KrushiNudi Intro Tour}"
+        if is_kn else
+        "🎬 Watch KrushiNudi Intro Tour (AI Farming Guidance)",
+        expanded=False
+    ):
+        st.video(str(intro_video_path))
+        st.caption(
+            "✨ ಎಐ ಬೆಳೆ ವೈದ್ಯ, ಬೋರ್‌ವೆಲ್ ಪಾಯಿಂಟ್, ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ಹಾಗೂ ಗರಿಷ್ಠ ಬೆಲೆ ಮಾರುಕಟ್ಟೆ ಕೇಂದ್ರಗಳ ಸಂಪೂರ್ಣ ಪರಿಚಯ."
+            if is_kn else
+            "✨ Complete walkthrough of AI-powered crop diagnosis, groundwater survey, spray planner and APMC mandi market rates."
+        )
 
 # Beta Badge & Statistics Counter
 st.markdown(ui.badge(t("Beta"), "medium") + " " + escape(t("Guidance comes from published sources and expert review is in progress.")), unsafe_allow_html=True)

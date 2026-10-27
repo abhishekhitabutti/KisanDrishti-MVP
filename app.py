@@ -13,8 +13,19 @@ import i18n
 import ui
 from i18n import t
 
-st.set_page_config(page_title="KrushiNudi", page_icon="🌾", initial_sidebar_state="expanded")
+logo_file = Path(ROOT_DIR) / "images" / "krushinudi_logo.jpg"
+st.set_page_config(
+    page_title="KrushiNudi",
+    page_icon=str(logo_file) if logo_file.exists() else "🌾",
+    initial_sidebar_state="expanded"
+)
 ui.inject_css()
+
+if logo_file.exists():
+    try:
+        st.logo(str(logo_file), icon_image=str(logo_file))
+    except Exception:
+        pass
 
 
 # Security Gate: Completely DEACTIVATED.
