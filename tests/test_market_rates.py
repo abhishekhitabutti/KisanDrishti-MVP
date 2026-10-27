@@ -72,3 +72,4 @@ def test_market_rates_page_renders_cleanly():
     assert not at.exception
     text = " ".join(m.value for m in at.markdown)
     assert "Market Rates" in text or "ಮಾರುಕಟ್ಟೆ ದರ" in text
+

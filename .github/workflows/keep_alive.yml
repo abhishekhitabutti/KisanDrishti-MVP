@@ -1,0 +1,38 @@
+name: Keep KrushiNudi Awake 24/7
+
+on:
+  schedule:
+    # Runs every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
+    # Streamlit Community Cloud puts free apps to sleep after inactivity
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab anytime
+  push:
+    branches: [ "main" ]
+
+jobs:
+  keep-alive:
+    name: Prevent Sleep & Auto-Wake App
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Playwright & Headless Browser
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Auto-Wake & Keep-Alive Execution
+        env:
+          STREAMLIT_APP_URL: "https://krushinudi-mvp.streamlit.app"
+        run: |
+          python scripts/wake_app.py
