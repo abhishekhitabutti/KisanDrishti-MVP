@@ -143,19 +143,19 @@ def language_picker(translated=True):
 
 
 def top_language_bar():
-    """Prominent, mobile-friendly segmented language switcher rendered at the top of the main container."""
+    """Prominent, compact, and accessible segmented language switcher rendered at the top."""
     lang = current_lang()
     is_kn = (lang == "kn")
 
     with st.container():
-        col_l1, col_l2 = st.columns([1.5, 1.5], gap="small")
+        col_l1, col_l2 = st.columns([2.6, 1.4], gap="small")
         with col_l1:
             brand_sub = "ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ" if is_kn else "AI Powered Farming Guidance"
             brand_title = "🌾 ಕೃಷಿನುಡಿ" if is_kn else "🌾 KrushiNudi"
             st.markdown(
-                f"<div style='display:flex; align-items:center; gap:8px; height:36px; padding-left:2px;'>"
-                f"<span style='font-size:1.15rem; font-weight:800; color:#1B5E20; letter-spacing:-0.3px;'>{brand_title}</span>"
-                f"<span style='font-size:0.74rem; font-weight:600; color:#2E7D32; background:#E8F5E9; border:1px solid #C8E6C9; padding:2px 8px; border-radius:12px;'>{brand_sub}</span>"
+                f"<div style='display:flex; align-items:center; gap:8px; height:32px; padding-left:2px;'>"
+                f"<span style='font-size:1.1rem; font-weight:800; color:#1B5E20; letter-spacing:-0.3px;'>{brand_title}</span>"
+                f"<span style='font-size:0.72rem; font-weight:600; color:#2E7D32; background:#E8F5E9; border:1px solid #C8E6C9; padding:2px 8px; border-radius:12px;'>{brand_sub}</span>"
                 f"</div>",
                 unsafe_allow_html=True
             )
@@ -183,5 +183,5 @@ def top_language_bar():
                     disabled=is_kn,
                     help="ಅಪ್ಲಿಕೇಶನ್ ಭಾಷೆಯನ್ನು ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಿ"
                 )
-        st.markdown("<div style='border-bottom: 1.5px solid #E8F5E9; margin-bottom: 14px; margin-top: 2px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='border-bottom: 1px solid #E8F5E9; margin-bottom: 12px; margin-top: 2px;'></div>", unsafe_allow_html=True)
 

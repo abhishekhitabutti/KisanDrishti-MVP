@@ -100,6 +100,101 @@ html, body, [class*="css"] {
   box-shadow: 0 3px 12px rgba(0,0,0,0.12);
 }
 
+/* --- Unified Hero Section (Usability Audit Resolution) --- */
+.kn-hero-unified {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 55%, #388E3C 100%);
+  border-radius: 20px;
+  padding: 26px 28px;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(27, 94, 32, 0.22);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.kn-hero-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff !important;
+  line-height: 1.15;
+  margin: 0;
+}
+.kn-hero-tagline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #C8E6C9;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.kn-hero-desc {
+  font-size: 0.92rem;
+  color: #E8F5E9;
+  opacity: 0.95;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+.kn-hero-cta-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.kn-btn-cta-primary {
+  background: #FFFFFF;
+  color: #1B5E20 !important;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 9px 20px;
+  border-radius: 24px;
+  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.kn-btn-cta-primary:hover {
+  background: #E8F5E9;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.22);
+  color: #0A3D0E !important;
+}
+.kn-btn-cta-secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: #FFFFFF !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 9px 18px;
+  border-radius: 24px;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.kn-btn-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-1px);
+}
+@media (max-width: 640px) {
+  .kn-hero-unified {
+    padding: 20px 18px;
+  }
+  .kn-hero-title {
+    font-size: 1.85rem;
+  }
+  .kn-hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .kn-btn-cta-primary, .kn-btn-cta-secondary {
+    justify-content: center;
+  }
+}
+
 .kd-card {
   background: #ffffff;
   border: 1px solid #DCE8DC;

@@ -49,44 +49,66 @@ n_crops = load_crop_count()
 is_kn = (i18n.current_lang() == "kn")
 
 # ==============================================================================
-# 1. KRUSHINUDI CONSOLIDATED UNIFIED HERO SECTION (FLOTO AUDIT RESOLUTION)
+# 1. KRUSHINUDI UNIFIED HERO SECTION (RESOLVES AUDIT ISSUES 1, 2, 3, 5, 6, 7)
 # ==============================================================================
-banner_sub = (
-    "ಕೃಷಿನುಡಿ {KrushiNudi} · ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ · ಕರ್ನಾಟಕದ ರೈತರ ವಿಶ್ವಾಸಾರ್ಹ ಡಿಜಿಟಲ್ ಕೃಷಿ ಸಂಗಾತಿ"
+hero_title = "ಕೃಷಿನುಡಿ · KrushiNudi" if is_kn else "KrushiNudi"
+hero_tagline = (
+    "ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಆಧಾರಿತ ಕೃಷಿ ಮಾರ್ಗದರ್ಶನ"
     if is_kn else
-    "KrushiNudi · By Farmers, For Farmers · Karnataka's Trusted Digital Agriculture Companion"
+    "AI-Powered Precision Farming Guidance"
 )
-banner_tag = (
-    "✨ ಚತುರ ಒಳನೋಟಗಳು · ಉತ್ತಮ ಕೃಷಿ · ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ {Smart Farm Advisory}"
+hero_desc = (
+    "ಕರ್ನಾಟಕದ ರೈತರ ವಿಶ್ವಾಸಾರ್ಹ ಡಿಜಿಟಲ್ ಕೃಷಿ ಸಂಗಾತಿ · ಕೃಷಿಕರಿಗಾಗಿ, ಕೃಷಿಕರಿಂದ"
     if is_kn else
-    "✨ Smarter Insights · Better Farming · Smart Farm Advisory"
+    "Karnataka's Trusted Digital Agriculture Companion · By Farmers, For Farmers"
 )
 
-logo_path = HERE / "images" / "krushinudi_logo.jpg"
-
-col_hero_logo, col_hero_text = st.columns([1, 2.7])
-with col_hero_logo:
-    if logo_path.exists():
-        st.image(str(logo_path), use_container_width=True)
-with col_hero_text:
-    st.markdown(
-        f"""
-        <div class="kn-brand-banner" style="padding: 20px 18px; margin-bottom: 0px;">
-            <div class="kn-brand-title" style="font-size: 2.1rem;">
-                <span>🌾</span> KrushiNudi <span>🍃</span>
+st.markdown(
+    f"""
+    <div class="kn-hero-unified">
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
+            <div style="background:rgba(255,255,255,0.15); padding:10px; border-radius:14px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.25);">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C8E6C9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                </svg>
             </div>
-            <div class="kn-brand-tagline">
-                — {"ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಆಧಾರಿತ ಕೃಷಿ ಮಾರ್ಗದರ್ಶನ" if is_kn else "AI Powered Farming Guidance"} —
-            </div>
-            <div style="font-size: 0.92rem; color: #E8F5E9; margin-top: 6px; font-weight: 500;">
-                {banner_sub}
-            </div>
-            <div style="font-size: 0.82rem; color: #C8E6C9; margin-top: 4px; font-style: italic;">
-                {banner_tag}
+            <div>
+                <div class="kn-hero-tagline">{hero_tagline}</div>
+                <h1 class="kn-hero-title">{hero_title}</h1>
             </div>
         </div>
-        """,
-        unsafe_allow_html=True
+        <div class="kn-hero-desc">{hero_desc}</div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Interactive Quick-Action Navigation Chips (Resolves Issue 2 False Affordance & Issue 3 Primary Action)
+col_cta1, col_cta2, col_cta3, col_cta4 = st.columns(4, gap="small")
+with col_cta1:
+    ui.page_link(
+        "views/crop_doctor.py",
+        label=t("Crop Doctor") if not is_kn else "ರೋಗ ಪತ್ತೆ (Crop Doctor)",
+        icon="🩺"
+    )
+with col_cta2:
+    ui.page_link(
+        "views/borewell.py",
+        label=t("Water Point AI") if not is_kn else "ಬೋರ್‌ವೆಲ್ AI (Water Point)",
+        icon="💧"
+    )
+with col_cta3:
+    ui.page_link(
+        "views/crop_advisor.py",
+        label=t("Crop Advisor") if not is_kn else "ಬೆಳೆ ಸಲಹೆ (Crop Advice)",
+        icon="🌱"
+    )
+with col_cta4:
+    ui.page_link(
+        "views/market_rates.py",
+        label=t("Market Rates") if not is_kn else "ಮಾರುಕಟ್ಟೆ ದರ (Mandi Rates)",
+        icon="📈"
     )
 
 # Beta Badge & Statistics Counter
