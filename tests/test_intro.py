@@ -60,3 +60,4 @@ def test_intro_screen_language_switch():
     assert at.session_state["intro_seen"] is True
     assert at.session_state["lang"] == "kn"
     assert "ಕೃಷಿನುಡಿ" in markdown_text(at)
+
