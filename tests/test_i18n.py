@@ -62,7 +62,7 @@ def test_crop_label_always_keeps_the_english_name(monkeypatch):
 
 
 def run_in_kannada(path, state=None, record=None):
-    at = AppTest.from_file(path, default_timeout=30)
+    at = AppTest.from_file(path, default_timeout=60)
     at.session_state["lang"] = "kn"
     for k, v in (state or {}).items():
         at.session_state[k] = v

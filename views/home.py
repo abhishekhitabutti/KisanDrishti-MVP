@@ -171,15 +171,15 @@ with c_r2_2:
     with st.container(border=True):
         st.markdown(
             "<span style='background:#2E7D32; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:10px; float:right;'>4</span>"
-            "**🛒 " + ("ರೈತರಿಂದ ನೇರ ಖರೀದಿ {Direct Buy}" if is_kn else "Direct Buy (Farmer to Consumer)") + "**",
+            "**📈 " + ("ಮಾರುಕಟ್ಟೆ ದರ & ಮಾರಾಟ ಕೇಂದ್ರಗಳು {Market Rates & Selling}" if is_kn else "Market Rates & Best Price Selling") + "**",
             unsafe_allow_html=True
         )
         st.caption(
-            "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ನೇರವಾಗಿ ಕರ್ನಾಟಕದ ರೈತರಿಂದ ತಾಜಾ ಸಿರಿಧಾನ್ಯ, ತರಕಾರಿ, ಬೆಲ್ಲ ಮತ್ತು ಕಾಡುಜೇನು ಖರೀದಿ."
+            "ದೈನಂದಿನ ಎಪಿಎಂಸಿ ದರಗಳು, ಬೆಲೆ ಏರಿಕೆ/ಇಳಿಕೆ ಮುನ್ಸೂಚನಾ ಗ್ರಾಫ್ ಹಾಗೂ ನಿಮ್ಮ ಜಿಲ್ಲೆಯಲ್ಲಿ ಗರಿಷ್ಠ ಬೆಲೆಗೆ ಬೆಳೆ ಮಾರಾಟ ಮಾಡಲು ಅಧಿಕೃತ ಖರೀದಿ ಕೇಂದ್ರಗಳು."
             if is_kn else
-            "Direct farm-to-consumer market. Zero middlemen commission. Authentic millets, jaggery, honey and fresh harvest."
+            "Daily APMC mandi rates, 30-day price trend graphs, forecasts and verified government/private centers to sell your crop at highest rates."
         )
-        ui.page_link("views/direct_market.py", "ಕೃಷಿ ಮಾರುಕಟ್ಟೆ {Open Direct Market}" if is_kn else "Open Direct Market", "👉")
+        ui.page_link("views/market_rates.py", "ಮಾರುಕಟ್ಟೆ & ಮಾರಾಟ {View Rates & Centers}" if is_kn else "Market Rates & Centers", "👉")
 
 # Row 3: Borewell Advisory & Crop Advisor
 c_r3_1, c_r3_2 = st.columns(2)

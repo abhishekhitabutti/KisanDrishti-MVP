@@ -21,12 +21,13 @@ ui.inject_css()
 # Anyone can use KrushiNudi directly without any login or registration.
 # auth.require_auth()
 
-# Language picker positioned at the top of the sidebar for instant accessibility
+# Language picker positioned in the sidebar and top mobile bar for universal accessibility
 i18n.language_picker()
+i18n.top_language_bar()
 
 pages = [
     st.Page("views/home.py", title=t("KrushiNudi"), icon="🌾", default=True),
-    st.Page("views/direct_market.py", title=t("Direct Buy (Farmer to Consumer)"), icon="🛒", url_path="market"),
+    st.Page("views/market_rates.py", title=t("Market Rates & Selling Centers"), icon="📈", url_path="market"),
     st.Page("views/crop_advisor.py", title=t("Crop advisor"), icon="🌱", url_path="advisor"),
     st.Page("views/borewell.py", title=t("Borewell advisory"), icon="💧", url_path="borewell"),
     st.Page("views/weed_nutrient.py", title=t("Weed & nutrient advisory"), icon="🌿", url_path="weed_nutrient"),
