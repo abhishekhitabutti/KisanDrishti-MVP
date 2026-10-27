@@ -36,3 +36,4 @@ jobs:
           STREAMLIT_APP_URL: "https://krushinudi-mvp.streamlit.app"
         run: |
           python scripts/wake_app.py
+

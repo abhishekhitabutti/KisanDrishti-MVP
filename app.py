@@ -23,7 +23,19 @@ ui.inject_css()
 
 # Language picker positioned in the sidebar and top mobile bar for universal accessibility
 i18n.language_picker()
-i18n.top_language_bar()
+
+if not hasattr(i18n, "top_language_bar"):
+    import importlib
+    try:
+        i18n = importlib.reload(i18n)
+    except Exception:
+        pass
+
+if hasattr(i18n, "top_language_bar"):
+    try:
+        i18n.top_language_bar()
+    except Exception:
+        pass
 
 pages = [
     st.Page("views/home.py", title=t("KrushiNudi"), icon="🌾", default=True),
