@@ -302,6 +302,115 @@ button[data-baseweb="tab"][aria-selected="true"] {
   color: #1B5E20 !important;
   border-bottom-color: #2E7D32 !important;
 }
+
+/* ====================================================================
+   PREMIUM SEGMENTED LANGUAGE SWITCHER (TOP BAR & SIDEBAR)
+   ==================================================================== */
+/* Top bar language buttons */
+div.st-key-top_bar_en, div.st-key-top_bar_kn {
+  display: flex !important;
+}
+
+div.st-key-top_bar_en button, div.st-key-top_bar_kn button {
+  border-radius: 24px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 4px 14px !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* Active Selected Language: Luxurious Emerald Gradient with Soft Ambient Glow */
+div.st-key-top_bar_en button:disabled, div.st-key-top_bar_kn button:disabled,
+div.st-key-top_bar_en button[kind="primary"], div.st-key-top_bar_kn button[kind="primary"] {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid #1B5E20 !important;
+  box-shadow: 0 3px 10px rgba(27, 94, 32, 0.28) !important;
+  opacity: 1 !important;
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+/* Inactive Clickable Language: Crisp Clean Pill with Soft Border & Hover Feedback */
+div.st-key-top_bar_en button[kind="secondary"], div.st-key-top_bar_kn button[kind="secondary"] {
+  background: #FFFFFF !important;
+  color: #2E7D32 !important;
+  border: 1.5px solid #C8E6C9 !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  cursor: pointer !important;
+}
+
+div.st-key-top_bar_en button[kind="secondary"]:hover, div.st-key-top_bar_kn button[kind="secondary"]:hover {
+  background: #E8F5E9 !important;
+  border-color: #2E7D32 !important;
+  color: #1B5E20 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.16) !important;
+}
+
+/* Sidebar Modern Segmented Control for Radio */
+div[data-testid="stSidebar"] div[role="radiogroup"] {
+  display: flex !important;
+  background: #F1F8F1 !important;
+  border: 1.5px solid #C8E6C9 !important;
+  border-radius: 28px !important;
+  padding: 4px !important;
+  gap: 4px !important;
+  margin-top: 4px !important;
+  margin-bottom: 8px !important;
+}
+
+div[data-testid="stSidebar"] div[role="radiogroup"] > label {
+  flex: 1 !important;
+  margin: 0 !important;
+  padding: 6px 12px !important;
+  border-radius: 22px !important;
+  justify-content: center !important;
+  text-align: center !important;
+  background: transparent !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+div[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
+  display: none !important; /* Discard old-fashioned radio circles */
+}
+
+div[data-testid="stSidebar"] div[role="radiogroup"] > label p {
+  margin: 0 !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  color: #2E7D32 !important;
+}
+
+div[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"],
+div[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
+  background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%) !important;
+  box-shadow: 0 3px 8px rgba(27, 94, 32, 0.25) !important;
+}
+
+div[data-testid="stSidebar"] div[role="radiogroup"] > label[data-checked="true"] p,
+div[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) p {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+/* Mobile viewport adjustments */
+@media (max-width: 640px) {
+  div.st-key-top_bar_en button, div.st-key-top_bar_kn button {
+    font-size: 0.78rem !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 2px 8px !important;
+  }
+}
 </style>
 """
 
