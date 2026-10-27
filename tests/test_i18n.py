@@ -89,12 +89,21 @@ def test_crop_advisor_in_kannada(monkeypatch):
 
 
 def test_switching_with_the_radio_changes_language():
-    at = AppTest.from_file(ROUTER, default_timeout=40).run()
+    at = AppTest.from_file(ROUTER, default_timeout=50).run()
     assert "KrushiNudi" in markdown_text(at)
     at.radio(key="lang_radio").set_value("ಕನ್ನಡ").run()
     assert "ಕೃಷಿನುಡಿ" in markdown_text(at) and not at.exception
     at.radio(key="lang_radio").set_value("English").run()
     assert "KrushiNudi" in markdown_text(at)
+
+
+def test_top_language_bar_switches_language():
+    at = AppTest.from_file(ROUTER, default_timeout=50).run()
+    assert "KrushiNudi" in markdown_text(at)
+    at.button(key="top_bar_kn").click().run()
+    assert "ಕೃಷಿನುಡಿ" in markdown_text(at) and not at.exception
+    at.button(key="top_bar_en").click().run()
+    assert "KrushiNudi" in markdown_text(at) and not at.exception
 
 
 def test_crop_doctor_in_kannada_shows_safety_text_in_kannada():

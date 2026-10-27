@@ -23,11 +23,43 @@ def _kannada():
 UNTRANSLATED_PAGES = set()
 
 
+def set_language(target_lang):
+    """Switch active language between 'en' and 'kn'.
+    Invoked safely via on_click callback before widgets are instantiated.
+    """
+    st.session_state["lang"] = target_lang
+    st.session_state["lang_radio"] = LANGS.get(target_lang, "English")
+    try:
+        st.query_params["lang"] = target_lang
+    except Exception:
+        pass
+
+
+def _on_lang_radio_change():
+    choice = st.session_state.get("lang_radio")
+    target = "kn" if choice == LANGS["kn"] else "en"
+    st.session_state["lang"] = target
+    try:
+        st.query_params["lang"] = target
+    except Exception:
+        pass
+
+
 def current_lang():
     radio = st.session_state.get("lang_radio")
     if radio is not None:
         return "kn" if radio == LANGS["kn"] else "en"
-    return st.session_state.get("lang", "en")
+    if "lang" in st.session_state:
+        return st.session_state["lang"]
+    try:
+        qp = st.query_params.get("lang")
+        if qp in ("kn", "en"):
+            st.session_state["lang"] = qp
+            st.session_state["lang_radio"] = LANGS[qp]
+            return qp
+    except Exception:
+        pass
+    return "en"
 
 
 def t(text, **kw):
@@ -84,14 +116,18 @@ def language_picker(translated=True):
                 unsafe_allow_html=True,
             )
         st.markdown("**🌐 ಭಾಷೆ / Language**")
-        choice = st.radio(
-            "Language / ಭಾಷೆ",
-            list(LANGS.values()),
-            index=0 if lang == "en" else 1,
-            horizontal=True,
-            key="lang_radio",
-            label_visibility="collapsed",
-        )
+        radio_kw = {
+            "label": "Language / ಭಾಷೆ",
+            "options": list(LANGS.values()),
+            "horizontal": True,
+            "key": "lang_radio",
+            "on_change": _on_lang_radio_change,
+            "label_visibility": "collapsed",
+        }
+        if "lang_radio" not in st.session_state:
+            radio_kw["index"] = 0 if lang == "en" else 1
+
+        choice = st.radio(**radio_kw)
         st.session_state["lang"] = "kn" if choice == LANGS["kn"] else "en"
         if st.session_state["lang"] == "kn":
             st.caption(t(REVIEW_NOTICE))
@@ -103,42 +139,45 @@ def language_picker(translated=True):
 
 def top_language_bar():
     """Prominent, mobile-friendly language switcher rendered at the top of the main container."""
-    try:
-        lang = current_lang()
-        with st.container():
-            col_l1, col_l2 = st.columns([2.2, 1.8])
-            with col_l1:
-                brand_sub = "ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ" if lang == "kn" else "Smart Farm Advisory"
-                st.markdown(
-                    f"<div style='font-size:1.05rem; font-weight:800; color:#1B5E20; padding-top:4px; display:flex; align-items:center; gap:6px;'>"
-                    f"🌾 <b>KrushiNudi</b> <span style='font-size:0.75rem; font-weight:600; color:#2E7D32; background:#E8F5E9; padding:2px 8px; border-radius:8px;'>{brand_sub}</span></div>",
-                    unsafe_allow_html=True
+    lang = current_lang()
+    is_kn = (lang == "kn")
+
+    with st.container():
+        col_l1, col_l2 = st.columns([1.6, 1.4], gap="small")
+        with col_l1:
+            brand_sub = "ಬುದ್ಧಿವಂತ ಕೃಷಿಯ ಧ್ವನಿ" if is_kn else "AI Powered Farming Guidance"
+            brand_title = "🌾 ಕೃಷಿನುಡಿ" if is_kn else "🌾 KrushiNudi"
+            st.markdown(
+                f"<div style='padding-top:4px; display:flex; align-items:center; gap:8px;'>"
+                f"<div style='font-size:1.15rem; font-weight:800; color:#1B5E20; line-height:1.2;'>"
+                f"{brand_title} <span style='font-size:0.75rem; font-weight:600; color:#2E7D32; background:#E8F5E9; padding:2px 8px; border-radius:8px; margin-left:4px;'>{brand_sub}</span>"
+                f"</div>"
+                f"</div>",
+                unsafe_allow_html=True
+            )
+        with col_l2:
+            b1, b2 = st.columns(2, gap="small")
+            with b1:
+                st.button(
+                    "🇬🇧 English" if not is_kn else "English",
+                    key="top_bar_en",
+                    type="primary" if not is_kn else "secondary",
+                    on_click=set_language,
+                    args=("en",),
+                    use_container_width=True,
+                    disabled=(not is_kn),
+                    help="Switch to English"
                 )
-            with col_l2:
-                b1, b2 = st.columns(2)
-                with b1:
-                    if lang == "en":
-                        st.markdown(
-                            "<div style='background:#2E7D32; color:#ffffff; font-size:0.8rem; font-weight:700; padding:5px 4px; border-radius:8px; text-align:center;'>🇬🇧 English</div>",
-                            unsafe_allow_html=True
-                        )
-                    else:
-                        if st.button("English", key="top_bar_en", use_container_width=True):
-                            st.session_state["lang"] = "en"
-                            st.session_state["lang_radio"] = LANGS["en"]
-                            st.rerun()
-                with b2:
-                    if lang == "kn":
-                        st.markdown(
-                            "<div style='background:#2E7D32; color:#ffffff; font-size:0.8rem; font-weight:700; padding:5px 4px; border-radius:8px; text-align:center;'>🌾 ಕನ್ನಡ</div>",
-                            unsafe_allow_html=True
-                        )
-                    else:
-                        if st.button("ಕನ್ನಡ", key="top_bar_kn", use_container_width=True):
-                            st.session_state["lang"] = "kn"
-                            st.session_state["lang_radio"] = LANGS["kn"]
-                            st.rerun()
-            st.markdown("<div style='border-bottom: 1px solid #E0EAE0; margin-bottom: 12px; margin-top: 4px;'></div>", unsafe_allow_html=True)
-    except Exception:
-        pass
+            with b2:
+                st.button(
+                    "🌾 ಕನ್ನಡ" if is_kn else "ಕನ್ನಡ",
+                    key="top_bar_kn",
+                    type="primary" if is_kn else "secondary",
+                    on_click=set_language,
+                    args=("kn",),
+                    use_container_width=True,
+                    disabled=is_kn,
+                    help="ಕನ್ನಡಕ್ಕೆ ಬದಲಾಯಿಸಿ"
+                )
+        st.markdown("<div style='border-bottom: 2px solid #E8F5E9; margin-bottom: 12px; margin-top: 4px;'></div>", unsafe_allow_html=True)
 
