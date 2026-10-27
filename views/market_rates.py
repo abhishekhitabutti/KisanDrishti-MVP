@@ -119,38 +119,119 @@ with tab_rates:
 
     # Interactive Visual Chart (Graph) of 30-Day History and 14-Day Prediction
     st.markdown("#### 📈 " + ("ಬೆಲೆ ಇತಿಹಾಸ & ಮುಂದಿನ 14 ದಿನಗಳ ಮುನ್ಸೂಚನಾ ಗ್ರಾಫ್" if is_kn else "30-Day Price Trend & 14-Day Predictive Graph"))
-    st.caption("ಹಸಿರು ಗೆರೆ: ಕಳೆದ 30 ದಿನಗಳ ವಾಸ್ತವಿಕ ದರ | ಕಿತ್ತಳೆ ಗೆರೆ: ಮುಂದಿನ 14 ದಿನಗಳ ನಿರೀಕ್ಷಿತ ದರ | ಕೆಂಪು ಗೆರೆ: 30 ದಿನಗಳ ಸರಾಸರಿ"
-               if is_kn else
-               "Historical daily modal price vs 30-day moving average and 14-day projected market direction.")
+    
+    # Legend strip with distinct color badges
+    col_act_lbl = "ಹಿಂದಿನ 30 ದಿನಗಳ ವಾಸ್ತವಿಕ ದರ {Past Actual}" if is_kn else "Past 30 Days Actual Rate"
+    col_fc_lbl = "ಮುಂದಿನ 14 ದಿನಗಳ ನಿರೀಕ್ಷಿತ ಮುನ್ಸೂಚನೆ {AI Forecast}" if is_kn else "14-Day Projected Forecast"
+    col_avg_lbl = "30 ದಿನಗಳ ಸರಾಸರಿ {30-Day Avg}" if is_kn else "30-Day Moving Average"
+    col_msp_lbl = "ಸರ್ಕಾರಿ MSP ಬೆಂಬಲ ಬೆಲೆ {Govt MSP}" if is_kn else "Government MSP Rate"
+    avg_val = crop_data["avg_30d"]
+    msp_val = crop_data["msp"] if crop_data["msp"] > 0 else None
 
-    # Build DataFrame for line_chart
-    # Combine history and forecast into continuous timeseries
+    msp_pill = f"""
+        <span style="background:#E3F2FD; color:#1565C0; border:1px solid #BBDEFB; padding:3px 10px; border-radius:14px; display:inline-flex; align-items:center; gap:6px;">
+            <span style="display:inline-block; width:10px; height:10px; background:#1565C0; border-radius:50%;"></span>
+            {col_msp_lbl}: <b>₹{msp_val:,}</b>
+        </span>
+    """ if msp_val else ""
+
+    st.markdown(
+        f"""
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; font-size:0.83rem; font-weight:600;">
+            <span style="background:#E8F5E9; color:#1B5E20; border:1px solid #C8E6C9; padding:3px 10px; border-radius:14px; display:inline-flex; align-items:center; gap:6px;">
+                <span style="display:inline-block; width:10px; height:10px; background:#2E7D32; border-radius:50%;"></span>
+                {col_act_lbl} (ಹಸಿರು ಗೆರೆ)
+            </span>
+            <span style="background:#FFF3E0; color:#E65100; border:1px solid #FFE0B2; padding:3px 10px; border-radius:14px; display:inline-flex; align-items:center; gap:6px;">
+                <span style="display:inline-block; width:10px; height:10px; background:#E65100; border-radius:50%;"></span>
+                {col_fc_lbl} (ಕಿತ್ತಳೆ ಗೆರೆ)
+            </span>
+            <span style="background:#ECEFF1; color:#37474F; border:1px solid #CFD8DC; padding:3px 10px; border-radius:14px; display:inline-flex; align-items:center; gap:6px;">
+                <span style="display:inline-block; width:10px; height:10px; background:#78909C; border-radius:50%;"></span>
+                {col_avg_lbl}: <b>₹{avg_val:,}</b>
+            </span>
+            {msp_pill}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Multi-Series Continuous DataFrame
+    import numpy as np
     chart_rows = []
-    avg_line = crop_data["avg_30d"]
-    msp_line = crop_data["msp"] if crop_data["msp"] > 0 else None
 
     for h in history:
         row = {
-            "ದಿನಾಂಕ / Date": h["label"],
-            "ಮಾರುಕಟ್ಟೆ ದರ (Mandi Price)": h["price"],
-            "30 ದಿನಗಳ ಸರಾಸರಿ (30-Day Avg)": avg_line,
+            "Date": pd.to_datetime(h["date"]),
+            col_act_lbl: float(h["price"]),
+            col_fc_lbl: float(h["price"]) if h == history[-1] else np.nan,
+            col_avg_lbl: float(avg_val),
         }
-        if msp_line:
-            row["ಸರ್ಕಾರಿ MSP (Govt MSP)"] = msp_line
+        if msp_val:
+            row[col_msp_lbl] = float(msp_val)
         chart_rows.append(row)
 
     for f in forecast:
         row = {
-            "ದಿನಾಂಕ / Date": f["label"],
-            "ಮಾರುಕಟ್ಟೆ ದರ (Mandi Price)": f["price"],
-            "30 ದಿನಗಳ ಸರಾಸರಿ (30-Day Avg)": avg_line,
+            "Date": pd.to_datetime(f["date"]),
+            col_act_lbl: np.nan,
+            col_fc_lbl: float(f["price"]),
+            col_avg_lbl: float(avg_val),
         }
-        if msp_line:
-            row["ಸರ್ಕಾರಿ MSP (Govt MSP)"] = msp_line
+        if msp_val:
+            row[col_msp_lbl] = float(msp_val)
         chart_rows.append(row)
 
-    df_chart = pd.DataFrame(chart_rows).set_index("ದಿನಾಂಕ / Date")
-    st.line_chart(df_chart, height=340)
+    df_chart = pd.DataFrame(chart_rows).set_index("Date")
+    chart_colors = ["#2E7D32", "#E65100", "#78909C", "#1565C0"] if msp_val else ["#2E7D32", "#E65100", "#78909C"]
+
+    # View Mode Toggle: Interactive Graph vs Daily Table Breakdown
+    view_mode = st.radio(
+        "ನೋಟ ಆಯ್ಕೆಮಾಡಿ {View Mode}:" if is_kn else "View Mode:",
+        ["📈 ಬೆಲೆ ಏರಿಕೆ/ಇಳಿಕೆ ಗ್ರಾಫ್ {Price Trend Graph}" if is_kn else "📈 Price Trend Graph",
+         "📋 ದೈನಂದಿನ ಬೆಲೆ ಕೋಷ್ಟಕ {Daily Price Table}" if is_kn else "📋 Daily Price Table"],
+        horizontal=True,
+        label_visibility="collapsed",
+        key=f"chart_view_mode_{sel_crop_id}"
+    )
+
+    if "ಗ್ರಾಫ್" in view_mode or "Graph" in view_mode:
+        st.line_chart(df_chart, height=360, color=chart_colors)
+    else:
+        # Build clean daily table for farmer reference
+        table_rows = []
+        for h in history[:-1]:
+            diff = h["price"] - avg_val
+            diff_sign = "+" if diff >= 0 else ""
+            table_rows.append({
+                "ದಿನಾಂಕ / Date": h["date"],
+                "ಹಂತ / Status": "ವಾಸ್ತವಿಕ ದರ (Past Actual)" if is_kn else "Past Actual Rate",
+                f"ದರ / Price ({crop_data['unit']})": f"₹{h['price']:,}",
+                "ಸರಾಸರಿಗಿಂತ / vs 30D Avg": f"{diff_sign}₹{diff:,}"
+            })
+        
+        # Today
+        diff_today = crop_data["today_modal"] - avg_val
+        diff_sign_today = "+" if diff_today >= 0 else ""
+        table_rows.append({
+            "ದಿನಾಂಕ / Date": history[-1]["date"] + (" (ಇಂದು)" if is_kn else " (Today)"),
+            "ಹಂತ / Status": "⭐ ಇಂದಿನ ಸರಾಸರಿ (Today Modal)" if is_kn else "⭐ Today's Modal",
+            f"ದರ / Price ({crop_data['unit']})": f"₹{crop_data['today_modal']:,}",
+            "ಸರಾಸರಿಗಿಂತ / vs 30D Avg": f"{diff_sign_today}₹{diff_today:,}"
+        })
+
+        # Future 14 days
+        for f in forecast:
+            diff_f = f["price"] - avg_val
+            diff_sign_f = "+" if diff_f >= 0 else ""
+            table_rows.append({
+                "ದಿನಾಂಕ / Date": f["date"],
+                "ಹಂತ / Status": "🔮 ನಿರೀಕ್ಷಿತ ಮುನ್ಸೂಚನೆ (Forecast)" if is_kn else "🔮 Projected Forecast",
+                f"ದರ / Price ({crop_data['unit']})": f"₹{f['price']:,}",
+                "ಸರಾಸರಿಗಿಂತ / vs 30D Avg": f"{diff_sign_f}₹{diff_f:,}"
+            })
+        
+        st.dataframe(pd.DataFrame(table_rows), use_container_width=True, hide_index=True)
 
     # AI / Statistical Price Trend Verdict Box
     verdict_type = crop_data["verdict_type"]
