@@ -43,7 +43,7 @@ ui.hero(hero_title, hero_desc, "📈")
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("ಲೈವ್ ಮಾರುಕಟ್ಟೆಗಳು" if is_kn else "APMC Yards Monitored", "31 ಜಿಲ್ಲೆಗಳು" if is_kn else "31 Districts", "ಇ-ನಾಮ್ ನೆಟ್‌ವರ್ಕ್ {e-NAM}")
 m2.metric("ದೈನಂದಿನ ಬೆಳೆಗಳು" if is_kn else "Crops Tracked", "22 ಬೆಳೆಗಳು" if is_kn else "22 Key Crops", "ಧಾನ್ಯ, ಕಾಳು, ಮಸಾಲೆ, ತರಕಾರಿ")
-m3.metric("ಖರೀದಿ ಕೇಂದ್ರಗಳು" if is_kn else "Selling Centers", "40+ ಕೇಂದ್ರಗಳು" if is_kn else "40+ Verified Hubs", "ಸರ್ಕಾರಿ MSP & ಎಪಿಎಂಸಿ")
+m3.metric("ಖರೀದಿ ಕೇಂದ್ರಗಳು & ಮಳಿಗೆಗಳು" if is_kn else "Selling Centers & Shops", "60+ ಕೇಂದ್ರಗಳು" if is_kn else "60+ Verified Hubs", "31 ಜಿಲ್ಲೆಗಳು · ಸರ್ಕಾರಿ, ಎಪಿಎಂಸಿ & FPO" if is_kn else "All 31 Districts · MSP, APMC & FPOs")
 m4.metric("ರೈತರ ಸರಾಸರಿ ಉಳಿತಾಯ" if is_kn else "Farmer Extra Profit", "+15% ರಿಂದ 35%" if is_kn else "+15% to 35%", "ಮಧ್ಯವರ್ತಿ ರಹಿತ {Direct}")
 
 # Marketplace Tabs
@@ -202,15 +202,21 @@ with tab_centers:
         "Sell directly to APMC yards, government MSP depots, FPOs, and certified mills to eliminate middleman margins."
     )
 
-    # Filter Bar
-    c_f1, c_f2, c_f3, c_f4 = st.columns([1.5, 1.5, 1.5, 1.8])
+    # Search Box & District Filter Bar
+    search_query = st.text_input(
+        "🔍 ಕೇಂದ್ರ / ಮಳಿಗೆ / ತಾಲೂಕು ಹುಡುಕಿ {Search Center, Shop or Taluk}:" if is_kn else "🔍 Search Center, Shop, Town or Taluk:",
+        placeholder="ಉದಾಹರಣೆಗೆ: ತಿಪಟೂರು, ಸಿರಗುಪ್ಪ, ಗಂಗಾವತಿ, Byadgi, Challakere, Tiptur, Siruguppa..." if is_kn else "e.g., Tiptur, Siruguppa, Gangavathi, Byadgi, Challakere, Mangaluru, Belagavi...",
+        key="center_search_kw"
+    )
+
+    c_f1, c_f2, c_f3, c_f4 = st.columns([1.6, 1.5, 1.5, 1.8])
 
     with c_f1:
         dist_options = ["All"] + sorted(DISTRICTS)
         sel_dist = st.selectbox(
             "ಜಿಲ್ಲೆ {District}:" if is_kn else "District:",
             dist_options,
-            format_func=lambda d: ("ಎಲ್ಲಾ ಜಿಲ್ಲೆಗಳು {All Karnataka}" if d == "All" else DISTRICTS_KN.get(d, d)) if is_kn else ("All Karnataka" if d == "All" else d),
+            format_func=lambda d: ("ಎಲ್ಲಾ 31 ಜಿಲ್ಲೆಗಳು {All 31 Districts}" if d == "All" else DISTRICTS_KN.get(d, d)) if is_kn else ("All 31 Districts" if d == "All" else d),
             key="center_filter_dist"
         )
 
@@ -258,7 +264,8 @@ with tab_centers:
         crop_id=sel_filter_crop,
         district=sel_dist,
         category=sel_cat,
-        sort_by=sel_sort
+        sort_by=sel_sort,
+        search_query=search_query
     )
 
     st.markdown(f"**🔍 {len(matching_centers)} " + ("ಅಧಿಕೃತ ಖರೀದಿ ಕೇಂದ್ರಗಳು ಲಭ್ಯವಿದೆ" if is_kn else "Verified Centers Found") + "**")
