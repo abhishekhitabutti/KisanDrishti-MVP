@@ -26,35 +26,260 @@ import mandi_data
 import ui
 from i18n import t
 
+try:
+    import krishi_marata_vahini as kmv
+except Exception:
+    kmv = None
+
 is_kn = (i18n.current_lang() == "kn")
 
 # Page Header
 hero_title = "ಮಾರುಕಟ್ಟೆ ದರ & ಗರಿಷ್ಠ ಬೆಲೆ ಮಾರಾಟ ಕೇಂದ್ರಗಳು {Market Rates & Selling Centers}" if is_kn else "Market Rates & Best-Price Selling Centers"
 hero_desc = (
-    "ಕರ್ನಾಟಕದ ಪ್ರಮುಖ ಬೆಳೆಗಳ ದೈನಂದಿನ ಎಪಿಎಂಸಿ ದರಗಳು, ಬೆಲೆ ಏರಿಕೆ/ಇಳಿಕೆ ಮುನ್ಸೂಚನಾ ಗ್ರಾಫ್ ಹಾಗೂ "
+    "ಕರ್ನಾಟಕ ಸರ್ಕಾರದ ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ {Krishi Marata Vahini} ದೈನಂದಿನ ಎಪಿಎಂಸಿ ದರಗಳು, ಬೆಲೆ ಏರಿಕೆ/ಇಳಿಕೆ ಮುನ್ಸೂಚನಾ ಗ್ರಾಫ್ ಹಾಗೂ "
     "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ಗರಿಷ್ಠ ಬೆಲೆಗೆ ಬೆಳೆ ಮಾರಾಟ ಮಾಡಲು ನಿಮ್ಮ ಜಿಲ್ಲೆಯ ಅಧಿಕೃತ ಖರೀದಿ ಕೇಂದ್ರಗಳು."
     if is_kn else
-    "Daily APMC mandi rates across Karnataka crops, 30-day price trend graphs, 14-day predictive forecasts, "
+    "Daily APMC mandi rates from Government of Karnataka's Krishi Marata Vahini, 30-day price trend graphs, 14-day predictive forecasts, "
     "and verified government MSP depots, APMCs, and processing centers to sell your crop at the highest price."
 )
 ui.hero(hero_title, hero_desc, "📈")
 
 # High-Impact Performance Metrics Strip
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("ಲೈವ್ ಮಾರುಕಟ್ಟೆಗಳು" if is_kn else "APMC Yards Monitored", "31 ಜಿಲ್ಲೆಗಳು" if is_kn else "31 Districts", "ಇ-ನಾಮ್ ನೆಟ್‌ವರ್ಕ್ {e-NAM}")
-m2.metric("ದೈನಂದಿನ ಬೆಳೆಗಳು" if is_kn else "Crops Tracked", "22 ಬೆಳೆಗಳು" if is_kn else "22 Key Crops", "ಧಾನ್ಯ, ಕಾಳು, ಮಸಾಲೆ, ತರಕಾರಿ")
+m1.metric("ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ" if is_kn else "Krishi Marata Vahini", "73+ ಎಪಿಎಂಸಿಗಳು" if is_kn else "73+ APMC Mandis", "ಕರ್ನಾಟಕ ಸರ್ಕಾರ {KSAMB}")
+m2.metric("ದೈನಂದಿನ ಬೆಳೆಗಳು" if is_kn else "Crops & Varieties", "122+ ಬೆಳೆಗಳು" if is_kn else "122+ Commodities", "288+ ತಳಿಗಳ ಲೈವ್ ದರ")
 m3.metric("ಖರೀದಿ ಕೇಂದ್ರಗಳು & ಮಳಿಗೆಗಳು" if is_kn else "Selling Centers & Shops", "60+ ಕೇಂದ್ರಗಳು" if is_kn else "60+ Verified Hubs", "31 ಜಿಲ್ಲೆಗಳು · ಸರ್ಕಾರಿ, ಎಪಿಎಂಸಿ & FPO" if is_kn else "All 31 Districts · MSP, APMC & FPOs")
 m4.metric("ರೈತರ ಸರಾಸರಿ ಉಳಿತಾಯ" if is_kn else "Farmer Extra Profit", "+15% ರಿಂದ 35%" if is_kn else "+15% to 35%", "ಮಧ್ಯವರ್ತಿ ರಹಿತ {Direct}")
 
 # Marketplace Tabs
-tab_rates, tab_centers, tab_guide = st.tabs([
-    "📊 ದೈನಂದಿನ ದರ & ಬೆಲೆ ಮುನ್ಸೂಚನಾ ಗ್ರಾಫ್ {Daily Rates & Graphs}" if is_kn else "📊 Daily Rates & Price Graphs",
+tab_krama, tab_rates, tab_centers, tab_guide = st.tabs([
+    "🏛️ ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ {Krishi Marata Vahini APMC Rates}" if is_kn else "🏛️ Krishi Marata Vahini APMC Rates",
+    "📊 ದೈನಂದಿನ ದರ & ಬೆಲೆ ಮುನ್ಸೂಚನಾ ಗ್ರಾಫ್ {Price Trends & Graphs}" if is_kn else "📊 Price Trends & Graphs",
     "🏢 ಗರಿಷ್ಠ ಬೆಲೆ ಮಾರಾಟ ಕೇಂದ್ರಗಳು {Best Price Selling Centers}" if is_kn else "🏢 Best Price Selling Centers & Mandis",
     "📋 ರೈತರ ಮಾರಾಟ ಮಾರ್ಗದರ್ಶಿ {Smart Selling Guide}" if is_kn else "📋 Smart Selling Guide & Checklist"
 ])
 
 # ==============================================================================
-# TAB 1: DAILY MARKET RATES, 30-DAY GRAPHS & 14-DAY PRICE FORECASTS
+# TAB 1: KRISHI MARATA VAHINI (GOVT OF KARNATAKA APMC DAILY COMMODITY RATES)
+# ==============================================================================
+with tab_krama:
+    krama_bundle = kmv.fetch_latest_krama_prices() if kmv else {}
+    krama_data = krama_bundle.get("data", [])
+    rep_date = krama_bundle.get("report_date", "02/11/2026")
+    mkts_count = krama_bundle.get("markets_count", 73)
+    total_count = krama_bundle.get("total_items", len(krama_data))
+
+    # Official Government Header & Live Refresh Strip
+    with st.container(border=True):
+        col_hdr1, col_hdr2 = st.columns([3.2, 1.3])
+        with col_hdr1:
+            st.markdown(
+                "### 🏛️ " + (
+                    "ಕರ್ನಾಟಕ ರಾಜ್ಯ ಕೃಷಿ ಮಾರಾಟ ಮಂಡಳಿ {KSAMB} — ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ"
+                    if is_kn else
+                    "Karnataka State Agricultural Marketing Board (KSAMB) — Krishi Marata Vahini"
+                )
+            )
+            st.caption(
+                "ಭಾರತ ಸರ್ಕಾರ ಹಾಗೂ ಕರ್ನಾಟಕ ಸರ್ಕಾರದ ಅಧಿಕೃತ ಕೃಷಿ ಮಾರುಕಟ್ಟೆ ಪೋರ್ಟಲ್‌ನಿಂದ ನೇರ ದೈನಂದಿನ ಎಪಿಎಂಸಿ ಬೆಳೆ ದರಗಳು."
+                if is_kn else
+                "Official daily APMC mandi market commodity prices directly from Government of Karnataka's Krishi Marata Vahini portal."
+            )
+            st.markdown(
+                f"📅 **{'ವರದಿ ದಿನಾಂಕ:' if is_kn else 'Report Date:'}** `{rep_date}` &nbsp;|&nbsp; "
+                f"🏬 **{'ವರದಿ ಮಾಡಿದ ಮಾರುಕಟ್ಟೆಗಳು:' if is_kn else 'Reporting APMCs:'}** `{mkts_count} APMCs` &nbsp;|&nbsp; "
+                f"🌾 **{'ದಾಖಲಾದ ತಳಿಗಳು:' if is_kn else 'Varieties Tracked:'}** `{total_count} Varieties`"
+            )
+        with col_hdr2:
+            st.link_button(
+                "🌐 " + ("ಅಧಿಕೃತ ಪೋರ್ಟಲ್ {KRAMA}" if is_kn else "Official KRAMA Portal"),
+                "https://www.krama.karnataka.gov.in/Home",
+                use_container_width=True
+            )
+            st.link_button(
+                "📜 " + ("ಕನ್ನಡ ಪೋರ್ಟಲ್ {Home_kan}" if is_kn else "Kannada Portal View"),
+                "https://www.krama.karnataka.gov.in/Home_kan.aspx",
+                use_container_width=True
+            )
+
+    # Refresh Action
+    col_ref1, col_ref2 = st.columns([2.5, 1.5])
+    with col_ref1:
+        st.markdown(
+            "💡 *" +
+            ("ಪ್ರತಿದಿನ ಕರ್ನಾಟಕದ ಎಲ್ಲಾ 73+ ಎಪಿಎಂಸಿ ಪ್ರಾಂಗಣಗಳಲ್ಲಿ ರೈತರು ಮಾರಾಟ ಮಾಡಿದ ಅಸಲಿ ಕನಿಷ್ಠ, ಗರಿಷ್ಠ ಮತ್ತು ಮಾದರಿ ದರಗಳ ನೇರ ಪಟ್ಟಿ:"
+             if is_kn else
+             "Real-time daily minimum, maximum, and modal trading prices reported directly by APMC mandi yards across Karnataka:") +
+            "*"
+        )
+    with col_ref2:
+        if st.button("🔄 " + ("ಇಂದಿನ ಲೈವ್ ದರ ನವೀಕರಿಸಿ {Sync Live KRAMA Data}" if is_kn else "Sync Live KRAMA Data"), key="sync_krama_btn", use_container_width=True):
+            if kmv:
+                with st.spinner("ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ ಪೋರ್ಟಲ್‌ನಿಂದ ದರಗಳನ್ನು ಪಡೆಯಲಾಗುತ್ತಿದೆ..." if is_kn else "Fetching live rates from Krishi Marata Vahini..."):
+                    updated = kmv.fetch_latest_krama_prices(force_refresh=True)
+                    krama_bundle = updated
+                    krama_data = updated.get("data", krama_data)
+                    rep_date = updated.get("report_date", rep_date)
+                    mkts_count = updated.get("markets_count", mkts_count)
+                    total_count = updated.get("total_items", total_count)
+                    st.success("✅ ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ ಇಂದಿನ ಲೈವ್ ದರಗಳು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲ್ಪಟ್ಟಿವೆ!" if is_kn else "✅ Krishi Marata Vahini live rates successfully refreshed!")
+
+    # Top Staple Crops Spotlight Bar
+    st.markdown("#### 🌟 " + ("ಇಂದಿನ ಪ್ರಮುಖ ಕೃಷಿ ಉತ್ಪನ್ನಗಳ ಸರಾಸರಿ ದರಗಳು {Staple Crop Highlights}" if is_kn else "Today's Staple Crop Highlights"))
+    spotlights = kmv.get_spotlight_crops(krama_data) if kmv else []
+    if spotlights:
+        spot_cols = st.columns(min(6, len(spotlights)))
+        for i, s_item in enumerate(spotlights[:6]):
+            with spot_cols[i]:
+                with st.container(border=True):
+                    c_title = s_item["commodity_kn"] if is_kn else s_item["commodity_en"]
+                    v_title = s_item["variety_kn"] if is_kn else s_item["variety_en"]
+                    st.markdown(f"**{c_title}**")
+                    st.caption(f"{v_title}")
+                    st.markdown(f"<div style='font-size:1.3rem; font-weight:800; color:#1B5E20;'>₹{s_item['modal_price']:,}</div>", unsafe_allow_html=True)
+                    st.caption(f"ವ್ಯಾಪ್ತಿ: ₹{s_item['min_price']:,} - ₹{s_item['max_price']:,}")
+
+    # Search & Category Filters
+    st.markdown("---")
+    st.markdown("#### 🔍 " + ("ಬೆಳೆ ಮತ್ತು ವರ್ಗವಾರು ಮಾರುಕಟ್ಟೆ ದರ ಶೋಧನೆ {Search & Filter}" if is_kn else "Search & Filter APMC Crop Rates"))
+
+    f1, f2, f3, f4 = st.columns([1.5, 1.5, 2.0, 1.5])
+
+    # 1. Category selector
+    cat_objs = kmv.get_krama_categories(krama_data) if kmv else []
+    cat_options = [("All", "ಎಲ್ಲಾ ವರ್ಗಗಳು {All Categories}" if is_kn else "All Categories")] + [
+        (c["category_en"], f"{c['category_kn']} ({c['count']})") for c in cat_objs
+    ]
+
+    with f1:
+        sel_cat_en = st.selectbox(
+            "ವರ್ಗ {Category}:" if is_kn else "Category:",
+            [opt[0] for opt in cat_options],
+            format_func=lambda x: dict(cat_options).get(x, x),
+            key="krama_filter_cat"
+        )
+
+    # 2. Commodity selector within category
+    comm_objs = kmv.get_krama_commodities(sel_cat_en, krama_data) if kmv else []
+    comm_options = [("All", "ಎಲ್ಲಾ ಬೆಳೆಗಳು {All Crops}" if is_kn else "All Crops")] + [
+        (c["commodity_en"], f"{c['commodity_kn']} ({c['commodity_en']})") for c in comm_objs
+    ]
+
+    with f2:
+        sel_comm_en = st.selectbox(
+            "ಬೆಳೆ {Commodity}:" if is_kn else "Commodity:",
+            [opt[0] for opt in comm_options],
+            format_func=lambda x: dict(comm_options).get(x, x),
+            key="krama_filter_comm"
+        )
+
+    # 3. Live search query
+    with f3:
+        krama_query = st.text_input(
+            "ಬೆಳೆ / ತಳಿ ಹುಡುಕಿ {Search Crop or Variety}:" if is_kn else "Search Crop or Variety:",
+            placeholder="ಉದಾ: ಬ್ಯಾಡಗಿ, Sona, ಅಡಿಕೆ, Ragi, Cotton, Onion..." if is_kn else "e.g., Byadgi, Sona, Rashi, Ragi, Cotton, Onion...",
+            key="krama_search_kw"
+        )
+
+    # 4. Sort By
+    sort_opts = {
+        "modal_desc": "💰 ಗರಿಷ್ಠ ದರ ಮೊದಲು {Highest Rate}" if is_kn else "💰 Highest Rate First",
+        "modal_asc": "📉 ಕನಿಷ್ಠ ದರ ಮೊದಲು {Lowest Rate}" if is_kn else "📉 Lowest Rate First",
+        "spread_desc": "↕️ ಗರಿಷ್ಠ-ಕನಿಷ್ಠ ವ್ಯತ್ಯಾಸ {Price Spread}" if is_kn else "↕️ Price Spread First",
+        "name_asc": "🔤 ಬೆಳೆಯ ಹೆಸರು {Name A-Z}" if is_kn else "🔤 Commodity Name (A-Z)"
+    }
+    with f4:
+        sel_krama_sort = st.selectbox(
+            "ವಿಂಗಡಿಸಿ {Sort By}:" if is_kn else "Sort By:",
+            list(sort_opts.keys()),
+            format_func=lambda k: sort_opts[k],
+            key="krama_sort_by"
+        )
+
+    # Filtered dataset
+    filtered_krama = kmv.search_krama_prices(
+        category_en=sel_cat_en,
+        commodity_en=sel_comm_en,
+        search_query=krama_query,
+        sort_by=sel_krama_sort,
+        data_list=krama_data
+    ) if kmv else []
+
+    st.markdown(
+        f"**📊 {len(filtered_krama)} " +
+        (f"ಕೃಷಿ ಉತ್ಪನ್ನ ತಳಿಗಳ ದರ ಲಭ್ಯವಿದೆ (ದಿನಾಂಕ: {rep_date} · {mkts_count} ಎಪಿಎಂಸಿಗಳು):"
+         if is_kn else
+         f"Crop Varieties Found (Date: {rep_date} · {mkts_count} APMC Yards):") +
+        "**"
+    )
+
+    if not filtered_krama:
+        st.warning(
+            "ಹುಡುಕಾಟಕ್ಕೆ ತಕ್ಕಂತೆ ಯಾವುದೇ ಬೆಳೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ. ದಯವಿಟ್ಟು ಫಿಲ್ಟರ್ ಮರುಹೊಂದಿಸಿ."
+            if is_kn else
+            "No crops found matching your search. Please reset filters."
+        )
+    else:
+        # Build clean formatted table
+        krama_table_rows = []
+        for item in filtered_krama:
+            spread = item["max_price"] - item["min_price"]
+            krama_table_rows.append({
+                ("ವರ್ಗ {Category}" if is_kn else "Category"): item["category_kn"] if is_kn else item["category_en"],
+                ("ಬೆಳೆ {Commodity}" if is_kn else "Commodity"): item["commodity_kn"] if is_kn else item["commodity_en"],
+                ("ತಳಿ / ಗುಣಮಟ್ಟ {Variety}" if is_kn else "Variety / Grade"): item["variety_kn"] if is_kn else item["variety_en"],
+                ("ಕನಿಷ್ಠ ಬೆಲೆ {Min}" if is_kn else "Min Price"): f"₹{item['min_price']:,}",
+                ("ಗರಿಷ್ಠ ಬೆಲೆ {Max}" if is_kn else "Max Price"): f"₹{item['max_price']:,}",
+                ("ಮಾದರಿ ದರ {Modal}" if is_kn else "Modal Rate"): f"₹{item['modal_price']:,}",
+                ("ವ್ಯತ್ಯಾಸ {Spread}" if is_kn else "Spread"): f"₹{spread:,}",
+                ("ಪ್ರಮಾಣ {Unit}" if is_kn else "Unit"): item["unit"],
+                ("ದಿನಾಂಕ {Date}" if is_kn else "Report Date"): item["report_date"]
+            })
+
+        df_krama = pd.DataFrame(krama_table_rows)
+        st.dataframe(df_krama, use_container_width=True, hide_index=True)
+
+        # Download CSV button
+        csv_data = df_krama.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            "📥 " + ("ಇಂದಿನ ದರಗಳ ಪಟ್ಟಿಯನ್ನು CSV ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ {Download CSV}" if is_kn else "Download Today's Rates CSV"),
+            data=csv_data,
+            file_name=f"krishi_marata_vahini_apmc_rates_{rep_date.replace('/', '-')}.csv",
+            mime="text/csv",
+            key="dl_krama_csv"
+        )
+
+    # Official KSAMB External Reference Resources Strip
+    st.markdown("---")
+    st.markdown("#### 🌐 " + ("ಕರ್ನಾಟಕ ಕೃಷಿ ಮಾರಾಟ ವಾಹಿನಿ ಅಧಿಕೃತ ಲಿಂಕ್‌ಗಳು {Official KRAMA Links}" if is_kn else "Official Krishi Marata Vahini Links"))
+    k_link1, k_link2, k_link3, k_link4 = st.columns(4)
+    with k_link1:
+        st.link_button(
+            "📊 " + ("ದೈನಂದಿನ ಬೆಲೆ & ಆವಕ ವರದಿ {Daily Reports}" if is_kn else "Daily Reports (Main_rep)"),
+            "https://www.krama.karnataka.gov.in/Reports/Main_rep",
+            use_container_width=True
+        )
+    with k_link2:
+        st.link_button(
+            "⚖️ " + ("ಸರ್ಕಾರಿ ಬೆಂಬಲ ಬೆಲೆ ಪಟ್ಟಿ {Govt MSP Rates}" if is_kn else "Minimum Support Prices"),
+            "https://www.krama.karnataka.gov.in/Markets/MinimumSupportPrice",
+            use_container_width=True
+        )
+    with k_link3:
+        st.link_button(
+            "📈 " + ("ವಾರದ ಮಾರುಕಟ್ಟೆ ವಿಶ್ಲೇಷಣೆ {Weekly Analysis}" if is_kn else "Weekly Market Analysis"),
+            "https://www.krama.karnataka.gov.in/Markets/WeeklyAnalysis",
+            use_container_width=True
+        )
+    with k_link4:
+        st.link_button(
+            "📜 " + ("ಅಧಿಸೂಚಿತ ಕೃಷಿ ಸರಕುಗಳು {Notified Commodities}" if is_kn else "Notified Commodities"),
+            "https://www.krama.karnataka.gov.in/Markets/NotifiedCommodity",
+            use_container_width=True
+        )
+
+# ==============================================================================
+# TAB 2: DAILY MARKET RATES, 30-DAY GRAPHS & 14-DAY PRICE FORECASTS
 # ==============================================================================
 with tab_rates:
     st.markdown("### 🌾 " + ("ದೈನಂದಿನ ಮಾರುಕಟ್ಟೆ ದರಗಳು & ಬೆಲೆ ಏರಿಕೆ/ಇಳಿಕೆ ಗ್ರಾಫ್" if is_kn else "Daily Mandi Rates & Price Trend Forecasts"))

@@ -94,3 +94,44 @@ def test_market_rates_page_renders_cleanly():
     assert not at.exception
     text = " ".join(m.value for m in at.markdown)
     assert "Market Rates" in text or "ಮಾರುಕಟ್ಟೆ ದರ" in text
+
+
+def test_krishi_marata_vahini_data_integrity():
+    import krishi_marata_vahini as kmv
+    bundle = kmv.fetch_latest_krama_prices()
+    assert bundle["total_items"] >= 250
+    assert bundle["markets_count"] >= 50
+    assert "02/11/2026" in bundle["report_date"]
+
+    for item in bundle["data"][:50]:
+        assert item["min_price"] <= item["max_price"]
+        assert item["modal_price"] > 0
+        assert len(item["commodity_kn"]) > 0
+        assert len(item["variety_kn"]) > 0
+
+
+def test_krama_categories_and_search():
+    import krishi_marata_vahini as kmv
+    cats = kmv.get_krama_categories()
+    assert len(cats) >= 8
+
+    # Search for Byadgi
+    byadgi = kmv.search_krama_prices(search_query="ಬ್ಯಾಡಗಿ")
+    assert len(byadgi) >= 1
+
+    # Search by Category Cereals
+    cereals = kmv.search_krama_prices(category_en="Cereals")
+    assert len(cereals) >= 40
+
+    # Sort modal descending
+    sorted_items = kmv.search_krama_prices(sort_by="modal_desc")
+    modals = [x["modal_price"] for x in sorted_items]
+    assert modals == sorted(modals, reverse=True)
+
+
+def test_krama_spotlights():
+    import krishi_marata_vahini as kmv
+    spots = kmv.get_spotlight_crops()
+    assert len(spots) >= 8
+    spot_comms = {x["commodity_en"] for x in spots}
+    assert "Paddy" in spot_comms or "Arecanut" in spot_comms
